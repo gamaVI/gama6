@@ -1,0 +1,9 @@
+V to datoteko zapisujmo ideje iz katerih virov bomo pridobivali podatke.
+Ideje navajamo v naslednjem formatu:
+
+#<Zaporedna stevilka ideje>
+- < Način pridobivanja podatkov npr: CSV, scrapanje, API>
+- <Pogostost posodabljanja podatkov>
+- < Okvirna ideja kaj bi delali s temi podatki>
+- < URL do vira (če obstaja)>
+
