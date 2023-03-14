@@ -14,3 +14,5 @@ Ideje navajamo v naslednjem formatu:
 - Prikaz sklenjenih nepremičninskih poslov v okolici MB in
   prikaz raznih derivatov pridobljenih podatkov.
 - https://egp.gu.gov.si/egp/ -> 8. Točka -> Evidenca trga nepremičnin
+
+.
