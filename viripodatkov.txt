@@ -7,3 +7,10 @@ Ideje navajamo v naslednjem formatu:
 - < Okvirna ideja kaj bi delali s temi podatki>
 - < URL do vira (če obstaja)>
 
+
+#1
+- CSV 
+- Nekajkrat tedensko
+- Prikaz sklenjenih nepremičninskih poslov v okolici MB in
+  prikaz raznih derivatov pridobljenih podatkov.
+- https://egp.gu.gov.si/egp/ -> 8. Točka -> Evidenca trga nepremičnin
