@@ -15,4 +15,3 @@ Ideje navajamo v naslednjem formatu:
   prikaz raznih derivatov pridobljenih podatkov.
 - https://egp.gu.gov.si/egp/ -> 8. Točka -> Evidenca trga nepremičnin
 
-.
