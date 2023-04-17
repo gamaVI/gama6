@@ -1,0 +1,39 @@
+Naslov:
+    - Digitalni dvojček nepremičninskega trga osrednjeslovenske regije.
+
+Člani skupine:
+    - Gal Jeza (vodja),
+    - Matic Lukežič,
+    - Vid Čabrian.
+
+Kaj je cilj projekta:
+    Cilj projekta je na uporabniku prijazen način predstaviti stanje in dogajanje (sklenjenih nepremičninskih poslov) na nepremičninskem trgu v osrednjeslovenski regiji.
+
+Razvojna orodja:
+    - Komunikacija:
+        - Slack
+    - Vodenje projekta:
+        - Jira
+    - Verzioniranje kode:
+        - GitHub
+        - GitKraken
+    - IDE-ji:
+        - WebStorm (spletno programiranje)
+        - VS Code (spletno programiranje)
+        - IntelliJ (razvoj Kotlin storitve)
+    - Tehnologije:
+        - Infrastruktura:
+            - Docker
+            - Azure
+            - MongoDB Atlas
+        - Čelni del (Front-end)
+            - React / Next.Js
+            - Tailwind.css
+            - DaisyUI
+        - Zaledni del (Back-end)
+            - NodeJS (Express)
+            - MongoDB
+        - Storitev
+            - Kotlin
+
+        
