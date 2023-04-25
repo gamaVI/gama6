@@ -1,0 +1,242 @@
+{
+    "posel": [
+      {
+        "skupnaPovrsina": 120,
+        "cena": 250000,
+        "cenaNaM2": 2083.33,
+        "lokacija": "Ljubljana",
+        "datumPosla": "2023-01-03T00:00:00Z",
+        "letoGradnje": 1995,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Hiša",
+        "koordinataX": 46.056946,
+        "koordinataY": 14.505751
+      },
+      {
+        "skupnaPovrsina": 90,
+        "cena": 180000,
+        "cenaNaM2": 2000,
+        "lokacija": "Maribor",
+        "datumPosla": "2023-02-15T00:00:00Z",
+        "letoGradnje": 1987,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Stanovanje",
+        "koordinataX": 46.554650,
+        "koordinataY": 15.646586
+      },
+      {
+        "skupnaPovrsina": 110,
+        "cena": 195000,
+        "cenaNaM2": 1772.73,
+        "lokacija": "Celje",
+        "datumPosla": "2023-03-02T00:00:00Z",
+        "letoGradnje": 2000,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Stanovanje",
+        "koordinataX": 46.239747,
+        "koordinataY": 15.267707
+      },
+      {
+        "skupnaPovrsina": 80,
+        "cena": 140000,
+        "cenaNaM2": 1750,
+        "lokacija": "Koper",
+        "datumPosla": "2023-01-25T00:00:00Z",
+        "letoGradnje": 1990,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Stanovanje",
+        "koordinataX": 45.548058,
+        "koordinataY": 13.730188
+      },
+      {
+        "skupnaPovrsina": 85,
+        "cena": 170000,
+        "cenaNaM2": 2000,
+        "lokacija": "Novo Mesto",
+        "datumPosla": "2023-02-28T00:00:00Z",
+        "letoGradnje": 2005,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Stanovanje",
+        "koordinataX": 45.803973,
+        "koordinataY": 15.168808
+      },
+      {
+        "skupnaPovrsina": 130,
+        "cena": 260000,
+        "cenaNaM2": 2000,
+        "lokacija": "Kranj",
+        "datumPosla": "2023-03-15T00:00:00Z",
+        "letoGradnje": 2010,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Hiša",
+        "koordinataX": 46.238981,
+        "koordinataY": 14.355518
+      },
+      {
+        "skupnaPovrsina": 70,
+        "cena": 120000,
+        "cenaNaM2": 1714.29,
+        "lokacija": "Ptuj",
+        "datumPosla": "2023-01-20T00:00:00Z",
+        "letoGradnje": 1998,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Stanovanje",
+        "koordinataX": 46.419580,
+        "koordinataY": 15.869298
+      },
+      {
+        "skupnaPovrsina": 150,
+        "cena": 300000,
+        "cenaNaM2": 2000,
+        "lokacija": "Murska Sobota",
+        "datumPosla": "2023-04-12T00:00:00Z",
+        "letoGradnje": 2002,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Hiša",
+        "koordinataX": 46.663883,
+        "koordinataY": 16.162220
+      },
+      {
+        "skupnaPovrsina": 100,
+        "cena": 220000,
+        "cenaNaM2": 2200,
+        "lokacija": "Izola",
+        "datumPosla": "2023-02-10T00:00:00Z",
+        "letoGradnje": 2001,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Stanovanje",
+        "koordinataX": 45.536832,
+        "koordinataY": 13.659702
+      },
+      {
+        "skupnaPovrsina": 65,
+        "cena": 130000,
+        "cenaNaM2": 2000,
+        "lokacija": "Piran",
+        "datumPosla": "2023-05-08T00:00:00Z",
+        "letoGradnje": 1995,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Stanovanje",
+        "koordinataX": 45.527376,
+        "koordinataY": 13.570554
+      },
+      {
+        "skupnaPovrsina": 140,
+        "cena": 280000,
+        "cenaNaM2": 2000,
+        "lokacija": "Bled",
+        "datumPosla": "2023-03-01T00:00:00Z",
+        "letoGradnje": 2015,
+        "tipPosla": "Prodaja",
+        "tipNepremicnine": "Hiša",
+        "koordinataX": 46.369325,
+        "koordinataY": 14.108669
+      }
+    ],
+    "oglas": [
+      {
+        "url": "https://example.com/oglas1",
+        "naslov": "Prekrasna hiša v Ljubljani",
+        "tip": "Prodaja",
+        "opis": "Prodamo prekrasno hišo v Ljubljani z velikim vrtom.",
+        "velikost": 150,
+        "cena": 300000,
+        "agencija": "Nepremičnine Ljubljana",
+        "lokacija": "Ljubljana"
+      },
+      {
+        "url": "https://example.com/oglas2",
+        "naslov": "Dvoinpolsobno stanovanje v Mariboru",
+        "tip": "Prodaja",
+        "opis": "Prodamo dvoinpolsobno stanovanje v centru Maribora.",
+        "velikost": 60,
+        "cena": 120000,
+        "agencija": "Nepremičnine Maribor",
+        "lokacija": "Maribor"
+      },
+      {
+        "url": "https://example.com/oglas3",
+        "naslov": "Dupleks stanovanje v Celju",
+        "tip": "Prodaja",
+        "opis": "Prodamo dupleks stanovanje v mirni soseski v Celju.",
+        "velikost": 100,
+        "cena": 180000,
+        "agencija": "Nepremičnine Celje",
+        "lokacija": "Celje"
+      },
+      {
+        "url": "https://example.com/oglas4",
+        "naslov": "Enosobno stanovanje v Kopru",
+        "tip": "Prodaja",
+        "opis": "Prodamo enosobno stanovanje blizu morja v Kopru.",
+        "velikost": 40,
+        "cena": 90000,
+        "agencija": "Nepremičnine Koper",
+        "lokacija": "Koper"
+      },
+      {
+        "url": "https://example.com/oglas5",
+        "naslov": "Triinpolsobno stanovanje v Novem mestu",
+        "tip": "Prodaja",
+        "opis": "Prodamo triinpolsobno stanovanje v mirni soseski v Novem mestu.",
+        "velikost": 80,
+        "cena": 160000,
+        "agencija": "Nepremičnine Novo mesto",
+        "lokacija": "Novo Mesto"
+      },
+      {
+        "url": "https://example.com/oglas6",
+        "naslov": "Družinska hiša v Kranju",
+        "tip": "Prodaja",
+        "opis": "Prodamo prostorno družinsko hišo z vrtom v Kranju.",
+        "velikost": 180,
+        "cena": 360000,
+        "agencija": "Nepremičnine Kranj",
+        "lokacija": "Kranj"
+      },
+      {
+        "url": "https://example.com/oglas7",
+        "naslov": "Mansardno stanovanje v Ptuju",
+        "tip": "Prodaja",
+        "opis": "Prodamo mansardno stanovanje z lepim razgledom v Ptuju.",
+        "velikost": 70,
+        "cena": 130000,
+        "agencija": "Nepremičnine Ptuj",
+        "lokacija": "Ptuj"
+      },
+      {
+        "url": "https://example.com/oglas8",
+        "naslov": "Energetsko učinkovita hiša v Murski Soboti",
+        "tip": "Prodaja",
+        "opis": "Prodamo nizkoenergijsko hišo z velikim vrtom v Murski Soboti.",
+        "velikost": 150,
+        "cena": 300000,
+        "agencija": "Nepremičnine Murska Sobota",
+        "lokacija": "Murska Sobota"
+      },
+      {
+        "url": "https://example.com/oglas9",
+        "naslov": "Moderno stanovanje v Izoli",
+        "tip": "Prodaja",
+        "opis": "Prodamo moderno opremljeno stanovanje v Izoli, le nekaj korakov od plaže.",
+        "velikost": 75,
+        "cena": 220000,
+        "agencija": "Nepremičnine Izola",
+        "lokacija": "Izola"
+      },
+      {
+        "url": "https://example.com/oglas10",
+        "naslov": "Pogled na morje iz stanovanja v Piranu",
+        "tip": "Prodaja",
+        "opis": "Prodamo dvosobno stanovanje z čudovitim pogledom na morje v Piranu.",
+        "velikost": 60,
+        "cena": 180000,
+        "agencija": "Nepremičnine Piran",
+        "lokacija": "Piran"
+      }
+    ]
+  }
+  
+  
+  
+  
