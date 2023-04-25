@@ -1,11 +1,27 @@
 import { type NextPage } from "next";
+import {useState,useEffect} from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut,getProviders, useSession, ClientSafeProvider, LiteralUnion} from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
+  const [providers,setProviders] = useState<Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null>();
+  const {data: sessionData,status} = useSession();
+
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const providers = await getProviders();
+      setProviders(providers);
+    };
+    void fetchProviders();
+  },[]);
+
+
+
+
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   return (
@@ -48,7 +64,19 @@ const Home: NextPage = () => {
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
-            <AuthShowcase />
+            {providers?.auth0 && (
+              <button
+                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                onClick={() => void signIn(providers.auth0.id)}
+              >
+                Sign in with Auth0
+              </button>
+            )}
+            {
+              /*
+              <AuthShowcase />
+              */
+            }
           </div>
         </div>
       </main>
