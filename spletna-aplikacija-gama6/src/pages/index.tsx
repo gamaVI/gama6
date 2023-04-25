@@ -1,15 +1,25 @@
 import { type NextPage } from "next";
-import {useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut,getProviders, useSession, ClientSafeProvider, LiteralUnion} from "next-auth/react";
-import { BuiltInProviderType } from "next-auth/providers";
+import {
+  signIn,
+  signOut,
+  getProviders,
+  useSession,
+  type ClientSafeProvider,
+  type LiteralUnion,
+} from "next-auth/react";
+import { type BuiltInProviderType } from "next-auth/providers";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const [providers,setProviders] = useState<Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null>();
-  const {data: sessionData,status} = useSession();
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>();
+  const { data: sessionData } = useSession();
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -17,10 +27,7 @@ const Home: NextPage = () => {
       setProviders(providers);
     };
     void fetchProviders();
-  },[]);
-
-
-
+  }, []);
 
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
@@ -36,25 +43,43 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Gama<span className="text-[hsl(280,100%,70%)]">6</span>
           </h1>
-          
+
           <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
+            <p className="text-center text-2xl  text-white">
+              {sessionData && (
+                <>
+                  <span className="">
+                    Pozdravljen {sessionData.user?.name}{" "}
+                  </span>
+                  <div className="mt-5 flex flex-row gap-5 ">
+                    <Link
+                      href="/apitesting"
+                      className=" rounded-xl   bg-pink-500 px-4 py-2 text-lg font-semibold text-white hover:bg-white hover:text-pink-500"
+                    >
+                      Testiraj API
+                    </Link>
+                    <button
+                      className=" rounded-xl   bg-pink-500 px-4 py-2 text-lg font-semibold text-white hover:bg-white hover:text-pink-500"
+                      onClick={() => void signOut()}
+                    >
+                      Odjavi se
+                    </button>
+                  </div>
+                </>
+              )}
             </p>
-            {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-            {providers?.auth0 && (
+
+            {!sessionData && providers?.auth0 && (
               <button
                 className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
                 onClick={() => void signIn(providers.auth0.id)}
               >
-                Sign in with Auth0
+                Prijava
               </button>
             )}
-            {
-              /*
+            {/*
               <AuthShowcase />
-              */
-            }
+              */}
           </div>
         </div>
       </main>
