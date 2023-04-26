@@ -14,15 +14,48 @@ import {
 import { type BuiltInProviderType } from "next-auth/providers";
 
 import { api } from "~/utils/api";
-import OglasList from "./components/OglasiList";
+import JsonList from "./components/JsonList";
+import AddOglasForm from "./components/OglasiForm";
+
+interface Oglas {
+    naslov: string;
+    opis: string;
+    cena: number;
+    tip: string;
+    velikost: number;
+    agencija: string;
+    lokacija: string;
+    url: string;
+    }
+
 
 const ApiTesting: NextPage = () => {
   const { data: sessionData } = useSession();
   const [activeTab, setActiveTab] = useState<"oglasi" | "posli" | "form">(
     "oglasi"
   );
+  const {data: oglasi,isLoading, refetch} = api.oglasi.getAll.useQuery();
+  const addOglasMutation = api.oglasi.addOglas.useMutation({
+    onSuccess: (data) => {
+        console.log(data);
+        void refetch();
+        }
+  });
+
+  console.log(oglasi);
+    const handleSubmit =  (
+        values: Oglas
+    ) => {
+        addOglasMutation.mutate(
+            values
+        );
+    }
+
+
 
   return (
+    
+
     <>
       <Head>
         <title>Gama6 api testing</title>
@@ -36,7 +69,7 @@ const ApiTesting: NextPage = () => {
                 isSelected = {activeTab === "oglasi"}
                 onClick = {() => setActiveTab("oglasi")}
             />
-            
+
             <CustomButton
                 label = "Objavi oglas"
                 isSelected = {activeTab === "form"}
@@ -46,7 +79,14 @@ const ApiTesting: NextPage = () => {
           <h1 className=" text-4xl font-bold tracking-tight text-white ">
             {activeTab}
           </h1>
-          {activeTab === "oglasi" && <OglasList />}
+          {activeTab === "oglasi" && <>
+          <AddOglasForm 
+            onSubmit={(values) => {
+               void handleSubmit(values);
+            }}
+
+          />
+        <JsonList list={oglasi || []} /></>}
         </div>
       </main>
     </>
