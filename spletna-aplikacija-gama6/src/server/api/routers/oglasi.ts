@@ -6,6 +6,8 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
+import { getComparison } from "~/utils/realEstateComparision";
+
 export const oglasiRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.oglas.findMany();
@@ -48,6 +50,16 @@ export const oglasiRouter = createTRPCRouter({
         )
         
     ,
+    getComparison: publicProcedure
+    // accept two strings as input
+    .input(z.array(z.string()))
+    .mutation(async ({}) => {
+      const url2 = "https://www.nepremicnine.net/oglasi-prodaja/lj-center-hisa_6542556/"
+      const url1 =
+        "https://www.nepremicnine.net/oglasi-prodaja/lj-center-stanovanje_6537956/";
+      const data = await getComparison([url1, url2]);
+      return data;
+    }),
 
             
 

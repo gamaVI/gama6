@@ -22,6 +22,7 @@ const server = z.object({
   AUTH0_CLIENT_ID: z.string(),
   AUTH0_CLIENT_SECRET: z.string(),
   AUTH0_DOMAIN: z.string(),
+  OPENAI_API_KEY: z.string(),
 
 });
 
@@ -47,6 +48,7 @@ const processEnv = {
   AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
   AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
   AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
