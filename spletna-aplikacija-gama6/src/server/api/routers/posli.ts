@@ -5,6 +5,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { isPointInsidePolygon } from "~/utils/mapUtil";
 
 export const posliRouter = createTRPCRouter({
   hello: publicProcedure
@@ -85,5 +86,31 @@ export const posliRouter = createTRPCRouter({
       const { id } = input;
       const deletedPosel = await ctx.prisma.posel.delete({ where: { id } });
       return deletedPosel;
+    }),
+
+  /*
+  uporaba: 
+  const polygon = [
+    { x: 0, y: 0 },
+    { x: 0, y: 10 },
+    { x: 10, y: 10 },
+    { x: 10, y: 0 },
+  ];
+
+    const result = await trpcClient.query("posli.getPosliInPolygon", polygon);
+    console.log(result);
+  */
+  getPosliInPolygon: publicProcedure
+    .input(z.array(z.object({ x: z.number(), y: z.number() })))
+    .query(async ({ ctx, input }) => {
+      const polygon = input;
+      const posli = await ctx.prisma.posel.findMany();
+      const result = posli.filter((posel) =>
+        isPointInsidePolygon(
+          { x: posel.koordinataX, y: posel.koordinataY },
+          polygon
+        )
+      );
+      return result;
     }),
 });
