@@ -17,7 +17,7 @@ export const posliRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+    return ctx.prisma.posel.findMany();
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
@@ -37,11 +37,11 @@ export const posliRouter = createTRPCRouter({
     .input(
       z.object({
         skupnaPovrsina: z.number(),
-        cena: z.number(),
+        cena: z.number().int(),
         cenaNaM2: z.number(),
         lokacija: z.string(),
         datumPosla: z.string(),
-        letoGradnje: z.number(),
+        letoGradnje: z.number().int(),
         tipPosla: z.string(),
         tipNepremicnine: z.string(),
         koordinataX: z.number(),
