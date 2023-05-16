@@ -1,5 +1,4 @@
 
-import { z } from "zod";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
