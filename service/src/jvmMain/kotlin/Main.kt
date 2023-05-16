@@ -1,9 +1,6 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,38 +34,11 @@ fun App() {
                 }
             }
 
-            BottomNavigation(Modifier.align(Alignment.End)) {
-                BottomNavigationItem(
-                    icon = {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Filled.Home,
-                            contentDescription = "Moji kvadrati"
-                        )
-                    },
-                    selected = true,
-                    onClick = { currentScreen = Screen.MojiKvadrati }
-                )
-                BottomNavigationItem(
-                    icon = {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.Create,
-                            contentDescription = "Generator"
-                        )
-                    },
-                    selected = true,
-                    onClick = { currentScreen = Screen.Generator }
-                )
-                BottomNavigationItem(
-                    icon = {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.List,
-                            contentDescription = "Nepremicnine"
-                        )
-                    },
-                    selected = true,
-                    onClick = { currentScreen = Screen.Nepremicnine }
-                )
-            }
+            AppBottomNavigation(
+                currentScreen,
+                onScreenSelected = { screen -> currentScreen = screen },
+                modifier = Modifier.align(Alignment.End)
+            )
         }
     }
 }
