@@ -1,5 +1,6 @@
 import React from 'react';
 import { api } from '~/utils/api';
+import {Card, CardContent,CardTitle} from "@/components/ui/card"
 
 
 interface ListItem {
@@ -13,15 +14,18 @@ interface ListItem {
 const JsonList:React.FC<JsonListProps>  =({list}) => {
 
   return (
-    <div className="p-4">
+    <div>
       <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {list?.map((listItem) => (
-          <li key={listItem?.id} className="col-span-1 bg-white rounded-lg shadow  overflow-x-scroll overflow-y-scrol">
-            <div className="w-full p-6 flex flex-col"><pre>
-             {JSON.stringify(listItem,null,2)}
+          <Card key={listItem?.id}>
+
+            <CardContent className="overflow-scroll">
+            <pre>
+             {JSON.stringify(listItem,null,2).replace("{","").replace("}","").replaceAll(" ","")}
              </pre>
-            </div>
-          </li>
+            </CardContent>
+          </Card>
+          
         ))}
       </ul>
     </div>

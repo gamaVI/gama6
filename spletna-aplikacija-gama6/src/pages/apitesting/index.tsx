@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import CustomButton from "./components/CustomButton";
 import Link from "next/link";
 import {
   signIn,
@@ -14,8 +13,7 @@ import {
 import { type BuiltInProviderType } from "next-auth/providers";
 
 import { api } from "~/utils/api";
-import JsonList from "./components/JsonList";
-import AddOglasForm from "./components/OglasiForm";
+import JsonList from "../dashboard/components/jsonlist"
 
 interface Oglas {
     naslov: string;
@@ -63,30 +61,10 @@ const ApiTesting: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <div className="flex gap-4">
-            <CustomButton
-                label = "Oglasi"
-                isSelected = {activeTab === "oglasi"}
-                onClick = {() => setActiveTab("oglasi")}
-            />
+          
 
-            <CustomButton
-                label = "Objavi oglas"
-                isSelected = {activeTab === "form"}
-                onClick = {() => setActiveTab("form")}
-            />
-          </div>
-          <h1 className=" text-4xl font-bold tracking-tight text-white ">
-            {activeTab}
-          </h1>
-          {activeTab === "oglasi" && <>
-          <AddOglasForm 
-            onSubmit={(values) => {
-               void handleSubmit(values);
-            }}
-
-          />
-        <JsonList list={oglasi || []} /></>}
+          
+        <JsonList list={oglasi || []} />
         </div>
       </main>
     </>
