@@ -32,7 +32,6 @@ const Primerjava: NextPage = () => {
         setData(data);
         setLoading(false);
       }
-      
     },
   });
 
