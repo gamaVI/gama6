@@ -4,18 +4,17 @@ import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import util.Posel
 import util.generatePosel
+import util.objects.Posel
 import util.ui.PoselItem
 
 fun generatePosli(
@@ -46,6 +45,11 @@ fun GeneratorScreen() {
     val state = rememberLazyListState()
 
     Column(modifier = Modifier.fillMaxSize()) {
+        Text(
+            "Generator poslov",
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.h2
+        )
         if (showInputSection.value || posli.value.isEmpty()) {
             Row(
                 modifier = Modifier
@@ -92,7 +96,7 @@ fun GeneratorScreen() {
                                         removeAt(index)
                                     }
                                 },
-                                onEdit = { editedPosel ->
+                                onEdit = { editedPosel: Posel ->
                                     posli.value = posli.value.toMutableList().apply {
                                         this[index] = editedPosel
                                     }

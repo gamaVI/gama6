@@ -1,21 +1,9 @@
 package util
 
+import util.objects.Posel
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.random.Random
-
-data class Posel(
-    val skupnaPovrsina: Double,
-    val cena: Int,
-    val cenaNaM2: Int,
-    val lokacija: String,
-    val datumPosla: String,
-    val letoGradnje: Int,
-    val tipPosla: String,
-    val tipNepremicnine: String,
-    val koordinateX: Double,
-    val koordinateY: Double
-)
 
 val random = Random.Default
 

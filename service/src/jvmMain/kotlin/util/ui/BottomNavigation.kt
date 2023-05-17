@@ -20,8 +20,10 @@ fun AppBottomNavigation(
                     contentDescription = "Moji kvadrati"
                 )
             },
-            selected = true,
-            onClick = { onScreenSelected(Screen.MojiKvadrati) }
+            selected = currentScreen == Screen.MojiKvadrati,
+            onClick = {
+                onScreenSelected(Screen.MojiKvadrati)
+            }
         )
         BottomNavigationItem(
             icon = {
@@ -30,8 +32,10 @@ fun AppBottomNavigation(
                     contentDescription = "Generator"
                 )
             },
-            selected = true,
-            onClick = { onScreenSelected(Screen.Generator) }
+            selected = currentScreen == Screen.Generator,
+            onClick = {
+                onScreenSelected(Screen.Generator)
+            }
         )
         BottomNavigationItem(
             icon = {
@@ -40,8 +44,10 @@ fun AppBottomNavigation(
                     contentDescription = "Nepremicnine"
                 )
             },
-            selected = true,
-            onClick = { onScreenSelected(Screen.Nepremicnine) }
+            selected = currentScreen == Screen.Nepremicnine,
+            onClick = {
+                onScreenSelected(Screen.Nepremicnine)
+            }
         )
     }
 }
