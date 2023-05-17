@@ -15,7 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    
 
     const scraper = new Scraper();
-   
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const listings = await scraper.scrape(pageNumber, minCost, maxCost, typeOfBuilding, location);
 
