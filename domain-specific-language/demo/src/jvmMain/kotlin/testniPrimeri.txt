@@ -1,0 +1,86 @@
+city "Ljubljana" {
+    road "Presernova ulica" {
+    line((2, 2),  (2, 5));
+    line((5, 4),  (6, 4));
+    bend ((1, 1), (2, 2), 20);
+     }
+    park "Soncni Park" { circ (5, 8) 5 }
+    restaurant "Hut Burger" (13, 7)
+    school "FRI" (15, 7)
+    townhall "Obcina Ljubljana" (10, 4)
+    church "Sv. Peter" (4, 9)
+    stadium "Stozice" (8, 8)
+    let "population" = 15
+    let "x_os" = 16
+    for "i" in 1..population {
+    building "Hisa" { box (x_os, 2) (x_os, 3) }
+    }
+}
+
+city "Maribor" {
+    building "Dvorana" { box (1.25, 9) 3.5, 12) }
+    river "Drava" { poly ((4, 7), (6, 9), (8, 11)) }
+    restaurant "Poper" (15, 7)
+    school "FERI" (1, 1)
+    townhall "Mariborska obcina" (7, 19)
+    church "Sv. Jože" (5, 7)
+    stadium "Ljudksi vrt" (3.5, 8.75)
+    let "x_os" = 5
+    for "i" in 1..x_os {
+    building "Bajte" { box (x_os, 2) (x_os, 3) }
+    }
+}
+
+city "Celje" {
+    road "Pine Street" {
+        line ((5, 1) (9, 4));
+        line ((7, 2) (1, 8));
+        line ((0, 4.25) (3, 1));
+        bend ((9, 9) (3,1), 5);
+         }
+    park "Celjski park" { circ (3, 3) 2 }
+    stadium "Kelea" (12, 2)
+}
+
+
+city "Ptuj" {
+    road "Zupanciceva" { line (1.4, 4) (7, 5) }
+    park "Mestni park" { circ (2, 7) 3 }
+    let "stevilo" = 10
+    if "stevilo" > 5 {
+        building "Dvorec" { box (5 , 2) (8, 3) }
+    }
+}
+
+city "Piran" {
+    building "Trznica" { box (19, 19) (25 , -18) }
+    beach "Juzna plaza" (6, 13)
+}
+
+city "Novo Mesto" {
+    building "Neboticnik" { box (88, 64) (88, 63) }
+    river "Sava" { poly ((2, 3), (4, 6), (8, 8)) }
+    list "Gostilne" ["McDonald", "Pica Novo mesto", "Kitajska restavracija"]
+}
+
+
+city "Koper" {
+    building "Kipec" { box (6, 2.29) (6, 2.30) }
+    park "Lunin park" { circ (12, 2) 5 }
+    if true {
+        church "Sv. Nikolaj" (5, 5)
+    }
+}
+
+city "Murska Sobota" {
+    road "Prekmusrka cesta" { line (5, -0.16) (5, -0.14) }
+    park "Oblacen park" { circ (1, 58) 5 }
+    let "population" = 10000
+}
+
+city "Kranj" {
+    building "Hisa" { box (2, 13) (2.2, 9) }
+    river "Ljubljanica" { poly ((1, 4), (5, 4), (7, 13) (9, 13)) }
+}
+
+
