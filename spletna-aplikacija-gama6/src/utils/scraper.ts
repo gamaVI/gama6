@@ -70,6 +70,9 @@ export class Scraper {
         const formattedPrice =  price ? parseInt(price.replace('€', '').replace('.', '').split(",")[0].trim()) : null;
         const formattedSize =  size ? parseFloat(size.replace('m2', '').replace(',', '.').replaceAll(" ","").split(",")[0].trim()) : null;
         const formattedYear =  year ? parseInt(year.replace('leto', '').trim()) : null;
+        
+        
+        
         return {
           title,
           link: link ? `https://www.nepremicnine.net/${link}` : null,
@@ -82,8 +85,17 @@ export class Scraper {
         };
       });
     })
-   // await browser.close();
-    return listingData;
+    
+    const pageCount  = await page.evaluate(() => {
+      return  parseInt(document.querySelector('.paging_last a')?.getAttribute('href')?.split("/?s")[0]?.split("/").slice(-1)[0]) || null;
+   })
+
+    
+    await browser.close();
+    return  {
+      listings: listingData,
+      pageCount : pageCount
+    }
   }
 
 
