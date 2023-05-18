@@ -7,11 +7,14 @@ import java.io.IOException
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import util.objects.Listing
+import java.util.concurrent.TimeUnit
 
 data class ListingsResponse(val listings: List<Listing>, val pageCount: Int)
 
 object ApiRequests {
-    private var client = OkHttpClient()
+    private val client = OkHttpClient.Builder()
+        .callTimeout(25, TimeUnit.SECONDS) //Timeout after 25 seconds
+        .build()
     private var BASE_URL = "http://localhost:3000/api/scraping/nepremicnine"
 
     @JvmStatic
