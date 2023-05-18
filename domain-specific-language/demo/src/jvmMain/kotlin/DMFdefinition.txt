@@ -1,0 +1,27 @@
+<program> ::= <statement>*
+<statement> ::= <city> | <let> | <for> | <if> | <list>
+<city> ::= "city" <string> "{" <city_element>* "}"
+<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium>
+<road> ::= "road" <string> "{" <lines>* "}"
+<lines> ::= "line" "(" <point> <point> ");" <lines> | "bend" "(" <point> <point> <number> ");" <lines> | ε
+<building> ::= "building" <string> "{" "box" <point> <point> "}"
+<park> ::= "park" <string> "{" "circ" <point> <number> "}"
+<river> ::= "river" <string> "{" "poly" <point_list> "}"
+<restaurant> ::= "restaurant" <string> <point>
+<school> ::= "school" <string> <point>
+<townhall> ::= "townhall" <string> <point>
+<church> ::= "church" <string> <point>
+<stadium> ::= "stadium" <string> <point>
+<let> ::= "let" <string> "=" <expression>
+<for> ::= "for" <string> "in" <number> ".." <number> "{" <statement>* "}"
+<if> ::= "if" <condition> "{" <statement>* "}"
+<list> ::= "list" <string> "[" <string>* "]"
+<expression> ::= <number> | <string> | <condition> | <point> | <arc>
+<arc> ::= "arc" <point> <number> <number>
+<condition> ::= <boolean>
+<point> ::= "(" <number> "," <number> ")"
+<point_list> ::= "(" <point> <point_list_tail> ")"
+<point_list_tail> ::= "," <point> <point_list_tail> | ε
+<number> ::= [0-9]+
+<string> ::= """ [a-zA-Z0-9\s]* """
+<boolean> ::= "true" | "false"
