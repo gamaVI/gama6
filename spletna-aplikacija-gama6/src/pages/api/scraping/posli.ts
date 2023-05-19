@@ -2,7 +2,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Scraper, Listing } from "~/utils/scraper";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { de } from "date-fns/locale";
 /*eslint-disable*/
+
+
 
 const getAuthToken = async () => {
   let authToken = "";
@@ -45,9 +48,9 @@ export default async function handler(
 ) {
   const AUTHTOKEN = await getAuthToken();
   try {
-    // send a post request to the server with url : https://sparkasse.arvio.si/api/v1/transaction-map/search
-    // and body : {"location":"Ljubljana","typeOfBuilding":"stanovanje","minCost":0,"maxCost":1000000,"minSize":0,"maxSize":1000000}
-
+    
+  
+    const { unit_type,unit_subtype,date_interval_months}  = req.body;
     const response = await fetch(
       "https://sparkasse.arvio.si/api/v1/transaction-map/search",
       {
@@ -57,20 +60,34 @@ export default async function handler(
           Authorization: `Token ${AUTHTOKEN}`,
         }),
         body: JSON.stringify({
-          unit_type: 2,
-          unit_subtype: 3,
-          date_interval_months: 18,
-          count : 100,
+          unit_type: unit_type,
+          unit_subtype: unit_subtype,
+          date_interval_months: date_interval_months,
           bbox: "14.41011428833008,46.01043551674467,14.602031707763674,46.10573209804895",
         }),
       }
     );
-    console.log(response);
     const deals = await response.json();
+    const detailedDeals = []
+
   
-    res.status(200).json(
-      deals.length
-    );
+    for (const deal of deals) {
+      const dealDetails = await fetch(
+        `https://sparkasse.arvio.si/api/v1/transaction-map/search?id=${deal.id}`,
+        {
+          method: "GET",
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Authorization: `Token ${AUTHTOKEN}`,
+          }),
+        }
+      );
+      const dealDetailsJson = await dealDetails.json();
+      detailedDeals.push(dealDetailsJson);
+    }
+
+    res.status(200).json(detailedDeals);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

@@ -6,13 +6,13 @@ import { UserNav } from "./components/user-nav"
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import JsonList from "./components/jsonlist"
-
+import OverviewPage from "./overview/overview"
 
 const DashboardPage: NextPage =()=>{
 
   const { data: sessionData } = useSession();
   const {data: oglasi,refetch:refetchOglasi} = api.oglasi.getAll.useQuery();
-  const {data: posli} = api.posli.getAll.useQuery();
+  const {data: posli} = api.transactions.getAllTransactions.useQuery();
 
   const addOglasMutation = api.oglasi.addOglas.useMutation({
     onSuccess: (data) => {
@@ -62,6 +62,7 @@ const DashboardPage: NextPage =()=>{
               <TabsTrigger value="objavaposla">Objavi posel</TabsTrigger>
               <TabsTrigger value="oglasi">Oglasi</TabsTrigger>
               <TabsTrigger value="objavaoglasa">Objavi oglas</TabsTrigger>
+              <TabsTrigger value="splosnipregled">Splošni pregled</TabsTrigger>
             </TabsList>
             <TabsContent value="posli" className="space-y-4">
             <JsonList 
@@ -75,6 +76,9 @@ const DashboardPage: NextPage =()=>{
             </TabsContent>
             <TabsContent value="objavaoglasa" className="space-y-4">
 
+            </TabsContent>
+            <TabsContent value="splosnipregled" className="space-y-4">
+              <OverviewPage/>
             </TabsContent>
           </Tabs>
         </div>
