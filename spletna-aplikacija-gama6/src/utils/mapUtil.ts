@@ -1,6 +1,7 @@
+/*eslint-disable*/
 function isPointInsidePolygon(
-  point: { x: number; y: number },
-  polygon?: Array<{ x: number; y: number }>
+  point: { lat : number,lng: number },
+  polygon?: Array<{ lat: number; lng: number }>
 ): boolean {
   if (!polygon || polygon.length < 3) {
     return false;
@@ -9,13 +10,13 @@ function isPointInsidePolygon(
   let isInside = false;
 
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    const xi = polygon[i]?.x || 0;
-    const yi = polygon[i]?.y || 0;
-    const xj = polygon[j]?.x || 0;
-    const yj = polygon[j]?.y || 0;
+    const xi = polygon[i]?.lat || 0;
+    const yi = polygon[i]?.lng || 0;
+    const xj = polygon[j]?.lat || 0;
+    const yj = polygon[j]?.lng || 0;
     const intersect =
-      yi > point.y !== yj > point.y &&
-      point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
+      yi > point.lng !== yj > point.lng &&
+      point.lat < ((xj - xi) * (point.lng - yi)) / (yj - yi) + xi;
     if (intersect) {
       isInside = !isInside;
     }

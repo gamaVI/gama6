@@ -4,7 +4,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 
 import  { Configuration, OpenAIApi } from "openai";
-import { env } from "~/env.mjs";
+import { env } from "@/env.mjs";
 
 
 

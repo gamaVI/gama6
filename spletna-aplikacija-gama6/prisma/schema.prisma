@@ -62,18 +62,37 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Posel {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  skupnaPovrsina  Float
-  cena            Int
-  cenaNaM2        Float
-  lokacija        String
-  datumPosla      DateTime
-  letoGradnje     Int
-  tipPosla        String
-  tipNepremicnine String
-  koordinataX     Float
-  koordinataY     Float
+
+model Transaction {
+  id                        String   @id @default(auto()) @map("_id") @db.ObjectId
+  apiId                     String   @unique
+  componentType             String
+  address                   String
+  transactionAmountM2       Float?
+  estimatedAmountM2         Float?
+  isEstimatedAmount         Boolean
+  gps                       Gps      @relation(fields: [gpsId], references: [id])
+  transactionItemsList      String[]
+  transactionSumParcelSizes Int
+  transactionDate           DateTime
+  transactionAmountGross    Float
+  transactionTax            Float?
+  buildingYearBuilt         Int
+  unitRoomCount             Int?
+  unitRoomsSumSize          Float
+  unitRooms                 String
+  gpsId                     String   @db.ObjectId
+
+  @@map("properties")
+}
+
+model Gps {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  lat         Float
+  lng         Float
+  Transaction Transaction[]
+
+  @@map("gps")
 }
 
 model Oglas {
