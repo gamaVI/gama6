@@ -7,78 +7,76 @@ bend ((1, 1), (2, 2), 20);
 park "soncni park" { circ (5, 8) 5 }
 restaurant "hut burger" (13, 7)
 school "fri" (15, 7)
-townhall "Obcina Ljubljana" (10, 4)
-church "Sv. Peter" (4, 9)
-stadium "Stozice" (8, 8)
+townhall "obcina ljubljana" (10, 4)
+church "peter" (4, 9)
+stadium "stozice" (8, 8)
 let "population" = 15
-let "x_os" = 16
-for "i" in 1 .. population {
-building "hisa" { box (x_os, 2) (x_os, 3) }
+let "xos" = 16
+for "mesta" in 1 .. population {
+building "hisa" { box (xos, 2) (xos, 3) }
 }
 }
 
-city "Maribor" {
-building "Dvorana" { box (1.25, 9) (3.5, 12) }
-river "Drava" { poly ((4, 7), (6, 9), (8, 11)) }
-restaurant "Poper" (15, 7)
-school "FERI" (1, 1)
-townhall "Mariborska obcina" (7, 19)
-church "Sv. Jože" (5, 7)
-stadium "Ljudski vrt" (3.5, 8.75)
-let "x_os" = 5
-for "i" in 1..x_os {
-building "Bajte" { box (x_os, 2) (x_os, 3) }
+city "maribor" {
+building "dvorana" { box (1, 9) (3, 12) }
+river "drava" { poly ((4, 7), (6, 9), (8, 11)) }
+restaurant "poper" (15, 7)
+school "feri" (1, 1)
+townhall "mariborska obcina" (7, 19)
+church "joze" (5, 7)
+stadium "ljudski vrt" (3, 8)
+let "xos" = 5
+for "mesta" in 1..xos {
+building "bajte" { box (xos, 2) (xos, 3) }
 }
 }
 
-city "Celje" {
-road "Pine Street" {
+city "celje" {
+road "pinestreet" {
 line ((5, 1), (9, 4));
 line ((7, 2), (1, 8));
 line ((0, 4.25), (3, 1));
 bend ((9, 9), (3, 1), 5);
 }
-park "Celjski park" { circ (3, 3) 2 }
-stadium "Kelea" (12, 2)
+park "celjskipark" { circ (3, 3) 2 }
+stadium "kelea" (12, 2)
 }
 
-city "Ptuj" {
-road "Zupanciceva" { line ((1.4, 4), (7, 5)) }
-park "Mestni park" { circ (2, 7) 3 }
+city "ptuj" {
+road "zupanciceva" { line ((1.4, 4), (7, 5)) }
+park "mestnipark" { circ (2, 7) 3 }
 let "stevilo" = 10
 if "stevilo" > 5 {
-building "Dvorec" { box (5 , 2) (8, 3) }
+building "dvorec" { box (5 , 2) (8, 3) }
 }
 }
 
-city "Piran" {
-building "Trznica" { box (19, 19) (25, -18) }
-park "Juzna plaza" { circ (6, 13) 5 }
+city "piran" {
+building "trznica" { box (19, 19) (25, 18) }
+park "juznaplaza" { circ (6, 13) 5 }
 }
 
-city "Novo Mesto" {
-building "Neboticnik" { box (88, 64) (88, 63) }
-river "Sava" { poly ((2, 3), (4, 6), (8, 8)) }
-list "Gostilne" ["McDonald", "Pica Novo mesto", "Kitajska restavracija"]
+city "novo mesto" {
+building "neboticnik" { box (88, 64) (88, 63) }
+river "sava" { poly ((2, 3), (4, 6), (8, 8)) }
+list "gostilne" ["mcdonald", "picerija", "kitajska"]
 }
 
-city "Koper" {
-building "Kipec" { box (6, 2.29) (6, 2.30) }
-park "Lunin park" { circ (12, 2) 5 }
+city "koper" {
+building "kipec" { box (6, 2.29) (6, 2.30) }
+park "lunin park" { circ (12, 2) 5 }
 if true {
-church "Sv. Nikolaj" (5, 5)
+church "nikolaj" (5, 5)
 }
 }
 
-city "Murska Sobota" {
-road "Prekmurska cesta" { line (5, 0.16) (5, 0.14) }
-park "Oblacen park" { circ (1, 58) 5 }
+city "murska sobota" {
+road "prekmurska cesta" { line (5, 0.16) (5, 0.14) }
+park "oblacen park" { circ (1, 58) 5 }
 let "population" = 10000
 }
 
-city "Kranj" {
-building "Hisa" { box (2, 13) (2.2, 9) }
-river "Ljubljanica" { poly ((1, 4), (5, 4), (7, 13), (9, 13)) }
+city "kranj" {
+building "hisa" { box (2, 13) (2.2, 9) }
+river "ljubljanica" { poly ((1, 4), (5, 4), (7, 13), (9, 13)) }
 }
-
-

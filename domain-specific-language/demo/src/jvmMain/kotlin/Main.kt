@@ -551,5 +551,5 @@ fun printTokens(scanner: Scanner) {
 }
 
 fun main(){
-    printTokens(Scanner(Automaton, "city \"ljubljana\" {\nroad \"presernova ulica\" {\nline((2, 2), (2, 5)); \n line((5, 4), (6, 4));\nbend ((1, 1), (2, 2), 20);\n}\npark \"soncni park\" { circ (5, 8) 5 }\n restaurant \"hut burger\" (13, 7)\nschool \"fri\" (15, 7)\n townhall \"obcina ljubljana\" (10, 4)\nchurch \"sv. peter\" (4, 9)\nstadium \"stozice\" (8, 8)\nlet \"population\" = 15\nlet \"xos\" = 16\nfor \"mesto\" in 1 .. population {\nbuilding \"hisa\" { box ( xos , 2) ( xos , 3) }\n}\n}".byteInputStream()))
+    printTokens(Scanner(Automaton, "city \"ljubljana\" {\nroad \"presernova ulica\" {\nline((2.5, 2), (2, 5)); \n line((5, 4), (6, 4));\nbend ((1, 1), (2, 2), 20);\n}\npark \"soncni park\" { circ (5, 8) 5 }\n restaurant \"hut burger\" (13, 7)\nschool \"fri\" (15, 7)\n townhall \"obcina ljubljana\" (10, 4)\nchurch \"sv. peter\" (4, 9)\nstadium \"stozice\" (8, 8)\nlet \"population\" = 15\nlet \"xos\" = 16\nfor \"mesto\" in 1 .. population {\nbuilding \"hisa\" { box ( xos , 2) ( xos , 3) }\n}\n}".byteInputStream()))
 }
