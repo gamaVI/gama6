@@ -19,7 +19,7 @@ export function UserNav() {
   const { data: session } = useSession()
   console.log(session)
   if(!session) return (
-    <Button variant="outline" onClick={() => void signIn()}>Sign in</Button>
+    <Button variant="outline" onClick={() => void signIn("auth0")}>Sign in</Button>
   )
   return (
     <DropdownMenu>
