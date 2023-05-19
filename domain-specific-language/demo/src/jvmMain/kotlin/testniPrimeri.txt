@@ -1,19 +1,19 @@
-city "Ljubljana" {
-road "Presernova ulica" {
+city "ljubljana" {
+road "presernova ulica" {
 line((2, 2), (2, 5));
 line((5, 4), (6, 4));
 bend ((1, 1), (2, 2), 20);
 }
-park "Soncni Park" { circ (5, 8) 5 }
-restaurant "Hut Burger" (13, 7)
-school "FRI" (15, 7)
+park "soncni park" { circ (5, 8) 5 }
+restaurant "hut burger" (13, 7)
+school "fri" (15, 7)
 townhall "Obcina Ljubljana" (10, 4)
 church "Sv. Peter" (4, 9)
 stadium "Stozice" (8, 8)
 let "population" = 15
 let "x_os" = 16
-for "i" in 1..population {
-building "Hisa" { box (x_os, 2) (x_os, 3) }
+for "i" in 1 .. population {
+building "hisa" { box (x_os, 2) (x_os, 3) }
 }
 }
 
@@ -71,7 +71,7 @@ church "Sv. Nikolaj" (5, 5)
 }
 
 city "Murska Sobota" {
-road "Prekmurska cesta" { line (5, -0.16) (5, -0.14) }
+road "Prekmurska cesta" { line (5, 0.16) (5, 0.14) }
 park "Oblacen park" { circ (1, 58) 5 }
 let "population" = 10000
 }

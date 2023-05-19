@@ -1,6 +1,6 @@
 <program> ::= <statement>*
 <statement> ::= <city> | <let> | <for> | <if> | <list>
-<city> ::= "city" <string> "{" <city_element>* "}"
+<city> ::= ^ city ^ <string> "{" <city_element>* "}"
 <city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium>
 <road> ::= "road" <string> "{" <lines>* "}"
 <lines> ::= "line" "(" <point> <point> ");" <lines> | "bend" "(" <point> <point> <number> ");" <lines> | ε
