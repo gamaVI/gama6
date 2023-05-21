@@ -38,5 +38,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+
 # typescript
 *.tsbuildinfo
+
+# vscode
+.vscode/*
+*.code-workspace
+.idea
+
