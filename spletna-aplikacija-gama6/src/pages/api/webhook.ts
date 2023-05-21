@@ -18,9 +18,14 @@ export default function handler(req, res) {
         .digest("hex");
         */
      
-      exec(
-        " cd ~/home  && sudo ./update_container.sh",
-      );
+        exec("cd ~/home  && sudo ./update_container.sh", (error, stdout, stderr) => {
+            if (error) {
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log(`stdout: ${stdout}`);
+            console.error(`stderr: ${stderr}`);
+          });
       console.log("GitHub Webhook ran successfully");
       res.end();
       return;
