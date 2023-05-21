@@ -1,8 +1,8 @@
-import Link from "next/link"
+import Link from "next/link";
 
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils";
 
-export function MainNav({
+export default function MainNav({
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
@@ -31,5 +31,5 @@ export function MainNav({
         Ostalo
       </Link>
     </nav>
-  )
+  );
 }
