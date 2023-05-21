@@ -27,4 +27,4 @@ jobs:
       with:
         context: spletna-aplikacija-gama6
         push: true
-        tags: mlukee/web-app:$(date +%s)
+        tags: mlukee/web-app:latest
