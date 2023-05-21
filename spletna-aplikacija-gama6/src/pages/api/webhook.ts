@@ -18,7 +18,7 @@ export default function handler(req, res) {
         .digest("hex");
         */
      
-        exec("cd /home/galjeza/home/  && sudo ./update_container.sh", (error, stdout, stderr) => {
+        exec("sudo /scripts/update_container.sh", (error, stdout, stderr) => {
             if (error) {
               console.error(`exec error: ${error}`);
               return;
