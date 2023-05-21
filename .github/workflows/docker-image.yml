@@ -33,4 +33,6 @@ jobs:
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
           AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_SECRET : ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
