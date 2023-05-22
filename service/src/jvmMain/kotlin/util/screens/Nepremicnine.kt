@@ -17,8 +17,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import util.ApiRequests
-import util.ListingsResponse
 import util.objects.Listing
+import util.objects.ListingsResponse
 import util.ui.NepremicninaItem
 
 fun handleGetNepremicnine(apiResponse: MutableState<ListingsResponse>, pageNumber: Int = 1) {
@@ -105,7 +105,7 @@ fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: Mu
                                 }
                             }
                         },
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp).align(Alignment.BottomStart)
                     )
                 }
             }

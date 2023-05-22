@@ -1,7 +1,11 @@
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,16 +15,17 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import util.ListingsResponse
 import util.objects.Listing
+import util.objects.ListingsResponse
 import util.objects.Posel
 import util.screens.GeneratorScreen
-import util.screens.MojiKvadratiScreen
 import util.screens.NepremicnineScreen
+import util.screens.SparkasseScreen
+import java.awt.Color
 
 enum class Screen {
     Generator,
-    MojiKvadrati,
+    Sparkasse,
     Nepremicnine
 }
 
@@ -39,13 +44,17 @@ fun App() {
     val pattern = remember { Regex("^\\d+\$") }
     var showInputSection = remember { mutableStateOf(true) }
     val state = rememberLazyListState()
+
+    // ------------------ Sparkasse states ------------------
+    var sparkassePosli = remember { mutableStateOf(mutableListOf<Sparkasse>()) }
+    var showInputSectionSparkasse = remember { mutableStateOf(true) }
     MaterialTheme {
         var currentScreen by remember { mutableStateOf(Screen.Generator) }
         Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Box(Modifier.weight(1f)) {
                 when (currentScreen) {
                     Screen.Generator -> GeneratorScreen(posli, generate, steviloPoslov, pattern, showInputSection, state)
-                    Screen.MojiKvadrati -> MojiKvadratiScreen()
+                    Screen.Sparkasse -> SparkasseScreen(sparkassePosli, pattern, showInputSectionSparkasse)
                     Screen.Nepremicnine -> NepremicnineScreen(apiResponse, listings, pageNumber)
                 }
             }
@@ -53,7 +62,7 @@ fun App() {
             AppBottomNavigation(
                 currentScreen,
                 onScreenSelected = { screen -> currentScreen = screen },
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End),
             )
         }
     }
