@@ -1,18 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Scraper, Listing } from "~/utils/scraper";
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
+
 import { de } from "date-fns/locale";
+import puppeteer from "puppeteer";
 /*eslint-disable*/
 
 
 
 const getAuthToken = async () => {
   let authToken = "";
-  puppeteer.use(StealthPlugin());
-  const browser = await puppeteer.launch({
-    headless: true,
-  });
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
   await page.setRequestInterception(true);
   page.on("request", (request) => {
