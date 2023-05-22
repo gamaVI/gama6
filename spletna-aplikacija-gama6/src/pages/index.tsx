@@ -55,7 +55,7 @@ const Home: NextPage = () => {
                         <Link
                           href="/dashboard"
                         >
-                          Nadzorna plošča webhook test
+                          Nadzorna plošča
                         </Link>
                         </Button>
                        

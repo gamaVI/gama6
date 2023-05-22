@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { type NextPage } from "next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,6 +8,7 @@ import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import JsonList from "./components/jsonlist";
 import OverviewPage from "./overview/overview";
+import AnalizaObmocja from "./analizaobmocja/analizaobmocja";
 
 const DashboardPage: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -57,11 +59,10 @@ const DashboardPage: NextPage = () => {
           </div>
           <Tabs defaultValue="posli" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="posli">Posli</TabsTrigger>
-              <TabsTrigger value="objavaposla">Objavi posel</TabsTrigger>
-              <TabsTrigger value="oglasi">Oglasi</TabsTrigger>
-              <TabsTrigger value="objavaoglasa">Objavi oglas</TabsTrigger>
+              <TabsTrigger value="posli">Posli JSON</TabsTrigger>
+              <TabsTrigger value="oglasi">Oglasi JSON</TabsTrigger>
               <TabsTrigger value="splosnipregled">Splošni pregled</TabsTrigger>
+              <TabsTrigger value="analizaobmocja">Analiza območja</TabsTrigger>
             </TabsList>
             <TabsContent value="posli" className="space-y-4">
               <JsonList list={posli || []} />
@@ -75,6 +76,9 @@ const DashboardPage: NextPage = () => {
             ></TabsContent>
             <TabsContent value="splosnipregled" className="space-y-4">
               <OverviewPage />
+            </TabsContent>
+            <TabsContent value="analizaobmocja" className="space-y-4">
+              <AnalizaObmocja />
             </TabsContent>
           </Tabs>
         </div>

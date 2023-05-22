@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Bar, AreaChart,Area,  ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 const data = [
   {
@@ -56,7 +56,7 @@ const data = [
 export default function Overview() {
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
+      <AreaChart data={data}>
         <XAxis
           dataKey="name"
           stroke="#888888"
@@ -71,8 +71,8 @@ export default function Overview() {
           axisLine={false}
           tickFormatter={(value) => `$${value}`}
         />
-        <Bar dataKey="total" fill="#adfa1d" radius={[4, 4, 0, 0]} />
-      </BarChart>
+        <Area type="monotone" dataKey="total" fill="#adfa1d" stroke="#adfa1d" radius={[4, 4, 0, 0]} />
+      </AreaChart>
     </ResponsiveContainer>
   );
 }
