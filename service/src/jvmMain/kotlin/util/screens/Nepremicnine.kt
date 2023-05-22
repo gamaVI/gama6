@@ -32,12 +32,9 @@ fun handleGetNepremicnine(apiResponse: MutableState<ListingsResponse>, pageNumbe
 
 
 @Composable
-fun NepremicnineScreen() {
+fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: MutableState<MutableList<Listing>>, pageNumber: MutableState<Int>) {
     var loading by remember { mutableStateOf(false) }
-    val apiResponse = remember { mutableStateOf(ListingsResponse(emptyList(), 1)) }
-    val pageNumber = remember { mutableStateOf(1) }
     val state = rememberLazyListState()
-    val listings = remember { mutableStateOf(mutableListOf<Listing>()) }
 
     //Handle async requests
     val coroutineScope = rememberCoroutineScope()

@@ -3,7 +3,7 @@ package util.screens
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -36,13 +36,15 @@ fun generatePosli(
 }
 
 @Composable
-fun GeneratorScreen() {
-    var generate = remember { mutableStateOf(false) }
-    var steviloPoslov = remember { mutableStateOf("") }
-    var posli = remember { mutableStateOf(mutableListOf<Posel>()) }
-    val pattern = remember { Regex("^\\d+\$") }
-    var showInputSection = remember { mutableStateOf(true) }
-    val state = rememberLazyListState()
+fun GeneratorScreen(
+    posli: MutableState<MutableList<Posel>>,
+    generate: MutableState<Boolean>,
+    steviloPoslov: MutableState<String>,
+    pattern: Regex,
+    showInputSection: MutableState<Boolean>,
+    state: LazyListState
+) {
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -80,38 +82,39 @@ fun GeneratorScreen() {
                         Text("Generate")
                 }
             }
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = state
-            ) {
-                item {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        posli.value.forEachIndexed { index, posel ->
-                            PoselItem(
-                                posel = posel,
-                                onDelete = {
-                                    posli.value = posli.value.toMutableList().apply {
-                                        removeAt(index)
+        } else {
+            Box(modifier = Modifier.weight(1f)) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state
+                ) {
+                    item {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            posli.value.forEachIndexed { index, posel ->
+                                PoselItem(
+                                    posel = posel,
+                                    onDelete = {
+                                        posli.value = posli.value.toMutableList().apply {
+                                            removeAt(index)
+                                        }
+                                    },
+                                    onEdit = { editedPosel: Posel ->
+                                        posli.value = posli.value.toMutableList().apply {
+                                            this[index] = editedPosel
+                                        }
                                     }
-                                },
-                                onEdit = { editedPosel: Posel ->
-                                    posli.value = posli.value.toMutableList().apply {
-                                        this[index] = editedPosel
-                                    }
-                                }
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
                         }
                     }
                 }
-            }
 
-            VerticalScrollbar(
-                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().padding(start = 5.dp),
-                adapter = rememberScrollbarAdapter(scrollState = state)
-            )
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().padding(start = 5.dp),
+                    adapter = rememberScrollbarAdapter(scrollState = state)
+                )
+            }
         }
 
     }

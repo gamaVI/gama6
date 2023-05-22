@@ -14,6 +14,7 @@ data class ListingsResponse(val listings: List<Listing>, val pageCount: Int)
 object ApiRequests {
     private val client = OkHttpClient.Builder()
         .callTimeout(25, TimeUnit.SECONDS) //Timeout after 25 seconds
+        .readTimeout(25, TimeUnit.SECONDS)
         .build()
     private var BASE_URL = "http://localhost:3000/api/scraping/nepremicnine"
 
