@@ -1,4 +1,3 @@
-import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -24,7 +23,12 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation("it.skrape:skrapeit:1.2.2")
+                implementation("com.squareup.okhttp3:okhttp:4.10.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+                implementation ("com.google.code.gson:gson:2.8.9")
+                implementation("io.coil-kt:coil-compose:2.3.0")
+
             }
         }
         val jvmTest by getting
