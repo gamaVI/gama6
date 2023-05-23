@@ -1,5 +1,6 @@
 package util.ui
 
+import Sparkasse
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import util.objects.Posel
 
 @Composable
-fun PoselItem(posel: Posel, onEdit: (Posel) -> Unit, onDelete: () -> Unit) {
+fun PoselItem(posel: Sparkasse, onEdit: (Sparkasse) -> Unit, onDelete: () -> Unit) {
     var isEditing by remember { mutableStateOf(false) }
     val editedPosel = remember { mutableStateOf(posel.copy()) }
     Card(
@@ -27,116 +28,176 @@ fun PoselItem(posel: Posel, onEdit: (Posel) -> Unit, onDelete: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 if (isEditing) {
                     OutlinedTextField(
-                        value = editedPosel.value.skupnaPovrsina.toString(),
+                        value = editedPosel.value.componentTypeDisplay,
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(skupnaPovrsina = it.toDoubleOrNull() ?: 50.0)
+                            editedPosel.value = editedPosel.value.copy(componentTypeDisplay = it)
                         },
-                        label = { Text("Skupna površina") },
+                        label = { Text("Unit type") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = editedPosel.value.cena.toString(),
+                        value = editedPosel.value.address,
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(cena = it.toIntOrNull() ?: 60_000)
+                            editedPosel.value = editedPosel.value.copy(address = it)
                         },
-                        label = { Text("Cena") },
+                        label = { Text("Naslov") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = editedPosel.value.cenaNaM2.toString(),
+                        value = editedPosel.value.transactionAmountM2.toString(),
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(cenaNaM2 = it.toIntOrNull() ?: 500)
+                            editedPosel.value = editedPosel.value.copy(transactionAmountM2 = it.toDoubleOrNull() ?: 1000.0)
                         },
                         label = { Text("Cena na m2") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = editedPosel.value.lokacija,
-                        onValueChange = { editedPosel.value = editedPosel.value.copy(lokacija = it) },
-                        label = { Text("Lokacija") },
+                        value = editedPosel.value.estimatedAmountM2.toString(),
+                        onValueChange = { editedPosel.value = editedPosel.value.copy(estimatedAmountM2 = it.toDoubleOrNull() ?: 1000.0 )  },
+                        label = { Text("Okvirna cena na m2") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+//                    OutlinedTextField(
+//                        value = editedPosel.value.gps.lat.toString(),
+//                        onValueChange = { editedPosel.value = editedPosel.value.copy(gps = it.toDoubleOrNull() ?: 46.1236754) },
+//                        label = { Text("Latitude") },
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+//                    OutlinedTextField(
+//                        value = editedPosel.value.gps.lng.toString(),
+//                        onValueChange = {
+//                            editedPosel.value = editedPosel.value.copy(gps = it.toDoubleOrNull() ?: 15.12456468)
+//                        },
+//                        label = { Text("Longitude") },
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+//                    OutlinedTextField(
+//                        value = editedPosel.value.transactionItemsList.toString(),
+//                        onValueChange = { editedPosel.value = editedPosel.value.copy(transactionItemsList = it.toString().toList()) },
+//                        label = { Text("Transaction item list") },
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+                    OutlinedTextField(
+                        value = editedPosel.value.transactionSumParcelSizes.toString(),
+                        onValueChange = { editedPosel.value = editedPosel.value.copy(transactionSumParcelSizes = it.toIntOrNull() ?: 50 ) },
+                        label = { Text("Transaction Sum Parcel Sizes") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = editedPosel.value.datumPosla,
-                        onValueChange = { editedPosel.value = editedPosel.value.copy(datumPosla = it) },
-                        label = { Text("Datum posla") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = editedPosel.value.letoGradnje.toString(),
+                        value = editedPosel.value.transactionDate,
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(letoGradnje = it.toIntOrNull() ?: 1950)
+                            editedPosel.value = editedPosel.value.copy(transactionDate = it)
                         },
-                        label = { Text("Leto gradnje") },
+                        label = { Text("Transaction date") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = editedPosel.value.tipPosla,
-                        onValueChange = { editedPosel.value = editedPosel.value.copy(tipPosla = it) },
-                        label = { Text("Tip posla") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = editedPosel.value.tipNepremicnine,
-                        onValueChange = { editedPosel.value = editedPosel.value.copy(tipNepremicnine = it) },
-                        label = { Text("Tip nepremicnine") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = editedPosel.value.koordinateX.toString(),
+                        value = editedPosel.value.transactionAmountGross.toString(),
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(koordinateX = it.toDoubleOrNull() ?: 46.0)
+                            editedPosel.value = editedPosel.value.copy(transactionAmountGross = it.toIntOrNull() ?: 100_000)
                         },
-                        label = { Text("Koordinata X") },
+                        label = { Text("Transaction Amount Gross") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = editedPosel.value.koordinateY.toString(),
+                        value = editedPosel.value.transactionTax.toString(),
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(koordinateY = it.toDoubleOrNull() ?: 14.0)
+                            editedPosel.value = editedPosel.value.copy(transactionTax = it.toDoubleOrNull() ?: 22.0)
                         },
-                        label = { Text("Koordinata Y") },
+                        label = { Text("Transaction TAX") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = editedPosel.value.buildingYearBuilt.toString(),
+                        onValueChange = {
+                            editedPosel.value = editedPosel.value.copy(buildingYearBuilt = it.toIntOrNull() ?: 1965)
+                        },
+                        label = { Text("Year built") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = editedPosel.value.unitRoomCount.toString(),
+                        onValueChange = {
+                            editedPosel.value = editedPosel.value.copy(unitRoomCount = it.toIntOrNull() ?: 3)
+                        },
+                        label = { Text("Unit room count") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = editedPosel.value.unitRoomsSumSize.toString(),
+                        onValueChange = {
+                            editedPosel.value = editedPosel.value.copy(transactionTax = it.toDoubleOrNull() ?: 85.9)
+                        },
+                        label = { Text("Unit room sum size") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = editedPosel.value.unitRooms,
+                        onValueChange = {
+                            editedPosel.value = editedPosel.value.copy(unitRooms = it)
+                        },
+                        label = { Text("Unit rooms") },
                         modifier = Modifier.fillMaxWidth()
                     )
                 } else {
                     Text(
-                        text = "Skupna površina: ${posel.skupnaPovrsina}",
+                        text = "Component type display: ${posel.componentTypeDisplay}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Cena: ${posel.cena} €",
+                        text = "Address: ${posel.address}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Cena na m2: ${posel.cenaNaM2} €",
+                        text = "Transaction amount M2: ${posel.transactionAmountM2} €",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Lokacija: ${posel.lokacija}",
+                        text = "Estimated amount: ${posel.estimatedAmountM2 ?: "N/A"} €",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Datum posla: ${posel.datumPosla}",
+                        text = "Latitude: ${posel.gps.lat}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Leto gradnje: ${posel.letoGradnje}",
+                        text = "Longitude: ${posel.gps.lng}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Tip posla: ${posel.tipPosla}",
+                        text = "Transaction item list: ${posel.transactionItemsList}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Tip nepremičnine: ${posel.tipNepremicnine}",
+                        text = "Transaction sum parcel sizes: ${posel.transactionSumParcelSizes}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Koordinate X: ${posel.koordinateX}",
+                        text = "Transaction date: ${posel.transactionDate}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Koordinate Y: ${posel.koordinateY}",
+                        text = "Transaction amount gross: ${posel.transactionAmountGross}",
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = "Transaction tax: ${posel.transactionTax ?: "N/A"}",
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = "Year built: ${posel.buildingYearBuilt}",
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = "Unit room count: ${posel.unitRoomCount ?: "N/A"}",
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = "Unit rooms sum size: ${posel.unitRoomsSumSize}",
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = "Unit rooms: ${posel.unitRooms}",
                         style = MaterialTheme.typography.body1
                     )
                 }

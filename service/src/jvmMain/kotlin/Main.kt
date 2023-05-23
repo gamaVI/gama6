@@ -38,7 +38,7 @@ fun App() {
     val pageNumber = remember { mutableStateOf(1) }
 
     // ------------------ Generator states ------------------
-    var posli = remember { mutableStateOf(mutableListOf<Posel>()) }
+    var sparkasseGenerated = remember { mutableStateOf(mutableListOf<Sparkasse>()) }
     var generate = remember { mutableStateOf(false) }
     var steviloPoslov = remember { mutableStateOf("") }
     val pattern = remember { Regex("^\\d+\$") }
@@ -53,7 +53,7 @@ fun App() {
         Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Box(Modifier.weight(1f)) {
                 when (currentScreen) {
-                    Screen.Generator -> GeneratorScreen(posli, generate, steviloPoslov, pattern, showInputSection, state)
+                    Screen.Generator -> GeneratorScreen(sparkasseGenerated, generate, steviloPoslov, pattern, showInputSection, state)
                     Screen.Sparkasse -> SparkasseScreen(sparkassePosli, pattern, showInputSectionSparkasse)
                     Screen.Nepremicnine -> NepremicnineScreen(apiResponse, listings, pageNumber)
                 }

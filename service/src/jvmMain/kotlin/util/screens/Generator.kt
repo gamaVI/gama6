@@ -1,14 +1,12 @@
 package util.screens
 
+import Sparkasse
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -21,7 +19,7 @@ import util.ui.PoselItem
 fun generatePosli(
     generate: MutableState<Boolean>,
     steviloPoslov: MutableState<String>,
-    posli: MutableState<MutableList<Posel>>,
+    posli: MutableState<MutableList<Sparkasse>>,
     showInputSection: MutableState<Boolean>
 ) {
     generate.value = !generate.value
@@ -38,7 +36,7 @@ fun generatePosli(
 
 @Composable
 fun GeneratorScreen(
-    posli: MutableState<MutableList<Posel>>,
+    sparkasse: MutableState<MutableList<Sparkasse>>,
     generate: MutableState<Boolean>,
     steviloPoslov: MutableState<String>,
     pattern: Regex,
@@ -50,10 +48,10 @@ fun GeneratorScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             "Generator poslov",
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.h2
         )
-        if (showInputSection.value || posli.value.isEmpty()) {
+        if (showInputSection.value || sparkasse.value.isEmpty()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -73,11 +71,11 @@ fun GeneratorScreen(
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
                     onClick = {
-                        generatePosli(generate, steviloPoslov, posli, showInputSection)
+                        generatePosli(generate, steviloPoslov, sparkasse, showInputSection)
                     },
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    
-                ) {
+
+                    ) {
                     if (generate.value)
                         Text("Generating...")
                     else
@@ -92,16 +90,16 @@ fun GeneratorScreen(
                 ) {
                     item {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            posli.value.forEachIndexed { index, posel ->
+                            sparkasse.value.forEachIndexed { index, posel ->
                                 PoselItem(
                                     posel = posel,
                                     onDelete = {
-                                        posli.value = posli.value.toMutableList().apply {
+                                        sparkasse.value = sparkasse.value.toMutableList().apply {
                                             removeAt(index)
                                         }
                                     },
-                                    onEdit = { editedPosel: Posel ->
-                                        posli.value = posli.value.toMutableList().apply {
+                                    onEdit = { editedPosel: Sparkasse ->
+                                        sparkasse.value = sparkasse.value.toMutableList().apply {
                                             this[index] = editedPosel
                                         }
                                     }
@@ -111,6 +109,15 @@ fun GeneratorScreen(
                         }
                     }
                 }
+
+                ExtendedFloatingActionButton(
+                    text = { Text("Refresh") },
+                    onClick = {
+                        sparkasse.value = mutableListOf()
+                        generatePosli(generate, steviloPoslov, sparkasse, showInputSection)
+                    },
+                    modifier = Modifier.align(Alignment.BottomStart)
+                )
 
                 VerticalScrollbar(
                     modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().padding(start = 5.dp),
