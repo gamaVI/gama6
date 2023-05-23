@@ -57,6 +57,7 @@ const val comma_SYMBOL = 43 //,
 const val true_SYMBOL = 44
 const val false_SYMBOL = 45
 const val quotaitons_SYMBOL = 46
+const val underscore_SYMBOL = 47
 
 
 
@@ -149,6 +150,7 @@ object Automaton : DFA {
         setTransition(1, 'q', 14)
         setTransition(1, 'u'..'z', 14)
         setTransition(14, 'a'..'z', 14)
+        setTransition(14, '_', 14)
         //arc
         setTransition(1, 'a', 13)
         setTransition(13, 'r', 15)
@@ -550,6 +552,10 @@ fun printTokens(scanner: Scanner) {
     }
 }
 
+
+
 fun main(){
-    printTokens(Scanner(Automaton, "city \"ljubljana\" {\nroad \"presernova ulica\" {\nline((2.5, 2), (2, 5)); \n line((5, 4), (6, 4));\nbend ((1, 1), (2, 2), 20);\n}\npark \"soncni park\" { circ (5, 8) 5 }\n restaurant \"hut burger\" (13, 7)\nschool \"fri\" (15, 7)\n townhall \"obcina ljubljana\" (10, 4)\nchurch \"sv. peter\" (4, 9)\nstadium \"stozice\" (8, 8)\nlet \"population\" = 15\nlet \"xos\" = 16\nfor \"mesto\" in 1 .. population {\nbuilding \"hisa\" { box ( xos , 2) ( xos , 3) }\n}\n}".byteInputStream()))
+    //printTokens(Scanner(Automaton, "city \"ljubljana\" {\nroad \"presernova ulica\" {\nline((2.5, 2), (2, 5)); \n line((5, 4), (6, 4));\nbend ((1, 1), (2, 2), 20);\n}\npark \"soncni park\" { circ (5, 8) 5 }\n restaurant \"hut burger\" (13, 7)\nschool \"fri\" (15, 7)\n townhall \"obcina ljubljana\" (10, 4)\nchurch \"sv. peter\" (4, 9)\nstadium \"stozice\" (8, 8)\nlet \"population\" = 15\nlet \"xos\" = 16\nfor \"mesto\" in 1 .. population {\nbuilding \"hisa\" { box ( xos , 2) ( xos , 3) }\n}\n}".byteInputStream()))
+    printTokens(Scanner(Automaton, (" { } ( ) [ ] . , \" road park river church stadium restaurant school townhall buil" +
+            "d0ing list let if for in true false city line bend circ box poly population xos stevilo mesta gostilne kipec neboticnik juznaplaza trznica dvorec mestnipark zupanciceva pinestreet celjskipark bajte ljudski vrt joze mariborska obcina feri poper drava dvorana stozice peter obcina ljubljana fri soncni_park presernova ulica ljubljana maribor celje ptuj piran novo mesto koper murska sobota kranj").byteInputStream()))
 }
