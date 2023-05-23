@@ -11,9 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import util.ApiRequests.savePosli
 import util.generatePosel
-import util.objects.Posel
 import util.ui.PoselItem
 
 fun generatePosli(
@@ -34,6 +35,13 @@ fun generatePosli(
         println("Stopped generating...")
 }
 
+fun handleSave(
+    sparkasse: MutableList<Sparkasse>
+){
+    savePosli(sparkasse)
+    println("Saving...")
+}
+
 @Composable
 fun GeneratorScreen(
     sparkasse: MutableState<MutableList<Sparkasse>>,
@@ -49,7 +57,7 @@ fun GeneratorScreen(
         Text(
             "Generator poslov",
             modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally),
-            style = MaterialTheme.typography.h2
+            style = MaterialTheme.typography.h3
         )
         if (showInputSection.value || sparkasse.value.isEmpty()) {
             Row(
@@ -66,7 +74,7 @@ fun GeneratorScreen(
                         }
                     },
                     label = { Text("Stevilo poslov") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(0.5f)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
@@ -109,15 +117,37 @@ fun GeneratorScreen(
                         }
                     }
                 }
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(start = 10.dp)
 
-                ExtendedFloatingActionButton(
-                    text = { Text("Refresh") },
-                    onClick = {
-                        sparkasse.value = mutableListOf()
-                        generatePosli(generate, steviloPoslov, sparkasse, showInputSection)
-                    },
-                    modifier = Modifier.align(Alignment.BottomStart)
-                )
+                ){
+
+                    ExtendedFloatingActionButton(
+                        text = { Text("Refresh") },
+                        onClick = {
+                            sparkasse.value = mutableListOf()
+                            generatePosli(generate, steviloPoslov, sparkasse, showInputSection)
+                        },
+                    )
+
+                    ExtendedFloatingActionButton(
+                        text = { Text("Clear") },
+                        onClick = {
+                            sparkasse.value = mutableListOf()
+                            showInputSection.value = true
+                        },
+                        backgroundColor = MaterialTheme.colors.error,
+                    )
+                    ExtendedFloatingActionButton(
+                        text = { Text("Save") },
+                        onClick = {
+                                  handleSave(sparkasse.value)
+                        },
+                        backgroundColor = Color(0xFF00D100),
+                    )
+                }
 
                 VerticalScrollbar(
                     modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().padding(start = 5.dp),

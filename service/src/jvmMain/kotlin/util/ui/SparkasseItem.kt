@@ -66,7 +66,7 @@ fun SparkasseItem(sparkasse: Sparkasse){
                     style = MaterialTheme.typography.body1
                 )
                 Text(
-                    text = "Davek: ${sparkasse.transactionTax?.toString() ?: "N/A"} " ,
+                    text = "Davek: ${sparkasse.transaction_tax?.toString() ?: "N/A"} " ,
                     style = MaterialTheme.typography.body1
                 )
                 Text(

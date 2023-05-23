@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import util.objects.Posel
 
 @Composable
 fun PoselItem(posel: Sparkasse, onEdit: (Sparkasse) -> Unit, onDelete: () -> Unit) {
@@ -100,9 +99,9 @@ fun PoselItem(posel: Sparkasse, onEdit: (Sparkasse) -> Unit, onDelete: () -> Uni
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = editedPosel.value.transactionTax.toString(),
+                        value = editedPosel.value.transaction_tax.toString(),
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(transactionTax = it.toDoubleOrNull() ?: 22.0)
+                            editedPosel.value = editedPosel.value.copy(transaction_tax = it.toDoubleOrNull() ?: 22.0)
                         },
                         label = { Text("Transaction TAX") },
                         modifier = Modifier.fillMaxWidth()
@@ -126,7 +125,7 @@ fun PoselItem(posel: Sparkasse, onEdit: (Sparkasse) -> Unit, onDelete: () -> Uni
                     OutlinedTextField(
                         value = editedPosel.value.unitRoomsSumSize.toString(),
                         onValueChange = {
-                            editedPosel.value = editedPosel.value.copy(transactionTax = it.toDoubleOrNull() ?: 85.9)
+                            editedPosel.value = editedPosel.value.copy(unitRoomsSumSize = it.toDoubleOrNull() ?: 85.9)
                         },
                         label = { Text("Unit room sum size") },
                         modifier = Modifier.fillMaxWidth()
@@ -181,7 +180,7 @@ fun PoselItem(posel: Sparkasse, onEdit: (Sparkasse) -> Unit, onDelete: () -> Uni
                         style = MaterialTheme.typography.body1
                     )
                     Text(
-                        text = "Transaction tax: ${posel.transactionTax ?: "N/A"}",
+                        text = "Transaction tax: ${posel.transaction_tax ?: "N/A"}",
                         style = MaterialTheme.typography.body1
                     )
                     Text(

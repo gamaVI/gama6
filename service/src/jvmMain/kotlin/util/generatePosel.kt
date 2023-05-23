@@ -2,7 +2,6 @@ package util
 
 import Gps
 import Sparkasse
-import util.objects.Posel
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
@@ -16,12 +15,12 @@ fun generatePosel(): Sparkasse {
     val transactionAmount = random.nextDouble(1247.1655328798186, 2357.1428571428573)
     val estimatedAmountM2 = transactionAmount
     val isEstimatedAmount = false
-    val gps = generateRandomLngAndLat(45.0, 47.0, 13.0, 15.0)
+    val gps = generateRandomLngAndLat(45.9, 46.1, 14.4, 14.6)
     val ltransactionItemList = generateRandomTransactionItems()
     val trasnsactionSumParcelSizes = random.nextInt(1, 5)
     val transactionDate = generateRandomDate()
     val transactionAmountGross = random.nextInt(35_000, 350_000)
-    val transactiontax = null
+    val transactiontax: Double? = null
     val buildingYearBuilt = random.nextInt(1965, 2023)
     val unitRoomCount = random.nextInt(1, 4)
     val unitRoomsSumSize = roundToDecimals(random.nextDouble(26.0, 97.0), 1)

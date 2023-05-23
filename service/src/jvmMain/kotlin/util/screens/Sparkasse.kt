@@ -42,6 +42,15 @@ fun handleGetSparkasse(
     println("Test connection")
 }
 
+fun handleSaveSparkasse(sparkasse: MutableList<Sparkasse>) {
+    try {
+        ApiRequests.savePosli(sparkasse)
+    } catch (e: Exception) {
+        println(e)
+    }
+    println("Saving")
+}
+
 @Preview
 @Composable
 fun SparkasseScreen(
@@ -59,13 +68,15 @@ fun SparkasseScreen(
     val subTypes1 = remember { mutableStateOf(listOf("Krajna", "Samostoječa", "Vmesna")) }
     val subTypes2 = remember { mutableStateOf(listOf("Garsonjera", "1-sobno", "2-sobno", "3-sobno", "4 in več sobno")) }
     val selectedUnitType = remember { mutableStateOf("Hiša") }
-    val selectedSubType = remember { mutableStateOf(
-        if(selectedUnitType.value == "Hiša") {
-            subTypes1.value[0]
-        } else {
-            subTypes2.value[0]
-        }
-    ) }
+    val selectedSubType = remember {
+        mutableStateOf(
+            if (selectedUnitType.value == "Hiša") {
+                subTypes1.value[0]
+            } else {
+                subTypes2.value[0]
+            }
+        )
+    }
 
     val selectedUnitTypeIndex = unitType.value.indexOf(selectedUnitType.value)
     val selectedSubTypeIndex = if (selectedUnitType.value == "Hiša") {
@@ -85,8 +96,8 @@ fun SparkasseScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             "Sparkasse",
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.h2
+            modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.h3
         )
         if (loading.value) {
             Box(
@@ -146,13 +157,18 @@ fun SparkasseScreen(
             Gumb za pridoibvanje poslov.
              */
             ExtendedFloatingActionButton(
-                text = {Text("Pridobi posle")},
+                text = { Text("Pridobi posle") },
                 onClick = {
                     loading.value = true
                     coroutineScope.launch {
                         try {
                             withContext(Dispatchers.IO) {
-                                handleGetSparkasse(sparkassePosli, dateIntervalMonths, selectedUnitTypeIndex, selectedSubTypeIndex)
+                                handleGetSparkasse(
+                                    sparkassePosli,
+                                    dateIntervalMonths,
+                                    selectedUnitTypeIndex,
+                                    selectedSubTypeIndex
+                                )
                                 sparkassePosli.value = sparkassePosli.value
                                 println(sparkassePosli.value)
                             }
@@ -188,26 +204,51 @@ fun SparkasseScreen(
                         }
                     }
                 }
-                /*
-                Gumb, ki izbrise vse posle.
-                 */
-                ExtendedFloatingActionButton(
-                    text = { Text("Pobrisi posle") },
-                    onClick = {
-                        sparkassePosli.value.clear()
-                        showInputSectionSparkasse.value = true
-                    },
+                Row(
                     modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(16.dp)
-                        .width(150.dp),
-                    backgroundColor = MaterialTheme.colors.error,
-                )
+                        .align(Alignment.BottomEnd)
+                        .padding(start = 10.dp)
+                ) {
+                    /*
+                    Gumb, ki izbrise vse posle.
+                     */
+                    ExtendedFloatingActionButton(
+                        text = { Text("Clear") },
+                        onClick = {
+                            sparkassePosli.value.clear()
+                            showInputSectionSparkasse.value = true
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .width(150.dp),
+                        backgroundColor = MaterialTheme.colors.error,
+                    )
 
-
+                    /*
+                    Gumb, ki shrani vse posle v bazo.
+                     */
+                    ExtendedFloatingActionButton(
+                        text = { Text("Save") },
+                        onClick = {
+                            loading.value = true
+                            coroutineScope.launch {
+                                try {
+                                    withContext(Dispatchers.IO) {
+                                        handleSaveSparkasse(sparkassePosli.value)
+                                    }
+                                } catch (e: Exception) {
+                                    println(e)
+                                } finally {
+                                    loading.value = false
+                                }
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .width(150.dp),
+                    )
+                }
             }
-
-
         }
     }
 }

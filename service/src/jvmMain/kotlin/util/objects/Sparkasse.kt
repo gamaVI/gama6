@@ -12,7 +12,7 @@ data class Sparkasse(
     @SerializedName("transaction_sum_parcel_sizes") val transactionSumParcelSizes: Int,
     @SerializedName("transaction_date") val transactionDate: String,
     @SerializedName("transaction_amount_gross") val transactionAmountGross: Int,
-    @SerializedName("transaction_tax") val transactionTax: Double?,
+    val transaction_tax: Double?,
     @SerializedName("building_year_built") val buildingYearBuilt: Int,
     @SerializedName("unit_room_count") val unitRoomCount: Int?,
     @SerializedName("unit_rooms_sum_size") val unitRoomsSumSize: Double,

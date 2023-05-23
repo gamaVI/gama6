@@ -42,8 +42,8 @@ fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: Mu
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             "Nepremičnine",
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.h2
+            modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.h3
         )
         if (loading) {
             Box(

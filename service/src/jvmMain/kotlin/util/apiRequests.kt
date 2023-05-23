@@ -2,6 +2,7 @@ package util
 
 import Sparkasse
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
@@ -96,6 +97,17 @@ object ApiRequests {
             println(e)
         }
         return emptyList()
+    }
+
+    @JvmStatic
+    fun savePosli(sparkasse: MutableList<Sparkasse>){
+        val gson = GsonBuilder().serializeNulls().create()
+        for (item in sparkasse) {
+            val json = gson.toJson(item)
+            println(json)
+            println("-------------------")
+        }
+
     }
 
 }
