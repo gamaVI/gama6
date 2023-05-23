@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,7 +51,9 @@ fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: Mu
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = Color(0xFF030711),
+                )
             }
         }
         if (!loading && listings.value.isNotEmpty()) {
@@ -105,7 +108,9 @@ fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: Mu
                                 }
                             }
                         },
-                        modifier = Modifier.padding(16.dp).align(Alignment.BottomStart)
+                        modifier = Modifier.padding(16.dp).align(Alignment.BottomStart),
+                        backgroundColor = Color(0xFF030711),
+                        contentColor = Color.White
                     )
                 }
             }
@@ -130,7 +135,9 @@ fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: Mu
                         }
                     }
                 },
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
+                backgroundColor = Color(0xFF030711),
+                contentColor = Color.White
             )
         }
 

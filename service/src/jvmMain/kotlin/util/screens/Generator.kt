@@ -37,7 +37,7 @@ fun generatePosli(
 
 fun handleSave(
     sparkasse: MutableList<Sparkasse>
-){
+) {
     savePosli(sparkasse)
     println("Saving...")
 }
@@ -74,21 +74,22 @@ fun GeneratorScreen(
                         }
                     },
                     label = { Text("Stevilo poslov") },
-                    modifier = Modifier.weight(0.5f)
+                    modifier = Modifier.weight(0.5f),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color(0xFF030711),
+                        focusedLabelColor = Color(0xFF030711)
+                    )
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Button(
+                ExtendedFloatingActionButton(
+                    text = { Text("Generiraj") },
                     onClick = {
                         generatePosli(generate, steviloPoslov, sparkasse, showInputSection)
                     },
                     modifier = Modifier.align(Alignment.CenterVertically),
-
-                    ) {
-                    if (generate.value)
-                        Text("Generating...")
-                    else
-                        Text("Generate")
-                }
+                    backgroundColor = Color(0xFF030711),
+                    contentColor = Color.White
+                )
             }
         } else {
             Box(modifier = Modifier.weight(1f)) {
@@ -122,10 +123,10 @@ fun GeneratorScreen(
                         .align(Alignment.BottomEnd)
                         .padding(start = 10.dp)
 
-                ){
+                ) {
 
                     ExtendedFloatingActionButton(
-                        text = { Text("Refresh") },
+                        text = { Text("Osveži") },
                         onClick = {
                             sparkasse.value = mutableListOf()
                             generatePosli(generate, steviloPoslov, sparkasse, showInputSection)
@@ -134,7 +135,7 @@ fun GeneratorScreen(
                     )
 
                     ExtendedFloatingActionButton(
-                        text = { Text("Clear") },
+                        text = { Text("Počisti") },
                         onClick = {
                             sparkasse.value = mutableListOf()
                             showInputSection.value = true
@@ -143,9 +144,9 @@ fun GeneratorScreen(
                         backgroundColor = MaterialTheme.colors.error,
                     )
                     ExtendedFloatingActionButton(
-                        text = { Text("Save") },
+                        text = { Text("Shrani") },
                         onClick = {
-                                  handleSave(sparkasse.value)
+                            handleSave(sparkasse.value)
                         },
                         modifier = Modifier.padding(5.dp),
                         backgroundColor = Color(0xFF00D100),

@@ -107,7 +107,9 @@ fun SparkasseScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = Color(0xFF030711),
+                )
             }
         }
 
@@ -129,6 +131,10 @@ fun SparkasseScreen(
                         if (it.matches(pattern)) dateIntervalMonths.value = it.toInt()
                     },
                     label = { Text("Število mesecev") },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color(0xFF030711),
+                        focusedLabelColor = Color(0xFF030711)
+                    )
                 )
                 CustomDropDown(
                     selectedText = selectedUnitType,
@@ -187,6 +193,8 @@ fun SparkasseScreen(
                     .align(Alignment.Start)
                     .padding(16.dp)
                     .width(150.dp),
+                backgroundColor = Color(0xFF030711),
+                contentColor = Color.White
             )
 
         } else {
@@ -228,7 +236,7 @@ fun SparkasseScreen(
                     Gumb, ki izbrise vse posle.
                      */
                     ExtendedFloatingActionButton(
-                        text = { Text("Clear") },
+                        text = { Text("Počisti") },
                         onClick = {
                             sparkassePosli.value.clear()
                             showInputSectionSparkasse.value = true
@@ -242,7 +250,7 @@ fun SparkasseScreen(
                     Gumb, ki shrani vse posle v bazo.
                      */
                     ExtendedFloatingActionButton(
-                        text = { Text("Save") },
+                        text = { Text("Počisti") },
                         onClick = {
                             loading.value = true
                             coroutineScope.launch {
@@ -298,7 +306,11 @@ fun CustomDropDown(
                     "contentDescription",
                     Modifier.clickable { expanded.value = !expanded.value }
                 )
-            }
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF030711),
+                focusedLabelColor = Color(0xFF030711)
+            )
         )
 
         DropdownMenu(
