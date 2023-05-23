@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import { DatePickerWithRange } from "./components/daterangepicker";
 import { Checkboxes } from "./components/checkboxes";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 const AnalizaObmocja = () => {
   const PolygonMap = useMemo(
     () =>
@@ -29,6 +31,16 @@ const AnalizaObmocja = () => {
           <p>Tip :</p>
           <Checkboxes />
         </div>
+        <div className="flex row gap-2">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor="email">Cena od</Label>
+      <Input type="email" id="email" placeholder="10000" />
+    </div>
+    <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor="email">Cena od</Label>
+      <Input type="email" id="email" placeholder="1000000" />
+    </div>
+    </div>
         <Button variant="default" className="w-full">Prikaži</Button>
         </div>
        

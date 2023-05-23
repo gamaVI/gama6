@@ -6,7 +6,7 @@ import MainNav from "./components/main-nav";
 import UserNav from "./components/user-nav";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import JsonList from "./components/jsonlist";
+import TransactionList from "./components/jsonlist";
 import OverviewPage from "./overview/overview";
 import AnalizaObmocja from "./analizaobmocja/analizaobmocja";
 
@@ -65,10 +65,10 @@ const DashboardPage: NextPage = () => {
               <TabsTrigger value="analizaobmocja">Analiza območja</TabsTrigger>
             </TabsList>
             <TabsContent value="posli" className="space-y-4">
-              <JsonList list={posli || []} />
+              <TransactionList list={posli || []} />
             </TabsContent>
             <TabsContent value="oglasi" className="space-y-4">
-              <JsonList list={oglasi || []} />
+              <h1>Oglasi</h1>
             </TabsContent>
             <TabsContent
               value="objavaoglasa"
