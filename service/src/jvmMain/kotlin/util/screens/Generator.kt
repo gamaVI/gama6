@@ -130,6 +130,7 @@ fun GeneratorScreen(
                             sparkasse.value = mutableListOf()
                             generatePosli(generate, steviloPoslov, sparkasse, showInputSection)
                         },
+                        modifier = Modifier.padding(5.dp)
                     )
 
                     ExtendedFloatingActionButton(
@@ -138,6 +139,7 @@ fun GeneratorScreen(
                             sparkasse.value = mutableListOf()
                             showInputSection.value = true
                         },
+                        modifier = Modifier.padding(5.dp),
                         backgroundColor = MaterialTheme.colors.error,
                     )
                     ExtendedFloatingActionButton(
@@ -145,6 +147,7 @@ fun GeneratorScreen(
                         onClick = {
                                   handleSave(sparkasse.value)
                         },
+                        modifier = Modifier.padding(5.dp),
                         backgroundColor = Color(0xFF00D100),
                     )
                 }

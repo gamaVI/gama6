@@ -2,10 +2,12 @@ package util.screens
 
 import Sparkasse
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -198,7 +201,19 @@ fun SparkasseScreen(
                     item {
                         Column(modifier = Modifier.padding(16.dp)) {
                             sparkassePosli.value.forEachIndexed { index, posel ->
-                                SparkasseItem(sparkasse = posel)
+                                SparkasseItem(
+                                    sparkasse = posel,
+                                    onDelete = {
+                                        sparkassePosli.value = sparkassePosli.value.toMutableList().apply {
+                                            removeAt(index)
+                                        }
+                                    },
+                                    onEdit = { editedPosel: Sparkasse ->
+                                        sparkassePosli.value = sparkassePosli.value.toMutableList().apply {
+                                            set(index, editedPosel)
+                                        }
+                                    }
+                                )
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }
@@ -219,8 +234,7 @@ fun SparkasseScreen(
                             showInputSectionSparkasse.value = true
                         },
                         modifier = Modifier
-                            .padding(16.dp)
-                            .width(150.dp),
+                            .padding(5.dp),
                         backgroundColor = MaterialTheme.colors.error,
                     )
 
@@ -244,10 +258,14 @@ fun SparkasseScreen(
                             }
                         },
                         modifier = Modifier
-                            .padding(16.dp)
-                            .width(150.dp),
+                            .padding(5.dp),
+                        backgroundColor = Color(0xFF00D100)
                     )
                 }
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().padding(start = 5.dp),
+                    adapter = rememberScrollbarAdapter(scrollState = state)
+                )
             }
         }
     }
