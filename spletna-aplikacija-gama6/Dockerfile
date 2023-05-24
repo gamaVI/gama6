@@ -40,6 +40,14 @@ RUN \
 ##### RUNNER
 
 FROM --platform=linux/amd64 node:16-alpine3.17 AS runner
+
+# install Chromium
+RUN apk add --no-cache chromium nss freetype freetype-dev harfbuzz ca-certificates ttf-freefont
+
+# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV CHROME_BIN=/usr/bin/chromium-browser
+
 WORKDIR /app
 
 ENV NODE_ENV production

@@ -1,6 +1,6 @@
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
-/*eslint-disable*/
+/* eslint-disable */
+// import puppeter core
+import puppeteer from "puppeteer-core";
 
 export interface Listing {
   title: string | null;
@@ -42,10 +42,10 @@ export class Scraper {
     location: string
   ): Promise<Listing[]> {
     const url = this.buildUrl(pageNumber, minCost, maxCost, typeOfBuilding, location);
-    puppeteer.use(StealthPlugin())
-      const browser = await puppeteer.launch({
-        headless: true,
-      });
+    const browser = await puppeteer.launch({
+      executablePath: process.env.CHROME_BIN || null, 
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
     const page = await browser.newPage();
     page.setDefaultTimeout(10000)
     // wait for three seconds

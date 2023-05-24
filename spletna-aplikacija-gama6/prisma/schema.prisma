@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -74,7 +75,7 @@ model Transaction {
   gps                       Gps      @relation(fields: [gpsId], references: [id])
   transactionItemsList      String[]
   transactionSumParcelSizes Int
-  transactionDate           DateTime
+  transactionDate           DateTime  @db.Date
   transactionAmountGross    Float
   transactionTax            Float?
   buildingYearBuilt         Int

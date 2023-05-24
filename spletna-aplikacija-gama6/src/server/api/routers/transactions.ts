@@ -24,7 +24,7 @@ export const transactionRouter = createTRPCRouter({
       return transaction;
     }),
 
-    addTransaction: protectedProcedure
+    addTransaction: publicProcedure
     .input(
       z.object({
         apiId: z.string(),
@@ -49,6 +49,13 @@ export const transactionRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // check if it already exists 
+      const existingTransaction = await ctx.prisma.transaction.findUnique({
+        where: { apiId: input.apiId },
+      });
+      if (existingTransaction) {
+        return existingTransaction;
+      }
       const gps = await ctx.prisma.gps.create({ data: input.gps });
       const transaction = await ctx.prisma.transaction.create({
         data: { ...input, gps: { connect: { id: gps.id } } },
