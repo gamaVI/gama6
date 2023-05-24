@@ -75,7 +75,7 @@ model Transaction {
   gps                       Gps      @relation(fields: [gpsId], references: [id])
   transactionItemsList      String[]
   transactionSumParcelSizes Int
-  transactionDate           DateTime
+  transactionDate           DateTime  @db.Date
   transactionAmountGross    Float
   transactionTax            Float?
   buildingYearBuilt         Int
