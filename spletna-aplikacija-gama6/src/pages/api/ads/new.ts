@@ -8,14 +8,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const schema = z.object({
-    naslov: z.string(),
-    opis: z.string(),
-    cena: z.number(),
+    title: z.string(),
+    price: z.number(),
     url: z.string(),
-    lokacija: z.string(),
-    agencija: z.string(),
-    velikost: z.number(),
-    tip: z.string(),
+    location: z.string(),
+    seller: z.string(),
+    size: z.number(),
+    type: z.string(),
+    photoUrl: z.string(),
   });
 
   try {
@@ -31,14 +31,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const newOglas = await prisma.oglas.create({
       data: {
-        naslov: input.naslov,
-        opis: input.opis,
-        cena: input.cena,
+        title: input.title,
+        price: input.price,
         url: input.url,
-        lokacija: input.lokacija,
-        agencija: input.agencija,
-        velikost: input.velikost,
-        tip: input.tip,
+        location: input.location,
+        seller: input.seller,
+        size: input.size,
+        type: input.type,
+        photoUrl: input.photoUrl,
       },
     });
 

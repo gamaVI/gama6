@@ -101,10 +101,9 @@ model Oglas {
   url      String
   title   String
   photoUrl String
-  tip      String
-  opis     String
-  velikost Float
-  cena     Int
-  agencija String
-  lokacija String
+  type      String
+  size Float
+  price     Int
+  seller String
+  location String
 }
