@@ -35,7 +35,7 @@ const TransactionList:React.FC<JsonListProps>  =({list}) => {
          <Card key={listItem.id}>
          <CardHeader>
            <CardTitle>{"Stanovanjska hiša"}</CardTitle>
-           <CardDescription>{"Brstje 8"}</CardDescription>
+           <CardDescription>{listItem.address}</CardDescription>
          </CardHeader>
          <CardContent>
            <Table>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState } from "react";
-import { MapContainer, TileLayer, FeatureGroup } from "react-leaflet";
+import { MapContainer, TileLayer, FeatureGroup ,Marker,Popup} from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import osm from "../analizaobmocja/osm-providers"
 import { useRef } from "react";
@@ -77,8 +77,15 @@ const TransactionMarkerMap = () => {
 
               <TileLayer
                 url={osm.maptiler.url}
-                attribution={osm.maptiler.attribution}
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               />
+              <Marker
+              position={[46.056946, 14.505751]}
+              >
+                <Popup>
+        A pretty CSS3 popup. <br /> Easily customizable.
+      </Popup>
+              </Marker>
             </MapContainer>
             
           </div>
