@@ -1,6 +1,7 @@
 package util
 
 import Sparkasse
+import SparkasseDB
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -23,6 +24,7 @@ object ApiRequests {
 
     private var NEPREMICNINE_API_ENDPOINT = "http://51.136.39.46:3000/api/scraping/nepremicnine"
     private var SPARKASSE_API_ENDPOINT = "http://51.136.39.46:3000/api/scraping/posli"
+    private var SPARKASSE_DB_ENDPOINT = "http://51.136.39.46:3000/api/transactions/new"
 
     @JvmStatic
     fun getNepremicnine(pageNumber: Int): ListingsResponse {
@@ -99,16 +101,63 @@ object ApiRequests {
         return emptyList()
     }
 
+    /*
+    Save sparkasse data to database one by one
+     */
     @JvmStatic
     fun savePosli(sparkasse: MutableList<Sparkasse>){
+        val sparkasseDB = convertSparkasseToSparkasseDB(sparkasse)
         val gson = GsonBuilder().serializeNulls().create()
-        for (item in sparkasse) {
-            val json = gson.toJson(item)
-            println(json)
-            println("-------------------")
-        }
+        for (item in sparkasseDB) {
+            try {
+                val json = gson.toJson(item)
+                val body = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                val request = Request.Builder()
+                    .url(SPARKASSE_DB_ENDPOINT)
+                    .post(body)
+                    .build()
+                println("Sending $json")  // print JSON instead of body for readability
+                val response = client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        throw IOException("Unexpected code $response")
+                    }
 
+                    val responseData = response.body?.string()
+                    responseData?.let {
+                        println("Received response: $it")  // print the received response
+                    }
+                }
+            } catch (e: Exception) {
+                println(e)
+            }
+        }
     }
 
+
+    @JvmStatic
+    fun convertSparkasseToSparkasseDB(sparkasse: MutableList<Sparkasse>) : List<SparkasseDB>{
+        val sparkasseDBList = sparkasse.map { sparkasse ->
+            SparkasseDB(
+                sparkasse.id,
+                sparkasse.componentTypeDisplay,
+                sparkasse.address,
+                sparkasse.transactionAmountM2,
+                sparkasse.estimatedAmountM2,
+                sparkasse.isEstimatedAmount,
+                sparkasse.gps,
+                sparkasse.transactionItemsList,
+                sparkasse.transactionSumParcelSizes,
+                sparkasse.transactionDate,
+                sparkasse.transactionAmountGross,
+                sparkasse.transaction_tax,
+                sparkasse.buildingYearBuilt,
+                sparkasse.unitRoomCount,
+                sparkasse.unitRoomsSumSize,
+                sparkasse.unitRooms
+            )
+        }
+        return sparkasseDBList
+    }
 }
+
 

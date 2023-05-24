@@ -4,6 +4,9 @@ import Gps
 import Sparkasse
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.random.Random
 
@@ -55,7 +58,7 @@ fun generateRandomLocation(): String {
 fun generateRandomUnitRooms(): String {
     val unitRoomTypes = listOf("Klet", "Shramba", "Odprt balkon", "Zaprta loža", "Tehnični ali pomožni prostori")
 
-    val numberOfUnitRooms = random.nextInt(0, unitRoomTypes.size + 1)
+    val numberOfUnitRooms = random.nextInt(1, unitRoomTypes.size + 1)
     val randomUnitRooms = unitRoomTypes.shuffled().take(numberOfUnitRooms)
 
     return randomUnitRooms.joinToString(", ")
@@ -111,12 +114,14 @@ fun generateRandomAddress(): String {
 
 
 fun generateRandomDate(): String {
+
     val year = random.nextInt(2013, 2024)
     val month = random.nextInt(1, 13)
-    val day = random.nextInt(1, 30)
-    val dayString = if (day < 10) "0$day" else "$day"
-    val monthString = if (month < 10) "0$month" else "$month"
-    return "$dayString.$monthString.$year"
+    val day = random.nextInt(1, YearMonth.of(year, month).lengthOfMonth() + 1)
+
+    val date = LocalDate.of(year, month, day)
+
+    return date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 }
 
 fun generateRandomTipPosla(): String {

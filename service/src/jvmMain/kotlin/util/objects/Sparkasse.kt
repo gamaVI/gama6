@@ -23,3 +23,23 @@ data class Gps(
     val lat: Double,
     val lng: Double
 )
+
+data class SparkasseDB(
+    @SerializedName("apiId") val id: String,
+    @SerializedName("componentType") val componentTypeDisplay: String,
+    @SerializedName("address") val address: String,
+    @SerializedName("transactionAmountM2") val transactionAmountM2: Double?,
+    @SerializedName("estimatedAmountM2") val estimatedAmountM2: Double?,
+    @SerializedName("isEstimatedAmount") val isEstimatedAmount: Boolean,
+    @SerializedName("gps") val gps: Gps,
+    @SerializedName("transactionItemsList") val transactionItemsList: List<String>,
+    @SerializedName("transactionSumParcelSizes") val transactionSumParcelSizes: Int,
+    @SerializedName("transactionDate") val transactionDate: String,
+    @SerializedName("transactionAmountGross") val transactionAmountGross: Int,
+    @SerializedName("transactionTax") val transaction_tax: Double?,
+    @SerializedName("buildingYearBuilt") val buildingYearBuilt: Int,
+    @SerializedName("unitRoomCount") val unitRoomCount: Int?,
+    @SerializedName("unitRoomsSumSize") val unitRoomsSumSize: Double,
+    @SerializedName("unitRooms") val unitRooms: String
+)
+

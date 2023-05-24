@@ -250,7 +250,7 @@ fun SparkasseScreen(
                     Gumb, ki shrani vse posle v bazo.
                      */
                     ExtendedFloatingActionButton(
-                        text = { Text("Počisti") },
+                        text = { Text("Shrani") },
                         onClick = {
                             loading.value = true
                             coroutineScope.launch {
