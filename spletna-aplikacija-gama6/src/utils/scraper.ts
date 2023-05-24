@@ -11,7 +11,7 @@ export interface Listing {
   year: string | null;
   seller: string | null;
   location: string | null;
-
+  typeOfBuilding: string | null;
 }
 
 export class Scraper {
@@ -81,7 +81,8 @@ export class Scraper {
           size : formattedSize,
           year : formattedYear,
           seller,
-          location
+          location,
+          typeOfBuilding,
         };
       });
     })

@@ -99,7 +99,8 @@ model Gps {
 model Oglas {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   url      String
-  naslov   String
+  title   String
+  photoUrl String
   tip      String
   opis     String
   velikost Float
