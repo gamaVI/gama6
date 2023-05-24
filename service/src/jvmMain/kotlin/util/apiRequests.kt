@@ -19,7 +19,7 @@ object ApiRequests {
 
     private val client = OkHttpClient.Builder()
         .callTimeout(25, TimeUnit.SECONDS) //Timeout after 25 seconds
-        .readTimeout(25, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
         .build()
 
     private var NEPREMICNINE_API_ENDPOINT = "http://51.136.39.46:3000/api/scraping/nepremicnine"
