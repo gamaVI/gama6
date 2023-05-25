@@ -10,6 +10,7 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import util.objects.Listing
+import util.objects.ListingDB
 import util.objects.ListingsResponse
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -22,7 +23,8 @@ object ApiRequests {
         .readTimeout(60, TimeUnit.SECONDS)
         .build()
 
-    private var NEPREMICNINE_API_ENDPOINT = "http://51.136.39.46:3000/api/scraping/nepremicnine"
+    private var NEPREMICNINE_API_ENDPOINT = "http://localhost:3000/api/scraping/nepremicnine"
+    private var NEPREMICNINE_DB_ENDPOINT = "http://localhost:3000/api/transactions/new" //TODO: Spremeni URL
     private var SPARKASSE_API_ENDPOINT = "http://51.136.39.46:3000/api/scraping/posli"
     private var SPARKASSE_DB_ENDPOINT = "http://51.136.39.46:3000/api/transactions/new"
 
@@ -63,6 +65,36 @@ object ApiRequests {
             println(e)
         }
         return ListingsResponse(emptyList(), 1)
+    }
+
+    @JvmStatic
+    fun saveNepremicnine(listing: MutableList<Listing>){
+        val nepremicninaDB = convertListingToListingDB(listing)
+        val gson = GsonBuilder().serializeNulls().setPrettyPrinting().create()
+        for (item in nepremicninaDB) {
+            try {
+                val json = gson.toJson(item)
+                val body = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                val request = Request.Builder()
+                    .url(NEPREMICNINE_DB_ENDPOINT)
+                    .post(body)
+                    .build()
+                println("Sending $json")  // print JSON instead of body for readability
+                val response = client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        throw IOException("Unexpected code $response")
+                    }
+
+                    val responseData = response.body?.string()
+                    responseData?.let {
+                        println("Received response: $it")  // print the received response
+                    }
+                }
+            } catch (e: Exception) {
+                println(e)
+            }
+        }
+
     }
 
     @JvmStatic
@@ -107,7 +139,7 @@ object ApiRequests {
     @JvmStatic
     fun savePosli(sparkasse: MutableList<Sparkasse>){
         val sparkasseDB = convertSparkasseToSparkasseDB(sparkasse)
-        val gson = GsonBuilder().serializeNulls().create()
+        val gson = GsonBuilder().serializeNulls().setPrettyPrinting().create()
         for (item in sparkasseDB) {
             try {
                 val json = gson.toJson(item)
@@ -157,6 +189,23 @@ object ApiRequests {
             )
         }
         return sparkasseDBList
+    }
+
+    @JvmStatic
+    fun convertListingToListingDB(listing: MutableList<Listing>) : List<ListingDB>{
+        val listingDBList = listing.map {listing ->
+            ListingDB(
+               listing.title,
+                listing.price,
+                listing.link,
+                listing.location,
+                listing.seller,
+                listing.size,
+                listing.photoUrl,
+                listing.type
+            )
+        }
+        return listingDBList
     }
 }
 

@@ -31,6 +31,15 @@ fun handleGetNepremicnine(apiResponse: MutableState<ListingsResponse>, pageNumbe
     println("Test connection")
 }
 
+fun handleSaveListing(listing: MutableList<Listing>) {
+    try {
+        ApiRequests.saveNepremicnine(listing)
+    } catch (e: Exception) {
+        println(e)
+    }
+    println("Saving")
+}
+
 
 @Composable
 fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: MutableState<MutableList<Listing>>, pageNumber: MutableState<Int>) {
