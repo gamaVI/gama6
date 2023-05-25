@@ -7,7 +7,7 @@ import UserNav from "./components/user-nav";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import TransactionList from "./components/jsonlist";
-import OverviewPage from "./overview/overview";
+import OverviewPage from "./analizaobmocja/overview";
 import AnalizaObmocja from "./analizaobmocja/analizaobmocja";
 
 const DashboardPage: NextPage = () => {
@@ -21,6 +21,9 @@ const DashboardPage: NextPage = () => {
       void refetchOglasi();
     },
   });
+
+
+  
   console.log(posli);
   console.log(oglasi);
   return (
@@ -53,34 +56,11 @@ const DashboardPage: NextPage = () => {
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">
-              Nadzorna plošča
+            📈 Analiza območja
             </h2>
             <div className="flex items-center space-x-2"></div>
           </div>
-          <Tabs defaultValue="posli" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="posli">Posli JSON</TabsTrigger>
-              <TabsTrigger value="oglasi">Oglasi JSON</TabsTrigger>
-              <TabsTrigger value="splosnipregled">Splošni pregled</TabsTrigger>
-              <TabsTrigger value="analizaobmocja">Analiza območja</TabsTrigger>
-            </TabsList>
-            <TabsContent value="posli" className="space-y-4">
-              <TransactionList list={posli || []} />
-            </TabsContent>
-            <TabsContent value="oglasi" className="space-y-4">
-              <h1>Oglasi</h1>
-            </TabsContent>
-            <TabsContent
-              value="objavaoglasa"
-              className="space-y-4"
-            ></TabsContent>
-            <TabsContent value="splosnipregled" className="space-y-4">
-              <OverviewPage />
-            </TabsContent>
-            <TabsContent value="analizaobmocja" className="space-y-4">
               <AnalizaObmocja />
-            </TabsContent>
-          </Tabs>
         </div>
       </div>
     </>

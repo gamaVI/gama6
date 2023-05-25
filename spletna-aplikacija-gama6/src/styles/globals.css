@@ -70,6 +70,15 @@
   }
 }
 
+.leaflet-popup-content-wrapper{
+  background-color: #030711 !important;
+  width: 50vw!important;
+}
+
+.leaflet-popup-content{
+  width:95% !important;
+}
+
 @layer base {
   * {
     @apply border-border;

@@ -94,7 +94,7 @@ export const transactionRouter = createTRPCRouter({
 
     getTransactionsInPolygon: publicProcedure
     .input(z.array(z.object({ lat: z.number(), lng: z.number() })))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const polygon = input;
       const transactions = await ctx.prisma.transaction.findMany({
         include: { gps: true },
