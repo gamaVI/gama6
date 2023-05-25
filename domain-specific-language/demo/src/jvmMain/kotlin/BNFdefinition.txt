@@ -1,7 +1,7 @@
 <program> ::= <statement>*
 <statement> ::= <city> | <let> | <if>
 <city> ::= "city" <string> "{" <city_element>* "}"
-<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium>
+<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium> | <let> | <for>
 <road> ::= "road" <string> "{" <lines>* "}"
 <lines> ::= "line" "(" <point> <point> ");" <lines> | "bend" "(" <point> <point> <number> ");" <lines> | ε
 <building> ::= "building" <string> "{" "box" <point> <point> "}"
@@ -15,9 +15,7 @@
 <let> ::= "let" <string> "=" <expression>
 <for> ::= "for" <string> "in" <number> ".." <number> "{" <statement>* "}"
 <if> ::= "if" <condition> "{" <statement>* "}"
-<list> ::= "list" <string> "[" <string>* "]"
-<expression> ::= <number> | <string> | <condition> | <point> | <arc>
-<arc> ::= "arc" <point> <number> <number>
+<expression> ::= <number> | <string> | <condition> | <point>
 <condition> ::= <boolean>
 <point> ::= "(" <number> "," <number> ")"
 <point_list> ::= "(" <point> <point_list_tail> ")"
