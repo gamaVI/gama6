@@ -36,9 +36,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Convert transactionDate from string to JavaScript Date
     if (input.transactionDate) {
-      input.transactionDate = dayjs(input.transactionDate, 'DD.MM.YYYY').toDate();
+      // set date to a date object and grab the month date and year from the string DD.MM.YYYy
+        const date = dayjs()
+            .set('date', parseInt(input.transactionDate.split('.')[0]))
+            .set('month', parseInt(input.transactionDate.split('.')[1]) - 1)
+            .set('year', parseInt(input.transactionDate.split('.')[2]))
+            .toDate();
+        input.transactionDate = date;
+
     }
-    
+
+
     // check if it already exists 
     const existingTransaction = await prisma.transaction.findUnique({
       where: { apiId: input.apiId },
