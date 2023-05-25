@@ -1,6 +1,6 @@
 /* eslint-disable */
 // import puppeter core
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 
 export interface Listing {
   title: string | null;
@@ -49,9 +49,7 @@ export class Scraper {
       location
     );
     const browser = await puppeteer.launch({
-      headless: true,
-      executablePath: process.env.CHROME_BIN || null,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: false,
     });
     const page = await browser.newPage();
     page.setDefaultTimeout(100000);
