@@ -16,6 +16,7 @@ import util.objects.Listing
 @Composable
 fun NepremicninaItem(nepremicnina: Listing, onEdit: (Listing) -> Unit, onDelete: () -> Unit) {
     var isEditing by remember { mutableStateOf(false) }
+    println("Nepremicnina: $nepremicnina")
     val editedNepremicnina = remember { mutableStateOf(nepremicnina.copy()) }
     Card(
         modifier = Modifier
@@ -126,6 +127,7 @@ fun NepremicninaItem(nepremicnina: Listing, onEdit: (Listing) -> Unit, onDelete:
                         style = MaterialTheme.typography.body1
                     )
                 }
+
             }
             Column(modifier = Modifier.wrapContentWidth(Alignment.End)) {
                 if (isEditing) {

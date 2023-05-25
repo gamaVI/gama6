@@ -42,7 +42,11 @@ fun handleSaveListing(listing: MutableList<Listing>) {
 
 
 @Composable
-fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: MutableState<MutableList<Listing>>, pageNumber: MutableState<Int>) {
+fun NepremicnineScreen(
+    apiResponse: MutableState<ListingsResponse>,
+    listings: MutableState<MutableList<Listing>>,
+    pageNumber: MutableState<Int>
+) {
     var loading by remember { mutableStateOf(false) }
     val state = rememberLazyListState()
 
@@ -73,9 +77,9 @@ fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: Mu
                 ) {
                     item {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            listings.value.forEachIndexed { index, nepremicnina ->
+                            listings.value.forEachIndexed { index, listing ->
                                 NepremicninaItem(
-                                    nepremicnina = nepremicnina,
+                                    nepremicnina = listing,
                                     onDelete = {
                                         listings.value = listings.value.toMutableList().apply {
                                             removeAt(index)
@@ -99,28 +103,64 @@ fun NepremicnineScreen(apiResponse: MutableState<ListingsResponse>, listings: Mu
                 if (loading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    ExtendedFloatingActionButton(
-                        text = { Text("Prikaži več") },
-                        onClick = {
-                            loading = true
-                            coroutineScope.launch {
-                                try {
-                                    withContext(Dispatchers.IO) {
-                                        handleGetNepremicnine(apiResponse, pageNumber.value)
-                                        listings.value.addAll(apiResponse.value.listings)
-                                        pageNumber.value += 1
-                                    }
-                                } catch (e: Exception) {
-                                    println(e)
-                                } finally {
-                                    loading = false
-                                }
-                            }
-                        },
-                        modifier = Modifier.padding(16.dp).align(Alignment.BottomStart),
-                        backgroundColor = Color(0xFF030711),
-                        contentColor = Color.White
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(start = 10.dp)
                     )
+                    {
+                        ExtendedFloatingActionButton(
+                            text = { Text("Prikaži več") },
+                            onClick = {
+                                loading = true
+                                coroutineScope.launch {
+                                    try {
+                                        withContext(Dispatchers.IO) {
+                                            handleGetNepremicnine(apiResponse, pageNumber.value)
+                                            listings.value.addAll(apiResponse.value.listings)
+                                            pageNumber.value += 1
+                                        }
+                                    } catch (e: Exception) {
+                                        println(e)
+                                    } finally {
+                                        loading = false
+                                    }
+                                }
+                            },
+                            modifier = Modifier.padding(5.dp),
+                            backgroundColor = Color(0xFF030711),
+                            contentColor = Color.White
+                        )
+                        ExtendedFloatingActionButton(
+                            text = { Text("Počisti") },
+                            onClick = {
+                                listings.value = mutableListOf()
+                                pageNumber.value = 1
+                            },
+                            modifier = Modifier.padding(5.dp),
+                            backgroundColor = MaterialTheme.colors.error,
+                            contentColor = Color.White
+                        )
+                        ExtendedFloatingActionButton(
+                            text = { Text("Shrani") },
+                            onClick = {
+                                loading = true
+                                coroutineScope.launch {
+                                    try {
+                                        withContext(Dispatchers.IO) {
+                                            handleSaveListing(listings.value)
+                                        }
+                                    } catch (e: Exception) {
+                                        println(e)
+                                    } finally {
+                                        loading = false
+                                    }
+                                }
+                            },
+                            modifier = Modifier.padding(5.dp),
+                            backgroundColor = Color(0xFF00D100),
+                        )
+                    }
                 }
             }
 

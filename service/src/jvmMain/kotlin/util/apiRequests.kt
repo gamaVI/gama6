@@ -24,7 +24,7 @@ object ApiRequests {
         .build()
 
     private var NEPREMICNINE_API_ENDPOINT = "http://localhost:3000/api/scraping/nepremicnine"
-    private var NEPREMICNINE_DB_ENDPOINT = "http://localhost:3000/api/transactions/new" //TODO: Spremeni URL
+    private var NEPREMICNINE_DB_ENDPOINT = "http://localhost:3000/api/ads/new"
     private var SPARKASSE_API_ENDPOINT = "http://51.136.39.46:3000/api/scraping/posli"
     private var SPARKASSE_DB_ENDPOINT = "http://51.136.39.46:3000/api/transactions/new"
 
@@ -202,7 +202,7 @@ object ApiRequests {
                 listing.seller,
                 listing.size,
                 listing.photoUrl,
-                listing.type
+                "stanovanje",
             )
         }
         return listingDBList
