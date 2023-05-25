@@ -75,7 +75,7 @@ model Transaction {
   gps                       Gps      @relation(fields: [gpsId], references: [id])
   transactionItemsList      String[]
   transactionSumParcelSizes Int
-  transactionDate           DateTime
+  transactionDate           DateTime  @db.Date
   transactionAmountGross    Float
   transactionTax            Float?
   buildingYearBuilt         Int
@@ -99,11 +99,11 @@ model Gps {
 model Oglas {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   url      String
-  naslov   String
-  tip      String
-  opis     String
-  velikost Float
-  cena     Int
-  agencija String
-  lokacija String
+  title   String
+  photoUrl String
+  type      String
+  size Float
+  price     Int
+  seller String
+  location String
 }
