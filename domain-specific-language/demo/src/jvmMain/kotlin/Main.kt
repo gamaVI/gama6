@@ -1,9 +1,14 @@
 
 package task
 
+import jdk.dynalink.linker.ConversionComparator
 import java.io.InputStream
 import java.util.*
 import java.io.File
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
 
 
 const val EOF = -1
@@ -58,6 +63,9 @@ const val true_SYMBOL = 44
 const val false_SYMBOL = 45
 const val quotaitons_SYMBOL = 46
 const val underscore_SYMBOL = 47
+const val superequal_SYMBOL = 48//==
+const val greater_SYMBOL = 49//>
+const val less_SYMBOL = 50//<
 
 
 
@@ -73,7 +81,7 @@ interface DFA {
 
 object Automaton : DFA {
     override val startState = 1
-    override val states = setOf(-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ,24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,   57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82,  83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95 ,96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108)
+    override val states = setOf(-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ,24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,   57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82,  83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95 ,96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111)
     override val finalStates = setOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 22, 29, 33,35,40, 45, 47, 48, 107, 52, 54, 56, 60, 63, 73, 77, 80, 86, 92, 96, 103, 104, 105, 108)
     override val alphabet = 0..255
 
@@ -136,10 +144,13 @@ object Automaton : DFA {
         setTransition(1, ']', 7)
         setTransition(1, '[', 8)
         setTransition(1, '=', 9)
+        setTransition(9, '=', 109)
         setTransition(1, ';', 10)
         setTransition(1, '.', 11)
         setTransition(1, ',', 12)
         setTransition(1, '\"', 108)
+        setTransition(1, '>', 110)
+        setTransition(1, '<', 111)
 
 
         //string iz 1 do 14
@@ -443,6 +454,9 @@ object Automaton : DFA {
         setSymbol(103, townhall_SYMBOL)
         setSymbol(105, EOF_SYMBOL)
         setSymbol(108, quotaitons_SYMBOL)
+        setSymbol(109, superequal_SYMBOL)
+        setSymbol(110, less_SYMBOL)
+        setSymbol(111, greater_SYMBOL)
 
     }
 
@@ -540,6 +554,10 @@ fun name(symbol: Int) =
         true_SYMBOL -> "true"
         false_SYMBOL -> "false"
         quotaitons_SYMBOL -> "quotaitons"
+        superequal_SYMBOL -> "superequal"
+        less_SYMBOL -> "less"
+        greater_SYMBOL -> "greater"
+
 
         else -> throw Error("Invalid symbol")
     }
@@ -563,7 +581,7 @@ data class StatmentNode(val statment: Node): Node{
 }
 data class ProgramNode(val elements: List<Node>): Node{
     override fun toGeoJSON(): String {
-        val features = elements.map { it.toGeoJSON() }.joinToString(",")
+        val features = elements.filterNot { it is LetNode }.map { it.toGeoJSON() }.joinToString(",")
         return """
             {
                 "type": "FeatureCollection",
@@ -574,21 +592,60 @@ data class ProgramNode(val elements: List<Node>): Node{
 }
 
 
+
 data class NumberNode(val number: Int): Node{
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
-
-    }}
-data class RoadNode(val name: String, val lines: List<Node>): Node{
-    override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        return """
+            {
+                "type": "Point",
+                "coordinates": [$number, $number]
+            }
+        """.trimIndent()
     }
 }
+
+data class RoadNode(val name: String, val elements: List<Node>): Node {
+    override fun toGeoJSON(): String {
+        val coordinates = elements.map {
+            when (it) {
+                is LineNode -> "[${it.toGeoJSON()}]"
+                is BendNode -> "[${it.toGeoJSON()}]"
+                else -> "[]" // Should not happen
+            }
+        }.joinToString(",")
+        return """
+            {
+                "type": "Feature",
+                "properties": {
+                    "name": "$name"
+                },
+                "geometry": {
+                    "type": "MultiLineString",
+                    "coordinates": [$coordinates]
+                }
+            }
+        """.trimIndent()
+    }
+}
+
+
 data class ChurchNode(val name: String, val point: PointNode): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        return """
+            {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [${point.x}, ${point.y}]
+                },
+                "properties": {
+                  "name": "$name"
+                }
+            }
+        """.trimIndent()
     }
 }
+
 
 data class PointNode(val x: String, val y: String): Node {
     override fun toGeoJSON(): String {
@@ -616,48 +673,110 @@ data class CityNode(val name: String, val elements: List<Node>): Node {
 
 
 
-data class LineNode(val point1: PointNode, val point2: PointNode): Node{
+data class LineNode(val point1: PointNode, val point2: PointNode): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
-
-}}
-data class BendNode(val point1: PointNode, val point2: PointNode, val number: NumberNode): Node{
-    override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
-
-}}
-data class ParkNode(val name: String, val circ: CircNode): Node{
-    override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
-
-}}
-data class CircNode(val point: PointNode, val number: NumberNode): Node{
-
-        override fun toGeoJSON(): String {
-            TODO("Not yet implemented")
-        }
+        return """
+            
+                [${point1.x}, ${point1.y}],
+                [${point2.x}, ${point2.y}]
+            
+        """.trimIndent()
     }
-data class RestaurantNode(val name: String, val point: PointNode): Node{
+}
+data class Coordinates(val x: Double, val y: Double) {
+    operator fun times(scalar: Double): Coordinates {
+        return Coordinates(x * scalar, y * scalar)
+    }
+    operator fun plus(other: Coordinates): Coordinates {
+        return Coordinates(x + other.x, y + other.y)
+    }
+}
+
+class Bezier(private val p0: Coordinates, private val p1: Coordinates, private val p2: Coordinates, private val p3: Coordinates) {
+    fun at(t: Double): Coordinates {
+        return p0 * (1.0 - t).pow(3.0) + p1 * 3.0 * (1.0 - t).pow(2.0) * t + p2 * 3.0 * (1.0 - t) * t.pow(2.0) + p3 * t.pow(3.0)
+    }
+    fun toPoints(segmentsCount: Int): List<Coordinates> {
+        val ps = mutableListOf<Coordinates>()
+        for (i in 0 .. segmentsCount) {
+            val t = i / segmentsCount.toDouble()
+            ps.add(at(t))
+        }
+        return ps
+    }
+}
+
+data class BendNode(val point1: PointNode, val point2: PointNode, val bendFactor: Int) : Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        val p0 = Coordinates(point1.x.toDouble(), point1.y.toDouble())
+        val p3 = Coordinates(point2.x.toDouble(), point2.y.toDouble())
+        val midX = (p0.x + p3.x) / 2
+        val midY = (p0.y + p3.y) / 2
 
-}}
-data class SchoolNode(val name: String, val point: PointNode): Node{
+        val scaleFactor = 0.5// Choose this factor according to your desired range for bendFactor
+        val shift = bendFactor * scaleFactor
+
+        val p1 = Coordinates(midX, p0.y)
+        val p2 = Coordinates(midX + shift, midY)
+
+        val bezier = Bezier(p0, p1, p2, p3)
+
+        // Always generate 20 points between p0 and p3
+        val coordinates = bezier.toPoints(100)
+
+        val geoJsonCoordinates = coordinates.joinToString(",") {
+            "[${it.x},${it.y}]"
+        }
+
+        return "$geoJsonCoordinates"
+    }
+}
+
+
+
+
+
+data class ParkNode(val name: String, val center: PointNode, val radius: Double) : Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        val coordinates = mutableListOf<Coordinates>()
+        val step = 2 * PI / 30
 
-}}
-data class TownhallNode(val name: String, val point: PointNode): Node{
-    override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        for (i in 0 until 30) {
+            val angle = step * i
 
-}}
+            val x = center.x.toDouble() + radius * cos(angle)
+            val y = center.y.toDouble() + radius * sin(angle)
 
-data class StadiumNode(val name: String, val point: PointNode): Node{
-    override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+            coordinates.add(Coordinates(x, y))
+        }
 
-}}
+        // Add the first point again at the end to close the polygon
+        coordinates.add(coordinates.first())
+
+        // Construct the coordinates string
+        val geoJsonCoordinates = coordinates.joinToString(",") {
+            "[${it.x},${it.y}]"
+        }
+
+        return """
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [$geoJsonCoordinates]
+                ]
+              },
+              "properties": {
+                "name": "$name"
+              }
+            }
+        """.trimIndent()
+    }
+}
+
+
+
 
 
 
@@ -699,67 +818,145 @@ data class BoxNode(val point1: PointNode, val point2: PointNode): Node{
     }
 }
 
-data class PolyNode(val points: List<PointNode>): Node{
+
+data class RiverNode(val name: String, val points: List<PointNode>) : Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        val geoJsonCoordinates = points.joinToString(",") {
+            "[${it.x},${it.y}]"
+        }
 
-}}
-data class RiverNode(val name: String, val poly: PolyNode): Node{
+        return """
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "MultiLineString",
+                "coordinates": [
+                  [$geoJsonCoordinates]
+                ]
+              },
+              "properties": {
+                "name": "$name"
+              }
+            }
+        """.trimIndent()
+    }
+}
+data class RestaurantNode(val name: String, val point: PointNode): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        return """
+            {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [${point.x}, ${point.y}]
+                },
+                "properties": {
+                  "name": "$name"
+                }
+            }
+        """.trimIndent()
+    }
+}
 
-}}
-data class ForNode(val name: String, val number1: NumberNode, val number2: NumberNode, val elements: List<Node>): Node{
+data class SchoolNode(val name: String, val point: PointNode): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        return """
+            {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [${point.x}, ${point.y}]
+                },
+                "properties": {
+                  "name": "$name"
+                }
+            }
+        """.trimIndent()
+    }
+}
 
-}}
-
-data class IfNode(val number1: NumberNode, val number2: NumberNode, val elements: List<Node>): Node{
+data class TownhallNode(val name: String, val point: PointNode): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        return """
+            {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [${point.x}, ${point.y}]
+                },
+                "properties": {
+                  "name": "$name"
+                }
+            }
+        """.trimIndent()
+    }
+}
 
-}}
-data class LetNode(val name: String, val number: NumberNode): Node{
+data class StadiumNode(val name: String, val point: PointNode): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
-
-}}
-
-data class BooleanNode(val bool: Boolean): Node{
+        return """
+            {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [${point.x}, ${point.y}]
+                },
+                "properties": {
+                  "name": "$name"
+                }
+            }
+        """.trimIndent()
+    }
+}
+data class LetNode(val name: String, val expression: Node): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
-
-}}
-
-data class StringNode(val string: String): Node{
+        throw UnsupportedOperationException("LetNode cannot be directly converted to GeoJSON")
+    }
+}
+data class StringNode(val value: String): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("StringNode cannot be directly converted to GeoJSON")
+    }
+}
+enum class Comparison {
+    GT, LT, EQ
+}
+data class ConditionNode(val left: NumberNode, val comparison: Comparison, val right: NumberNode): Node {
+    fun evaluate(): Boolean {
+        return when (comparison) {
+            Comparison.GT -> left.number > right.number
+            Comparison.LT -> left.number < right.number
+            Comparison.EQ -> left.number == right.number
+        }
+    }
 
-}}
-
-data class VariableNode(val name: String): Node{
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("ConditionNode cannot be directly converted to GeoJSON")
+    }
+}
 
-}}
-
-data class PointListNode(val points: List<PointNode>): Node{
+data class IfNode(val condition: ConditionNode, val body: CityNode): Node {
     override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
+        return if (condition.evaluate()) {
+            body.toGeoJSON()
+        } else {
+            ""
+        }
+    }
+}
 
-}}
-data class PointListTailNode(val point: PointNode): Node{
-    override fun toGeoJSON(): String {
-        TODO("Not yet implemented")
 
-}}
+
+
+
 
 class ParseException(symbol: Int, lexeme: String, row: Int, column: Int) : Exception("PARSE ERROR (${name(symbol)}, $lexeme) at $row:$column")
 
 
 class Parser(private val scanner: Scanner){
     private var last: Token? = null
+    private val variables = mutableMapOf<String, PointNode>()
+
 
     private fun panic(): Nothing =
         last?.let { throw ParseException(it.symbol, it.lexeme, it.startRow, it.startColumn) } ?: error("cannot happen")
@@ -778,7 +975,7 @@ class Parser(private val scanner: Scanner){
         return when (last?.symbol) {
 
             city_SYMBOL -> parseCity()
-            //let_SYMBOL -> parseLet()
+            let_SYMBOL -> parseLet()
             //if_SYMBOL -> parseIf()
             else -> panic()
         }
@@ -795,55 +992,24 @@ class Parser(private val scanner: Scanner){
         parseTerminal(r_w_paren_SYMBOL) // changed to right brace symbol
         return CityNode(name, elements)
     }
-    //<let> ::= "let" <string> "=" <expression>
-//    private fun parseLet(): LetNode {
-//        parseTerminal(let_SYMBOL)
-//        val name = parseTerminal(STRING_SYMBOL)
-//        parseTerminal(EQ_SYMBOL)
-//        val number = parseNumber()
-//        return LetNode(name, number)
-//    }
-    //<if> ::= "if" <condition> "{" <statement>* "}"
-//
-//
-//    private fun parseCity(): City {
-//        val name = parseTerminal(STRING_SYMBOL)
-//        parseTerminal(LBRACE_SYMBOL)
-//        val elements = mutableListOf<CityElement>()
-//        while (last?.symbol != RBRACE_SYMBOL) {
-//            elements.add(parseCityElement())
-//        }
-//        parseTerminal(RBRACE_SYMBOL)
-//        return City(name, elements)
-//    }
     //<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium> | <let> | <for>
     private fun parseCityElement(): Node {
         return when (last?.symbol) {
-            //road_SYMBOL -> parseRoad()
+            road_SYMBOL -> parseRoad()
             building_SYMBOL -> parseBuilding()
-//            park_SYMBOL -> parsePark()
-//            river_SYMBOL -> parseRiver()
-//            restaurant_SYMBOL -> parseRestaurant()
-//            school_SYMBOL -> parseSchool()
-//            townhall_SYMBOL -> parseTownhall()
-//            church_SYMBOL -> parseChurch()
-//            stadium_SYMBOL -> parseStadium()
+            park_SYMBOL -> parsePark()
+            river_SYMBOL -> parseRiver()
+            restaurant_SYMBOL -> parseRestaurant()
+            school_SYMBOL -> parseSchool()
+            townhall_SYMBOL -> parseTownhall()
+            church_SYMBOL -> parseChurch()
+            stadium_SYMBOL -> parseStadium()
 //            let_SYMBOL -> parseLet()
 //            for_SYMBOL -> parseFor()
 //            if_SYMBOL -> parseIf()
             else -> panic()
         }
     }
-    //<road> ::= "road" <string> "{" <point_list> "}"
-//    private fun parseRoad(): RoadNode {
-//        parseTerminal(road_SYMBOL)
-//        val name = parseTerminal(string_SYMBOL)
-//        parseTerminal(l_w_paren_SYMBOL)
-//        val points = parsePointList()
-//        parseTerminal(r_w_paren_SYMBOL)
-//        return RoadNode(name, points)
-//    }
-
     //<building> ::= "building" <string> "{" "box" <point> <point> "}"
     private fun parseBuilding(): BuildingNode {
         parseTerminal(building_SYMBOL)
@@ -859,87 +1025,187 @@ class Parser(private val scanner: Scanner){
 
     private fun parsePoint(): PointNode {
         parseTerminal(l_paren_SYMBOL)
-        val x = parseTerminal(number_SYMBOL)
+        val xToken = last
+        val xString = if (last?.symbol == number_SYMBOL) parseTerminal(number_SYMBOL) else parseTerminal(string_SYMBOL)
+        val x = if (variables.containsKey(xString)) {
+            variables[xString]?.x ?: panic()
+        } else {
+            xString
+        }
         parseTerminal(comma_SYMBOL)
-        val y = parseTerminal(number_SYMBOL)
+        val yToken = last
+        val yString = if (last?.symbol == number_SYMBOL) parseTerminal(number_SYMBOL) else parseTerminal(string_SYMBOL)
+        val y = if (variables.containsKey(yString)) {
+            variables[yString]?.y ?: panic()
+        } else {
+            yString
+        }
         parseTerminal(r_paren_SYMBOL)
         return PointNode(x, y)
     }
 
-//    //tu se dosti
-//    private fun parseCityElement(): CityElement {
-//        return when (last?.symbol) {
-//            ROAD_SYMBOL -> parseRoad()
-//            BUILDING_SYMBOL -> parseBuilding()
-//            PARK_SYMBOL -> parsePark()
-//            RIVER_SYMBOL -> parseRiver()
-//            RESTAURANT_SYMBOL -> parseRestaurant()
-//            SCHOOL_SYMBOL -> parseSchool()
-//            TOWNHALL_SYMBOL -> parseTownhall()
-//            CHURCH_SYMBOL -> parseChurch()
-//            STADIUM_SYMBOL -> parseStadium()
-//            LET_SYMBOL -> parseLet()
-//            FOR_SYMBOL -> parseFor()
-//            IF_SYMBOL -> parseIf()
+
+    fun parseRoad(): RoadNode {
+        parseTerminal(road_SYMBOL)
+        val roadName = parseTerminal(string_SYMBOL)
+        parseTerminal(l_w_paren_SYMBOL)
+        val elements = mutableListOf<Node>()
+        while (last?.symbol != r_w_paren_SYMBOL) {
+            when (last?.symbol) {
+                line_SYMBOL -> elements.add(parseLine())
+                bend_SYMBOL -> elements.add(parseBend())
+                else -> panic()
+            }
+        }
+        parseTerminal(r_w_paren_SYMBOL)
+        return RoadNode(roadName, elements)
+    }
+
+    fun parseLine(): LineNode {
+        parseTerminal(line_SYMBOL)
+        parseTerminal(l_paren_SYMBOL)
+
+        val point1 = parsePoint()
+        val point2 = parsePoint()
+        parseTerminal(r_paren_SYMBOL)
+        parseTerminal(semicolon_SYMBOL)
+        return LineNode(point1, point2)
+    }
+
+    fun parseBend(): BendNode {
+        parseTerminal(bend_SYMBOL)
+        parseTerminal(l_paren_SYMBOL)
+        val point1 = parsePoint()
+        val point2 = parsePoint()
+        val bendFactor = parseTerminal(number_SYMBOL).toInt()
+        parseTerminal(r_paren_SYMBOL)
+        parseTerminal(semicolon_SYMBOL)
+        return BendNode(point1, point2, bendFactor)
+    }
+    fun parsePark(): ParkNode {
+        parseTerminal(park_SYMBOL)
+        val parkName = parseTerminal(string_SYMBOL)
+
+        parseTerminal(l_w_paren_SYMBOL) // Match opening brace
+        parseTerminal(circ_SYMBOL) // Match 'circ' keyword
+
+        val centerPoint = parsePoint() // Parse the center point
+
+        val radius = parseTerminal(number_SYMBOL).toDouble() // Match the radius value
+
+        parseTerminal(r_w_paren_SYMBOL) // Match closing brace
+
+        return ParkNode(parkName, centerPoint, radius) // Construct and return the ParkNode object
+    }
+
+    fun parseRiver(): RiverNode {
+        parseTerminal(river_SYMBOL)
+        val riverName = parseTerminal(string_SYMBOL)
+        parseTerminal(l_w_paren_SYMBOL) // Match opening brace
+        parseTerminal(poly_SYMBOL) // Match 'poly' keyword
+
+        val points = parsePointList()
+
+        parseTerminal(r_w_paren_SYMBOL)
+        return RiverNode(riverName, points) // Construct and return the RiverNode object
+    }
+
+    private fun parsePointList(): List<PointNode> {
+        parseTerminal(l_paren_SYMBOL)
+        val points = mutableListOf<PointNode>()
+        points.add(parsePoint())
+        while (last?.symbol == comma_SYMBOL) {
+            parseTerminal(comma_SYMBOL)
+            points.add(parsePoint())
+        }
+        parseTerminal(r_paren_SYMBOL)
+        return points
+    }
+
+    private fun parseRestaurant(): RestaurantNode {
+        parseTerminal(restaurant_SYMBOL)
+        val name = parseTerminal(string_SYMBOL)
+        val point = parsePoint()
+        return RestaurantNode(name, point)
+    }
+
+    private fun parseSchool(): SchoolNode {
+        parseTerminal(school_SYMBOL)
+        val name = parseTerminal(string_SYMBOL)
+        val point = parsePoint()
+        return SchoolNode(name, point)
+    }
+
+    private fun parseTownhall(): TownhallNode {
+        parseTerminal(townhall_SYMBOL)
+        val name = parseTerminal(string_SYMBOL)
+        val point = parsePoint()
+        return TownhallNode(name, point)
+    }
+
+    private fun parseStadium(): StadiumNode {
+        parseTerminal(stadium_SYMBOL)
+        val name = parseTerminal(string_SYMBOL)
+        val point = parsePoint()
+        return StadiumNode(name, point)
+    }
+    private fun parseChurch(): ChurchNode {
+        parseTerminal(church_SYMBOL)
+        val name = parseTerminal(string_SYMBOL)
+        val point = parsePoint()
+        return ChurchNode(name, point)
+    }
+    private fun parseLet(): LetNode {
+        parseTerminal(let_SYMBOL)
+        val name = parseTerminal(string_SYMBOL)
+        parseTerminal(equal_SYMBOL)
+        val point = parsePoint()
+        parseTerminal(semicolon_SYMBOL)
+        variables[name] = point
+        return LetNode(name, point)
+    }
+
+    private fun parseExpression(): Node {
+        return when (last?.symbol) {
+            number_SYMBOL -> parseNumber()
+            string_SYMBOL -> parseString()
+            point_SYMBOL -> parsePoint()
+            else -> panic()
+        }
+    }
+
+    private fun parseNumber(): NumberNode {
+        val value = parseTerminal(number_SYMBOL)
+        return NumberNode(value.toInt())
+    }
+
+    private fun parseString(): StringNode {
+        val value = parseTerminal(string_SYMBOL)
+        return StringNode(value)
+    }
+//    private fun parseIf(): Node {
+//        parseTerminal(if_SYMBOL)
+//        val condition = parseCondition()
+//        parseTerminal(l_w_paren_SYMBOL) // Open brace
+//        val city = parseCity()
+//        parseTerminal(r_w_paren_SYMBOL) // Close brace
+//        return IfNode(condition, city)
+//    }
+//
+//    private fun parseCondition(): Node {
+//        val num1 = parseTerminal(number_SYMBOL).toDouble()
+//        val comparison = parseComparison()
+//        val num2 = parseTerminal(number_SYMBOL).toDouble()
+//        return ConditionNode(num1, comparison, num2)
+//    }
+//    private fun parseComparison(): Comparison {
+//        val symbol = parseTerminal(comparison_SYMBOL)
+//        return when (symbol) {
+//            ">" -> ConversionComparator.Comparison.GT
+//            "<" -> ConversionComparator.Comparison.LT
+//            "==" -> ConversionComparator.Comparison.EQ
 //            else -> panic()
 //        }
-//    }
-//
-//    private fun parseRoad(): Road {
-//        val name = parseTerminal(STRING_SYMBOL)
-//        parseTerminal(LBRACE_SYMBOL)
-//        val lines = mutableListOf<Line>()
-//        while (last?.symbol != RBRACE_SYMBOL) {
-//            lines.add(parseLine())
-//        }
-//        parseTerminal(RBRACE_SYMBOL)
-//        return Road(name, lines)
-//    }
-//
-//// Similar functions for parseBuilding(), parsePark(), etc...
-//
-//    private fun parseLine(): Line {
-//        // ... parse a line ...
-//    }
-//
-//    private fun parseLet(): Let {
-//        // ... parse a let statement ...
-//    }
-//
-//    private fun parseFor(): For {
-//        // ... parse a for statement ...
-//    }
-//
-//    private fun parseIf(): If {
-//        // ... parse an if statement ...
-//    }
-//
-//    private fun parseExpression(): Expression {
-//        // ... parse an expression ...
-//    }
-//
-//    private fun parseCondition(): Condition {
-//        // ... parse a condition ...
-//    }
-//
-//    private fun parsePoint(): Point {
-//        // ... parse a point ...
-//    }
-//
-//    private fun parsePointList(): List<Point> {
-//        // ... parse a list of points ...
-//    }
-//
-//    private fun parseNumber(): Int {
-//        // ... parse a number ...
-//    }
-//
-//    private fun parseString(): String {
-//        // ... parse a string ...
-//    }
-//
-//    private fun parseBoolean(): Boolean {
-//        // ... parse a boolean ...
 //    }
 
 
@@ -960,10 +1226,23 @@ class Parser(private val scanner: Scanner){
 
 fun main(){
     val input = """
+        let spremenljivka = (1, 2);
         city ljubljana {
             building hisa {
-                box (1, 2) (4, 3)
+                box (spremenljivka, 2) (4, 3)
             }
+            road presernova {
+                line((2, 2) (2, 5));
+                line((5, 4) (6, 4));
+                bend ((1, 1) (2, 2) 2);
+            }
+              park celjski_park { circ (1, 1) 2 }
+              river sava { poly ((2, 3), (4, 6), (8, 8)) }
+              restaurant hut_burger (13, 7)
+              school fri (15, 7)
+              townhall obcina_ljubljana (10, 4)
+              church peter (4, 9)
+              stadium stozice (8, 8)
         }
     """.trimIndent()
 

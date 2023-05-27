@@ -1,7 +1,7 @@
 <program> ::= <statement>*
 <statement> ::= <city> | <let> | <if>
 <city> ::= "city" <string> "{" <city_element>* "}"
-<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium> | <let> | <for>
+<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium> | <for>
 <road> ::= "road" <string> "{" <lines>* "}"
 <lines> ::= "line" "(" <point> <point> ");" <lines> | "bend" "(" <point> <point> <number> ");" <lines> | ε
 <building> ::= "building" <string> "{" "box" <point> <point> "}"
@@ -12,14 +12,23 @@
 <townhall> ::= "townhall" <string> <point>
 <church> ::= "church" <string> <point>
 <stadium> ::= "stadium" <string> <point>
-<let> ::= "let" <string> "=" <expression>
+<let> ::= "let" <string> "=" <point>;
 <for> ::= "for" <string> "in" <number> ".." <number> "{" <statement>* "}"
-<if> ::= "if" <condition> "{" <statement>* "}"
-<expression> ::= <number> | <string> | <condition> | <point>
-<condition> ::= <boolean>
+<if> ::= "if" <condition> "{" <city> "}"
+<condition> ::= <number> <comparison> <number>
 <point> ::= "(" <number> "," <number> ")"
 <point_list> ::= "(" <point> <point_list_tail> ")"
 <point_list_tail> ::= "," <point> <point_list_tail> | ε
 <number> ::= [0-9]+
 <string> ::= "\" [a-zA-Z0-9\s]* \""
+<comparison> ::= ">" | "<" | "=="
 <boolean> ::= "true" | "false"
+
+
+točke:
+od osnovnih 6 nimamo 1. točke(nevtralen element)
+od nadgradnje:
+    1. spremenljivke
+    2.if stavek
+    3. for stavek
+    4. park, river
