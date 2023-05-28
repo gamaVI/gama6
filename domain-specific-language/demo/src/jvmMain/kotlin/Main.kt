@@ -93,30 +93,96 @@ fun main() {
         "C:\\Users\\LENOVO\\OneDrive\\gradivo za feri\\4.Semester\\Praktikum\\chromedriver.exe"
     )
     val driver: WebDriver = ChromeDriver()
-    driver.get("http://geojson.io/#map=4.99/4.01/5")
+    driver.get("http://geojson.io/#map=3.51/11.85/15.62")
 
-    val input = """
-        let spremenljivka = 2;
-        let var = 1;
-        if spremenljivka > var {
-        city ljubljana {
-            building hisa {
-                box (5, 5) (3, 3)
+    val input = """     
+    let spremenljivka = 2;
+            let var = 1;
+            if spremenljivka > var {
+            city maribor {
+                building bajta {
+                    box (3, 4) (5, 6)
+                }
+                building bajta {
+                    box (5, 4) (7, 6)
+                }
+                building bajta {
+                    box (7, 4) (9, 6)
+                }
+                building bajta {
+                    box (9, 4) (11, 6)
+                }
+                building bajta {
+                    box (11, 4) (13, 6)
+                }
+                building bajta {
+                    box (3, 0) (5, 2)
+                }
+                building bajta {
+                    box (5, 0) (7, 2)
+                }
+                building bajta {
+                    box (7, 0) (9, 2)
+                }
+                building bajta {
+                    box (9, 0) (11, 2)
+                }
+                building bajta {
+                    box (11, 0) (13, 2)
+                }
+
+                road koroska {
+                    line((1, 3) (13, 3));
+                    bend ((13, 3) (15, 6) 2);
+                    bend ((13, 3) (15, 0) 2);
+                    line((15, 6) (15, 20));
+                }
+                  park promenada { circ (17, 3) 2 }
+                 building cerkev {
+                    box (16, 5) (18, 4)
+                }
+                  church sv_jurija (16, 5)
+                   building bajta {
+                    box (16, 6) (18, 8)
+                }
+                   building bajta {
+                    box (16, 8) (18, 10)
+                }
+                  building bajta {
+                    box (16, 10) (18, 12)
+                }
+                  building bajta {
+                    box (16, 12) (18, 14)
+                }
+                 building bajta {
+                    box (16, 14) (18, 16)
+                }
+
+                building univerza_v_mariboru {
+                    box (9, 7) (14, 18)
+                }
+                restaurant eat_smart_feri (10, 8)
+                school feri (12, 10)
+                river drava { poly ((20, 25), (22, 23), (20, 21), (22, 19), (20, 17), (22, 15), (20, 13), (22, 11), (20, 9), (22, 7), (20, 5), (22, 3), (20, 1)) }
+                road smetanova {
+                line ((5, 20) (25, 20));
+                bend ((25, 20) (27, 18) 2);
+                bend ((25, 20) (27, 22) 2);
+                line ((27, 18) (27, 0));
+                }
+                building mestna_obcina_maribor {
+                    box (26, 17) (23, 12)
+                }
+                townhall mestna_obcina_maribor (24, 14)
+
+                park vijolcni_park { circ (24, 9) 2 }
+                stadium ljudski_vrt (24, 9)
+
+
             }
-            road presernova {
-                line((2, 2) (2, 4));
-                line((5, 3) (6, 4));
-                bend ((2, 2) (3, 3) 2);
             }
-            park celjski_park { circ (4, 4) 1 }
-            river sava { poly ((1, 1), (1, 3), (3, 5), (5, 5)) }
-            restaurant hut_burger (7, 2)
-            school fri (8, 2)
-            townhall obcina_ljubljana (6, 6)
-            church peter (3, 7)
-            stadium stozice (9, 4)
-        }
-        }
+
+
     """.trimIndent()
 
     val scanner = Scanner(Automaton, input.byteInputStream())
@@ -127,7 +193,7 @@ fun main() {
     println(geoJSON)
 
     // Wait for the page to load
-    Thread.sleep(5000)
+    Thread.sleep(500)
 
     // Inject the JSON into CodeMirror
     val js = driver as JavascriptExecutor
@@ -137,7 +203,7 @@ fun main() {
     )
 
     // Keep the browser open
-    Thread.sleep(20000)
+    Thread.sleep(400000)
 
     // Close the browser
     driver.quit()
