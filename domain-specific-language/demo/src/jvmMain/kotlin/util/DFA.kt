@@ -1,5 +1,3 @@
-
-
 interface DFA {
     val states: Set<Int>
     val alphabet: IntRange

@@ -1,12 +1,12 @@
 import task.*
 
-class ParseException(symbol: Int, lexeme: String, row: Int, column: Int) : Exception("PARSE ERROR (${name(symbol)}, $lexeme) at $row:$column")
+class ParseException(symbol: Int, lexeme: String, row: Int, column: Int) :
+    Exception("PARSE ERROR (${name(symbol)}, $lexeme) at $row:$column")
 
 
-class Parser(private val scanner: Scanner){
+class Parser(private val scanner: Scanner) {
     private var last: Token? = null
     private val variables = mutableMapOf<String, Double>()
-
 
 
     private fun panic(): Nothing =
@@ -21,6 +21,7 @@ class Parser(private val scanner: Scanner){
         }
         return ProgramNode(statements)
     }
+
     //<statement> ::= <city> | <let> | <if>
     private fun parseStatement(): Node {
         return when (last?.symbol) {
@@ -31,6 +32,7 @@ class Parser(private val scanner: Scanner){
             else -> panic()
         }
     }
+
     //<city> ::= "city" <string> "{" <city_element>* "}"
     private fun parseCity(): CityNode {
         parseTerminal(city_SYMBOL)
@@ -43,6 +45,7 @@ class Parser(private val scanner: Scanner){
         parseTerminal(r_w_paren_SYMBOL) // changed to right brace symbol
         return CityNode(name, elements)
     }
+
     //<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium> | <let> | <for>
     private fun parseCityElement(): Node {
         return when (last?.symbol) {
@@ -60,6 +63,7 @@ class Parser(private val scanner: Scanner){
             else -> panic()
         }
     }
+
     //<building> ::= "building" <string> "{" "box" <point> <point> "}"
     private fun parseBuilding(): BuildingNode {
         parseTerminal(building_SYMBOL)
@@ -69,7 +73,7 @@ class Parser(private val scanner: Scanner){
         val point1 = parsePoint()
         val point2 = parsePoint()
         parseTerminal(r_w_paren_SYMBOL) // changed to right brace symbol
-        val temp= BoxNode(point1, point2)
+        val temp = BoxNode(point1, point2)
         return BuildingNode(name, temp)
     }
 
@@ -124,6 +128,7 @@ class Parser(private val scanner: Scanner){
         parseTerminal(semicolon_SYMBOL)
         return BendNode(point1, point2, bendFactor)
     }
+
     fun parsePark(): ParkNode {
         parseTerminal(park_SYMBOL)
         val parkName = parseTerminal(string_SYMBOL)
@@ -191,12 +196,14 @@ class Parser(private val scanner: Scanner){
         val point = parsePoint()
         return StadiumNode(name, point)
     }
+
     private fun parseChurch(): ChurchNode {
         parseTerminal(church_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
         val point = parsePoint()
         return ChurchNode(name, point)
     }
+
     private fun parseLet(): LetNode {
         parseTerminal(let_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
@@ -220,6 +227,7 @@ class Parser(private val scanner: Scanner){
         parseTerminal(r_w_paren_SYMBOL) // changed to right brace symbol
         return IfNode(condition, city)
     }
+
     private fun parseCondition(): ConditionNode {
         val num1 = parseNumberOrVariable()
         val comparison = parseComparison()
@@ -243,14 +251,17 @@ class Parser(private val scanner: Scanner){
                 parseTerminal(greater_SYMBOL)
                 ComparisonNode(ComparisonNode.Operator.GT)
             }
+
             less_SYMBOL -> {
                 parseTerminal(less_SYMBOL)
                 ComparisonNode(ComparisonNode.Operator.LT)
             }
+
             superequal_SYMBOL -> {
                 parseTerminal(superequal_SYMBOL)
                 ComparisonNode(ComparisonNode.Operator.EQ)
             }
+
             else -> panic()
         }
     }

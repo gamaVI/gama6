@@ -8,6 +8,7 @@ import Token
 
 import jdk.dynalink.linker.ConversionComparator
 import name
+import org.openqa.selenium.JavascriptExecutor
 import java.io.InputStream
 import java.util.*
 import java.io.File
@@ -17,6 +18,8 @@ import kotlin.math.pow
 import kotlin.math.sin
 import java.awt.Desktop
 import java.net.URI
+import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.ChromeDriver
 
 
 const val EOF = -1
@@ -84,30 +87,37 @@ fun printTokens(scanner: Scanner) {
     }
 }
 
-fun main(){
+fun main() {
+    System.setProperty(
+        "webdriver.chrome.driver",
+        "C:\\Users\\LENOVO\\OneDrive\\gradivo za feri\\4.Semester\\Praktikum\\chromedriver.exe"
+    )
+    val driver: WebDriver = ChromeDriver()
+    driver.get("http://geojson.io/#map=4.99/4.01/5")
+
     val input = """
-    let spremenljivka = 2;
-    let var = 1;
-    if spremenljivka > var {
-    city ljubljana {
-        building hisa {
-            box (5, 5) (3, 3)
+        let spremenljivka = 2;
+        let var = 1;
+        if spremenljivka > var {
+        city ljubljana {
+            building hisa {
+                box (5, 5) (3, 3)
+            }
+            road presernova {
+                line((2, 2) (2, 4));
+                line((5, 3) (6, 4));
+                bend ((2, 2) (3, 3) 2);
+            }
+            park celjski_park { circ (4, 4) 1 }
+            river sava { poly ((1, 1), (1, 3), (3, 5), (5, 5)) }
+            restaurant hut_burger (7, 2)
+            school fri (8, 2)
+            townhall obcina_ljubljana (6, 6)
+            church peter (3, 7)
+            stadium stozice (9, 4)
         }
-        road presernova {
-            line((2, 2) (2, 4));
-            line((5, 3) (6, 4));
-            bend ((2, 2) (3, 3) 2);
         }
-        park celjski_park { circ (4, 4) 1 }
-        river sava { poly ((1, 1), (1, 3), (3, 5), (5, 5)) }
-        restaurant hut_burger (7, 2)
-        school fri (8, 2)
-        townhall obcina_ljubljana (6, 6)
-        church peter (3, 7)
-        stadium stozice (9, 4)
-    }
-    }
-""".trimIndent()
+    """.trimIndent()
 
     val scanner = Scanner(Automaton, input.byteInputStream())
     val parser = Parser(scanner)
@@ -116,10 +126,21 @@ fun main(){
 
     println(geoJSON)
 
-    // Open geojson.io in your default web browser
-    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-        Desktop.getDesktop().browse(URI("http://geojson.io"))
-    }
+    // Wait for the page to load
+    Thread.sleep(5000)
+
+    // Inject the JSON into CodeMirror
+    val js = driver as JavascriptExecutor
+    js.executeScript(
+        "var editor= document.querySelector('.CodeMirror').CodeMirror; editor.setValue(arguments[0]);",
+        geoJSON
+    )
+
+    // Keep the browser open
+    Thread.sleep(20000)
+
+    // Close the browser
+    driver.quit()
 }
 
 

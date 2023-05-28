@@ -11,12 +11,13 @@ interface Node {
     }
 }
 
-data class StatmentNode(val statment: Node): Node{
+data class StatmentNode(val statment: Node) : Node {
     override fun toGeoJSON(): String {
         return statment.toGeoJSON()
     }
 }
-data class ProgramNode(val elements: List<Node>): Node{
+
+data class ProgramNode(val elements: List<Node>) : Node {
     override fun toGeoJSON(): String {
         val features = elements.filterNot { it is LetNode }.map { it.toGeoJSON() }.joinToString(",")
         return """
@@ -29,8 +30,7 @@ data class ProgramNode(val elements: List<Node>): Node{
 }
 
 
-
-data class NumberNode(val number: Int): Node{
+data class NumberNode(val number: Int) : Node {
     override fun toGeoJSON(): String {
         return """
             {
@@ -41,7 +41,7 @@ data class NumberNode(val number: Int): Node{
     }
 }
 
-data class RoadNode(val name: String, val elements: List<Node>): Node {
+data class RoadNode(val name: String, val elements: List<Node>) : Node {
     override fun toGeoJSON(): String {
         val coordinates = elements.map {
             when (it) {
@@ -66,7 +66,7 @@ data class RoadNode(val name: String, val elements: List<Node>): Node {
 }
 
 
-data class ChurchNode(val name: String, val point: PointNode): Node {
+data class ChurchNode(val name: String, val point: PointNode) : Node {
     override fun toGeoJSON(): String {
         return """
             {
@@ -84,13 +84,13 @@ data class ChurchNode(val name: String, val point: PointNode): Node {
 }
 
 
-data class PointNode(val x: Double, val y: Double): Node {
+data class PointNode(val x: Double, val y: Double) : Node {
     override fun toGeoJSON(): String {
         return "[$x, $y]"
     }
 }
 
-data class CityNode(val name: String, val elements: List<Node>): Node {
+data class CityNode(val name: String, val elements: List<Node>) : Node {
     override fun toGeoJSON(): String {
         val cityFeature = """
             {
@@ -109,8 +109,7 @@ data class CityNode(val name: String, val elements: List<Node>): Node {
 }
 
 
-
-data class LineNode(val point1: PointNode, val point2: PointNode): Node {
+data class LineNode(val point1: PointNode, val point2: PointNode) : Node {
     override fun toGeoJSON(): String {
         return """
             
@@ -120,22 +119,32 @@ data class LineNode(val point1: PointNode, val point2: PointNode): Node {
         """.trimIndent()
     }
 }
+
 data class Coordinates(val x: Double, val y: Double) {
     operator fun times(scalar: Double): Coordinates {
         return Coordinates(x * scalar, y * scalar)
     }
+
     operator fun plus(other: Coordinates): Coordinates {
         return Coordinates(x + other.x, y + other.y)
     }
 }
 
-class Bezier(private val p0: Coordinates, private val p1: Coordinates, private val p2: Coordinates, private val p3: Coordinates) {
+class Bezier(
+    private val p0: Coordinates,
+    private val p1: Coordinates,
+    private val p2: Coordinates,
+    private val p3: Coordinates
+) {
     fun at(t: Double): Coordinates {
-        return p0 * (1.0 - t).pow(3.0) + p1 * 3.0 * (1.0 - t).pow(2.0) * t + p2 * 3.0 * (1.0 - t) * t.pow(2.0) + p3 * t.pow(3.0)
+        return p0 * (1.0 - t).pow(3.0) + p1 * 3.0 * (1.0 - t).pow(2.0) * t + p2 * 3.0 * (1.0 - t) * t.pow(2.0) + p3 * t.pow(
+            3.0
+        )
     }
+
     fun toPoints(segmentsCount: Int): List<Coordinates> {
         val ps = mutableListOf<Coordinates>()
-        for (i in 0 .. segmentsCount) {
+        for (i in 0..segmentsCount) {
             val t = i / segmentsCount.toDouble()
             ps.add(at(t))
         }
@@ -168,9 +177,6 @@ data class BendNode(val point1: PointNode, val point2: PointNode, val bendFactor
         return "$geoJsonCoordinates"
     }
 }
-
-
-
 
 
 data class ParkNode(val name: String, val center: PointNode, val radius: Double) : Node {
@@ -213,11 +219,7 @@ data class ParkNode(val name: String, val center: PointNode, val radius: Double)
 }
 
 
-
-
-
-
-data class BuildingNode(val name: String, val box: BoxNode): Node {
+data class BuildingNode(val name: String, val box: BoxNode) : Node {
     override fun toGeoJSON(): String {
         return """
             {
@@ -232,13 +234,14 @@ data class BuildingNode(val name: String, val box: BoxNode): Node {
             }
         """.trimIndent()
     }
+
     override fun replaceVariable(name: String, value: Double): Node {
         return BuildingNode(name, box.replaceVariable(name, value) as BoxNode)
     }
 }
 
 
-data class BoxNode(val point1: PointNode, val point2: PointNode): Node{
+data class BoxNode(val point1: PointNode, val point2: PointNode) : Node {
     override fun toGeoJSON(): String {
         val x1 = point1.x.toDouble()
         val y1 = point1.y.toDouble()
@@ -281,7 +284,8 @@ data class RiverNode(val name: String, val points: List<PointNode>) : Node {
         """.trimIndent()
     }
 }
-data class RestaurantNode(val name: String, val point: PointNode): Node {
+
+data class RestaurantNode(val name: String, val point: PointNode) : Node {
     override fun toGeoJSON(): String {
         return """
             {
@@ -298,7 +302,7 @@ data class RestaurantNode(val name: String, val point: PointNode): Node {
     }
 }
 
-data class SchoolNode(val name: String, val point: PointNode): Node {
+data class SchoolNode(val name: String, val point: PointNode) : Node {
     override fun toGeoJSON(): String {
         return """
             {
@@ -315,7 +319,7 @@ data class SchoolNode(val name: String, val point: PointNode): Node {
     }
 }
 
-data class TownhallNode(val name: String, val point: PointNode): Node {
+data class TownhallNode(val name: String, val point: PointNode) : Node {
     override fun toGeoJSON(): String {
         return """
             {
@@ -332,7 +336,7 @@ data class TownhallNode(val name: String, val point: PointNode): Node {
     }
 }
 
-data class StadiumNode(val name: String, val point: PointNode): Node {
+data class StadiumNode(val name: String, val point: PointNode) : Node {
     override fun toGeoJSON(): String {
         return """
             {
@@ -348,17 +352,20 @@ data class StadiumNode(val name: String, val point: PointNode): Node {
         """.trimIndent()
     }
 }
-data class LetNode(val name: String, val expression: Double): Node {
+
+data class LetNode(val name: String, val expression: Double) : Node {
     override fun toGeoJSON(): String {
         throw UnsupportedOperationException("LetNode cannot be directly converted to GeoJSON")
     }
 }
-data class StringNode(val value: String): Node {
+
+data class StringNode(val value: String) : Node {
     override fun toGeoJSON(): String {
         throw UnsupportedOperationException("StringNode cannot be directly converted to GeoJSON")
     }
 }
-class ComparisonNode(val operator: Operator): Node {
+
+class ComparisonNode(val operator: Operator) : Node {
     enum class Operator {
         GT, // greater than
         LT, // less than
@@ -377,6 +384,7 @@ class ConditionNode(val left: NumberNode, val comparison: ComparisonNode, val ri
         // We don't need to convert this to GeoJSON
         return ""
     }
+
     fun evaluate(): Boolean {
         return when (comparison.operator) {
             ComparisonNode.Operator.GT -> left.number > right.number
