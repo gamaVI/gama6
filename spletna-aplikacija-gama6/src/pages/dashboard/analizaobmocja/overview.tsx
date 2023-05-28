@@ -20,6 +20,12 @@ import Overview from "./components/components/overviewgraph";
 import RecentSales from "./components/components/recentsales";
 import { Building } from "lucide-react";
 import TransactionsByDayGraph from "./components/components/transactionsbydaygraph";
+import ComponentTypePieChart from "./components/components/piecharts";
+import dayjs from "dayjs";
+import TransactionScatterPlot from "./components/components/scatterchart";
+import TransactionHistogram from "./components/components/histogram";
+import ParcelSizePriceScatterChart from "./components/components/corelationchart";
+import YearBuiltSizeScatterChart from "./components/components/correlationyearsize";
 
 export default function OverviewPage({transactions,dateFrom,dateTo}) {
   // Calculate total transaction amount
@@ -96,18 +102,18 @@ export default function OverviewPage({transactions,dateFrom,dateTo}) {
           <CardHeader>
             <CardTitle>Največji izvedeni posli v mesecu</CardTitle>
             <CardDescription>
-              V mesecu oktobru je bilo izvedenih 213 transakcij.
+             V obdobju od {dayjs(date.from).format("DD.MM.YYYY")} do {dayjs(date.to).format("DD.MM.YYYY")} je bilo izvedenih {numberOfTransactions} transakcij v skupni vrednosti {totalTransactionAmount} €.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <RecentSales />
+            <RecentSales transactions={transactions}/>
           </CardContent>
         </Card>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Povpečna cena na kvadratni meter</CardTitle>
+            <CardTitle>Število izvedenih transakcij po dnevih:</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
           <TransactionsByDayGraph dateFrom={dateFrom} dateTo={dateTo} transactions={transactions} />
@@ -115,15 +121,49 @@ export default function OverviewPage({transactions,dateFrom,dateTo}) {
         </Card>
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Največji izvedeni posli v mesecu</CardTitle>
-            <CardDescription>
-              V mesecu oktobru je bilo izvedenih 213 transakcij.
-            </CardDescription>
+            <CardTitle>Tipi prodanih nepremičnin</CardTitle>
           </CardHeader>
-          <CardContent>
-            <RecentSales />
+          <CardContent className="pl-2">
+            <ComponentTypePieChart transactions={transactions}/>
           </CardContent>
         </Card>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Cene transakcij glede na leto gradnje:</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+          <TransactionScatterPlot transactions={transactions} />
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Hisogram cen transakcij:</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+          <TransactionHistogram transactions={transactions} />
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Korelacija cene nepremičnine glede na velikost:</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+          <ParcelSizePriceScatterChart transactions={transactions} />
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Korelacija velikosti nepremičnine glede na leto gradnje:</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+          <YearBuiltSizeScatterChart transactions={transactions} />
+          </CardContent>
+        </Card>
+       
       </div>
     </>
   );

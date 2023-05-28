@@ -17,31 +17,33 @@ import dayjs from "dayjs";
 const AnalizaObmocja = () => {
 
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(2010, 0, 20),
+    to: addDays(new Date(2023, 0, 20), 20),
   })
 
   const [priceFrom, setPriceFrom] = useState<number | undefined>(10)
   const [priceTo, setPriceTo] = useState<number | undefined>(10000000)
-  const [enabledTypes, setEnabledTypes] = useState<number[]>([])
+  const [enabledTypes, setEnabledTypes] = useState<string[]>([])
   const [mapLayers, setMapLayers] = useState([]);
   const [transactions , setTransactions] = useState<any[]>([])
+
+  const {data: componentTypeList} = api.transactions.getAllComponentTypes.useQuery();
+
+ console.log("Enabled types: ", enabledTypes)
 
   const getTransactionsInPolygon = api.transactions.getTransactionsInPolygon.useMutation({
     onSuccess: (data) => {
 
       const filteredTransactions = data.filter((transaction) => {
+        
         const transactionDate = dayjs(transaction.transactionDate);
         const transactionPrice = transaction.transactionAmountGross;
   
-        return (
-          (transactionDate.isSame(date.from, 'day') ||  transactionDate.isAfter(date.from, 'day'))
-          &&
-          transactionDate.isSame(date.to, 'day') ||  transactionDate.isBefore(date.to, 'day')
-          &&
-          transactionPrice >= priceFrom &&
-          transactionPrice <= priceTo
-        );
+        const isDateInRange = transactionDate.isAfter(date.from) && transactionDate.isBefore(date.to);
+        const isPriceInRange = transactionPrice >= priceFrom && transactionPrice <= priceTo;
+        const isTypeEnabled = enabledTypes.includes(transaction.componentType);
+
+        return isDateInRange && isPriceInRange && isTypeEnabled;
       });
       
 
@@ -87,12 +89,6 @@ const AnalizaObmocja = () => {
           <p>Obdobje:</p>
           <DatePickerWithRange className="date-picker" date={date} setDate={setDate} />
         </div>
-        <div className="flex flex-row items-center gap-2">
-          <p>Tip :</p>
-          <Checkboxes  enabledTypes={enabledTypes} 
-          setEnabledTypes={setEnabledTypes}
-          />
-        </div>
         <div className="flex row gap-2">
         <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label htmlFor="email">Cena od</Label>
@@ -106,7 +102,16 @@ const AnalizaObmocja = () => {
         setPriceTo(parseInt(e.target.value))
       }}  />
     </div>
+    
     </div>
+    <div className="flex flex-row items-start justify-start gap-2">
+          <p>Tip :</p>
+          <div>
+          <Checkboxes  types={componentTypeList} enabledTypes={enabledTypes}
+          setEnabledTypes={setEnabledTypes}
+          />
+          </div>
+        </div>
         <Button variant="default" className="w-full mt-auto" onClick={()=>{
           void submitSearch()
         }}>Prikaži</Button>
@@ -116,7 +121,7 @@ const AnalizaObmocja = () => {
       </div>
     </div>
     {
-      transactions && <Overview transactions={transactions} dateFrom={date.from} dateTo={date.to} />
+      transactions.length>0 && <Overview transactions={transactions} dateFrom={date.from} dateTo={date.to} />
     }
     
   

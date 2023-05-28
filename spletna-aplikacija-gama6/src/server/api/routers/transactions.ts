@@ -107,4 +107,18 @@ export const transactionRouter = createTRPCRouter({
       );
       return result;
     }),
-});
+
+    getAllComponentTypes: publicProcedure.query(async ({ ctx }) => {
+      // find all diffferent component types in transactions
+      const componentTypes  = await ctx.prisma.transaction.findMany({
+        select: { componentType: true },
+      });
+      return [...new Set(componentTypes.map((item) => item.componentType))];
+    }),
+
+
+
+    }
+    );
+
+

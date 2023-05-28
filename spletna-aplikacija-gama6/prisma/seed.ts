@@ -1,86 +1,42 @@
 import { prisma } from "../src/server/db";
-import {  faker } from '@faker-js/faker';
-/*disable-eslint*/
+import axios from "axios";
+/* disable eslint */
 
-function generateRandomGps() {
-  return {
-    lat: faker.location.latitude({
-      min: 46.05,
-      max: 46.06,
-    }),
-    lng: faker.location.longitude(
-      {
-        min: 14.45,
-        max: 14.52,
-      }
-    ),
-  };
+async function postRequest(unit_type, unit_subtype, date_interval) {
+  const url = "http://51.136.39.46:3000/api/scraping/posli"; // replace with your server url if needed
+
+  try {
+    const response = await axios.post(url, {
+      unit_type,
+      unit_subtype,
+      date_interval_months: date_interval,
+    });
+
+    console.log(`Status: ${response.status}`);
+    console.log("Body: ", response.data);
+  } catch (err) {
+    console.error(err);
+  }
 }
-
-
-function generateRandomTransaction(gpsId :string) {
-  const transactionAmountM2 = faker.datatype.float({ min: 50.0, max: 1000.0 });
-  const estimatedAmountM2 = faker.datatype.float({ min: 50.0, max: 1000.0 });
-  const transactionSumParcelSizes = faker.datatype.number({ min: 1, max: 10 });
-  const transactionAmountGross = faker.datatype.number({ min: 10000, max: 1000000 });
-  const buildingYearBuilt = faker.datatype.number({ min: 1900, max: 2023 });
-  const unitRoomsSumSize = faker.datatype.number({ min: 10, max: 200 });
-  const transactionDate = faker.date.past().toISOString();
-
-  // Modify the return object to match the required shape
-  return {
-    apiId: faker.string.uuid(),
-    componentType: faker.random.word(),
-    address: faker.address.streetAddress(),
-    transactionAmountM2: transactionAmountM2,
-    estimatedAmountM2: estimatedAmountM2,
-    isEstimatedAmount: faker.datatype.boolean(),
-    transactionItemsList: [faker.random.word()],
-    transactionSumParcelSizes: transactionSumParcelSizes,
-    transactionDate: transactionDate,
-    transactionAmountGross: transactionAmountGross,
-    transactionTax: faker.datatype.number({ min: 100, max: 10000 }),
-    buildingYearBuilt: buildingYearBuilt,
-    unitRoomCount: faker.datatype.number({ min: 1, max: 10 }),
-    unitRoomsSumSize: unitRoomsSumSize,
-    unitRooms: faker.random.word(),
-    gpsId: gpsId,
-  };
-}
-
-function generateRandomOglas() {
-  const oglas = {
-      url: faker.internet.url(),
-      naslov: faker.lorem.sentence(),
-      tip: faker.lorem.word(),
-      opis: faker.lorem.paragraph(),
-      velikost: faker.number.float({ min: 20.0, max: 300.0 }),
-      cena: faker.number.int({ min: 50000, max: 500000 }),
-      agencija: faker.company.name(),
-      lokacija: faker.address.city()
-  };
-
-  return oglas;
-}
-
-
-
 
 async function main() {
-  for (let i = 0; i < 1000; i++) {
-    const gpsData = generateRandomGps();
-    const createdGps = await prisma.gps.create({
-      data: gpsData,
+  // set the date interval to 6 months
+  const date_interval = 6;
+
+  // possible unit types and subtypes
+  const unit_types = [1, 2];
+  const subtypes = {
+    1: [1, 2, 3],
+    2: [1, 2, 3, 4, 5],
+  };
+
+  unit_types.forEach((unit_type) => {
+    const unit_subtypes = subtypes[unit_type];
+
+    unit_subtypes.forEach(async (unit_subtype) => {
+      const results = await postRequest(unit_type, unit_subtype, date_interval);
+      console.log(results);
     });
-    const transaction = generateRandomTransaction(createdGps.id);
-    await prisma.transaction.create({
-      data: transaction,
-    });
-  }
-  
-  const oglasi = Array.from({ length: 1000 }, generateRandomOglas);
-  await prisma.oglas.createMany({
-    data: oglasi,
   });
 }
 

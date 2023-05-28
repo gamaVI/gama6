@@ -1,51 +1,36 @@
 import { useMemo } from 'react';
-import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis,Tooltip } from "recharts";
 import dayjs from 'dayjs';
 
 export default function Overview({ transactions, dateFrom, dateTo }) {
-  const startDate = dayjs(dateFrom);
-  const endDate = dayjs(dateTo);
+
 
   const data = useMemo(() => {
     // Generate a list of dates within the date range
     const dateList = [];
-    let currentDate = startDate;
+    let currentDate = dayjs(dateFrom);
+    const startDate = dayjs(dateFrom);
+    const endDate = dayjs(dateTo);
     while (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
-      dateList.push(currentDate.format('YYYY-MM-DD'));
+      dateList.push({
+        name: currentDate.format('YYYY-MM-DD'),
+        total: 0
+      });
       currentDate = currentDate.add(1, 'day');
     }
 
-    // Group transactions by day and count them
-    const groupedByDay = transactions.reduce((acc, transaction) => {
+    // iterate over transactions and check if they have the same date as the dateList
+    transactions.forEach(transaction => {
       const date = dayjs(transaction.transactionDate).format('YYYY-MM-DD');
-
-      if (!acc[date]) {
-        acc[date] = {
-          name: date,
-          total: 0
-        };
+      const dateIndex = dateList.findIndex(dateObj => dateObj.name === date);
+      if (dateIndex !== -1) {
+        dateList[dateIndex].total += 1;
       }
+    }
+    );
 
-      acc[date].total += 1;
-
-      return acc;
-    }, {});
-
-    // Populate missing dates with zero counts
-    dateList.forEach(date => {
-      if (!groupedByDay[date]) {
-        groupedByDay[date] = {
-          name: date,
-          total: 0
-        };
-      }
-    });
-
-    // Sort the data by date
-    const sortedData = Object.values(groupedByDay).sort((a, b) => dayjs(a.name).unix() - dayjs(b.name).unix());
-
-    return sortedData;
-  }, [transactions, startDate, endDate]);
+    return dateList;
+  }, [transactions, dateFrom, dateTo]);
 
   return (
     <ResponsiveContainer width="100%" height={350}>
@@ -64,6 +49,7 @@ export default function Overview({ transactions, dateFrom, dateTo }) {
           axisLine={false}
         />
         <Bar dataKey="total" fill="#adfa1d" />
+        <Tooltip />
       </BarChart>
     </ResponsiveContainer>
   );

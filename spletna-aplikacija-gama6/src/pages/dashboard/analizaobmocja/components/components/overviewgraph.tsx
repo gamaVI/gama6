@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable */
 import { useMemo } from 'react';
-import { Bar, AreaChart, Area, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Bar, AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import dayjs from 'dayjs';
 
 export default function Overview({transactions}) {
@@ -51,6 +51,7 @@ export default function Overview({transactions}) {
           tickFormatter={(value) => `€${value.toFixed(2)}`}
         />
         <Area type="monotone" dataKey="total" fill="#adfa1d" stroke="#adfa1d" radius={[4, 4, 0, 0]} />
+        <Tooltip />
       </AreaChart>
     </ResponsiveContainer>
   );
