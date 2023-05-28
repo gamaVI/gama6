@@ -10,12 +10,12 @@ import { isPointInsidePolygon } from "~/utils/mapUtil";
 export const transactionRouter = createTRPCRouter({
   
 
-  getAllTransactions: publicProcedure.query(({ ctx }) => {
+  getAllTransactions: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.transaction.findMany();
   }),
 
 
-  getTransactionById: publicProcedure
+  getTransactionById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const transaction = await ctx.prisma.transaction.findUnique({

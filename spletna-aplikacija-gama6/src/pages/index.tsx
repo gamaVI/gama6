@@ -55,7 +55,7 @@ const Home: NextPage = () => {
                         <Link
                           href="/dashboard"
                         >
-                          Nadzorna plošča
+                          Nadaljuj z uporabo
                         </Link>
                         </Button>
                        

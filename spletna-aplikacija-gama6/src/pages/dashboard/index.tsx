@@ -9,23 +9,27 @@ import { useSession } from "next-auth/react";
 import TransactionList from "./components/jsonlist";
 import OverviewPage from "./analizaobmocja/overview";
 import AnalizaObmocja from "./analizaobmocja/analizaobmocja";
+import Link from "next/link";
 
 const DashboardPage: NextPage = () => {
   const { data: sessionData } = useSession();
-  const { data: oglasi, refetch: refetchOglasi } = api.oglasi.getAll.useQuery();
-  const { data: posli } = api.transactions.getAllTransactions.useQuery();
-
-  const addOglasMutation = api.oglasi.addOglas.useMutation({
-    onSuccess: (data) => {
-      console.log(data);
-      void refetchOglasi();
-    },
-  });
-
-
   
-  console.log(posli);
-  console.log(oglasi);
+  // redirect user to landing page if not logged in
+  if (!sessionData) {
+    return (
+    <div className="flex items-center justify-center " style={{
+      height: "100vh",
+      width: "100vw",
+    }}>
+    <h1>
+      <Link href="/">You are not logged in. Click here to go to the landing page.</Link>
+    </h1>
+    </div>
+    )
+  }
+
+
+
   return (
     <>
       <div className="md:hidden">
