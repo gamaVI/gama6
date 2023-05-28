@@ -12,8 +12,7 @@
 <townhall> ::= "townhall" <string> <point>
 <church> ::= "church" <string> <point>
 <stadium> ::= "stadium" <string> <point>
-<let> ::= "let" <string> "=" <point>;
-<for> ::= "for" <string> "in" <number> ".." <number> "{" <statement>* "}"
+<let> ::= "let" <string> "=" <number>;
 <if> ::= "if" <condition> "{" <city> "}"
 <condition> ::= <number> <comparison> <number>
 <point> ::= "(" <number> "," <number> ")"
@@ -22,13 +21,21 @@
 <number> ::= [0-9]+
 <string> ::= "\" [a-zA-Z0-9\s]* \""
 <comparison> ::= ">" | "<" | "=="
-<boolean> ::= "true" | "false"
 
 
 točke:
 od osnovnih 6 nimamo 1. točke(nevtralen element)
 od nadgradnje:
-    1. spremenljivke
-    2.if stavek
-    3. for stavek
-    4. park, river
+    1. spremenljivke (let spremenljivka = 5;)
+    2. izjave ( box (spremenljivka, 2), (4, 3))
+    3. if stavek ( if spremenljivka > var {...})
+    4. dodatni elementi(park, river, restaurant, school, townhall, church, stadium)
+    (park celjski_park { circ (1, 1), 2 }
+                   river sava { poly ((2, 3), (4, 6), (8, 8)) }
+                   restaurant hut_burger (13, 7)
+                   school fri (15, 7)
+                   townhall obcina_ljubljana (10, 4)
+                   church peter (4, 9)
+                   stadium stozice (8, 8)
+)
+    5 .Dodatni ukazi(poly ((2, 3), (4, 6), (8, 8)))

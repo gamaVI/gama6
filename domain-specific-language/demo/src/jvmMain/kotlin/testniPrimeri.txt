@@ -26,7 +26,7 @@ townhall "mariborska_obcina" (4, 5)
 church "joze" (3, 3)
 stadium "ljudski_vrt" (2, 4)
 let "xos" = 5
-for "os" in 1..xos {
+for os in 1..5 {
 building "bajteos" { box (os, 1) (os, 2) }
 }
 }
