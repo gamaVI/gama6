@@ -12,23 +12,20 @@ export default function MainNav({
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
       {...props}
     >
+      <h1 className=" text-2xl font-extrabold tracking-tight text-white">
+          🏘️Gama<span className="text-[hsl(280,100%,70%)]">6</span>
+          </h1>
       <Link
         href="/examples/dashboard"
         className="text-sm font-medium transition-colors hover:text-primary"
       >
-        Analitika
+        Analiza območja
       </Link>
       <Link
         href="/examples/dashboard"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Ai asistent
-      </Link>
-      <Link
-        href="/examples/dashboard"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Ostalo
+        AI asistent
       </Link>
     </nav>
   );
