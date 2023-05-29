@@ -1,43 +1,96 @@
 import { prisma } from "../src/server/db";
+import { getAuthToken } from "./utils/tokenUtils";
 import axios from "axios";
 /* disable eslint */
 
-async function postRequest(unit_type, unit_subtype, date_interval) {
-  const url = "http://51.136.39.46:3000/api/scraping/posli"; // replace with your server url if needed
-
+const scrapeAndSaveToDB = async (token, priceFrom, priceTo) => {
   try {
-    const response = await axios.post(url, {
-      unit_type,
-      unit_subtype,
-      date_interval_months: date_interval,
+    const response = await axios({
+      method: 'post',
+      url: 'https://sparkasse.arvio.si/api/v1/transaction-map/search',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      },
+      data: {
+        transaction_amount_gross__gte: priceFrom,
+        transaction_amount_gross__lte: priceTo,
+        date_interval_months: 100,
+        bbox: '14.41011428833008,46.01043551674467,14.602031707763674,46.10573209804895',
+      },
     });
+    
+    const deals = response.data;
+    const detailedDeals = [];
+    for (const deal of deals) {
+      const dealDetails = await axios(
+        {
+          method: "get",
+          url : `https://sparkasse.arvio.si/api/v1/transaction-map/search?id=${deal.id}`,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${token}`,
+          }
+        }
+      );
+      const dealDetailsJson = dealDetails.data;
+      detailedDeals.push(dealDetailsJson);
+    }
 
-    console.log(`Status: ${response.status}`);
-    console.log("Body: ", response.data);
-  } catch (err) {
-    console.error(err);
+    // save to db
+    for (const deal of detailedDeals) {
+      await axios({
+        method: "post",
+        url: "http://localhost:3000/api/transactions/new",
+        data: {
+          apiId: deal.id,
+          componentType: deal.get_component_type_display,
+          address: deal.address,
+          transactionAmountM2: deal.transaction_amount_m2,
+          estimatedAmountM2: deal.estimated_amount_m2,
+          isEstimatedAmount: deal.is_estimated_amount,
+          gps: deal.gps,
+          transactionItemsList: deal.transaction_items_list,
+          transactionSumParcelSizes: deal.transaction_sum_parcel_sizes,
+          transactionDate: deal.transaction_date,
+          transactionAmountGross: deal.transaction_amount_gross,
+          transactionTax: deal.transaction_tax,
+          buildingYearBuilt: deal.building_year_built,
+          unitRoomCount: deal.unit_room_count,
+          unitRoomsSumSize: deal.unit_rooms_sum_size,
+          unitRooms: deal.unit_rooms,
+
+        },
+      });
+          
+          
+    
   }
 }
+  catch (error) {
+    console.error(error);
+  }
+};
+
+
+      
+
+
 
 async function main() {
-  // set the date interval to 6 months
-  const date_interval = 6;
+  let priceFrom = 10000;
+  let priceTo = 11000;
+ 
 
-  // possible unit types and subtypes
-  const unit_types = [1, 2];
-  const subtypes = {
-    1: [1, 2, 3],
-    2: [1, 2, 3, 4, 5],
-  };
+  const token = await getAuthToken();
+  
 
-  unit_types.forEach((unit_type) => {
-    const unit_subtypes = subtypes[unit_type];
 
-    unit_subtypes.forEach(async (unit_subtype) => {
-      const results = await postRequest(unit_type, unit_subtype, date_interval);
-      console.log(results);
-    });
-  });
+  while(priceTo < 5000000) {
+    const deals = await scrapeAndSaveToDB(token, priceFrom, priceTo)
+    priceFrom = priceTo;
+    priceTo = priceTo + 5000;
+  }
 }
 
 main()
