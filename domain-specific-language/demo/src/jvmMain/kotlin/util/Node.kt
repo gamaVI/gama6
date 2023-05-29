@@ -6,16 +6,11 @@ import kotlin.math.sin
 interface Node {
     fun toGeoJSON(): String
     fun replaceVariable(name: String, value: Double): Node {
-        // Default implementation: do nothing, just return the current object
+        // vrača samo samega sebe
         return this
     }
 }
 
-data class StatmentNode(val statment: Node) : Node {
-    override fun toGeoJSON(): String {
-        return statment.toGeoJSON()
-    }
-}
 
 data class ProgramNode(val elements: List<Node>) : Node {
     override fun toGeoJSON(): String {
@@ -47,7 +42,7 @@ data class RoadNode(val name: String, val elements: List<Node>) : Node {
             when (it) {
                 is LineNode -> "[${it.toGeoJSON()}]"
                 is BendNode -> "[${it.toGeoJSON()}]"
-                else -> "[]" // Should not happen
+                else -> "[]" // nesme prit do tega... ampak tudi če ne bo vračalo napake in geoJson bo delal
             }
         }.joinToString(",")
         return """
@@ -154,12 +149,12 @@ class Bezier(
 
 data class BendNode(val point1: PointNode, val point2: PointNode, val bendFactor: Int) : Node {
     override fun toGeoJSON(): String {
-        val p0 = Coordinates(point1.x.toDouble(), point1.y.toDouble())
-        val p3 = Coordinates(point2.x.toDouble(), point2.y.toDouble())
+        val p0 = Coordinates(point1.x, point1.y)
+        val p3 = Coordinates(point2.x, point2.y)
         val midX = (p0.x + p3.x) / 2
         val midY = (p0.y + p3.y) / 2
 
-        val scaleFactor = 0.5// Choose this factor according to your desired range for bendFactor
+        val scaleFactor = 0.5// lahko nastavlaš kak hudo močen bend bo(priporočano med 0.1 in 2)
         val shift = bendFactor * scaleFactor
 
         val p1 = Coordinates(midX, p0.y)
@@ -167,7 +162,7 @@ data class BendNode(val point1: PointNode, val point2: PointNode, val bendFactor
 
         val bezier = Bezier(p0, p1, p2, p3)
 
-        // Always generate 20 points between p0 and p3
+        // nastaviš koliko točk naj bo med začetno in končno točko
         val coordinates = bezier.toPoints(100)
 
         val geoJsonCoordinates = coordinates.joinToString(",") {
@@ -187,16 +182,16 @@ data class ParkNode(val name: String, val center: PointNode, val radius: Double)
         for (i in 0 until 30) {
             val angle = step * i
 
-            val x = center.x.toDouble() + radius * cos(angle)
-            val y = center.y.toDouble() + radius * sin(angle)
+            val x = center.x+ radius * cos(angle)
+            val y = center.y + radius * sin(angle)
 
             coordinates.add(Coordinates(x, y))
         }
 
-        // Add the first point again at the end to close the polygon
+        // mores na koncu dodat se prvo tocko da se zapre poligon
         coordinates.add(coordinates.first())
 
-        // Construct the coordinates string
+        // pretvorba v geoJson
         val geoJsonCoordinates = coordinates.joinToString(",") {
             "[${it.x},${it.y}]"
         }
@@ -243,12 +238,12 @@ data class BuildingNode(val name: String, val box: BoxNode) : Node {
 
 data class BoxNode(val point1: PointNode, val point2: PointNode) : Node {
     override fun toGeoJSON(): String {
-        val x1 = point1.x.toDouble()
-        val y1 = point1.y.toDouble()
-        val x2 = point2.x.toDouble()
-        val y2 = point2.y.toDouble()
+        val x1 = point1.x
+        val y1 = point1.y
+        val x2 = point2.x
+        val y2 = point2.y
 
-        // Assuming the box is axis aligned, return just the coordinates
+        // spet mores na koncu dodat se prvo tocko da se zapre poligon
         return """
             [
                 [$x1, $y1],
@@ -359,29 +354,24 @@ data class LetNode(val name: String, val expression: Double) : Node {
     }
 }
 
-data class StringNode(val value: String) : Node {
-    override fun toGeoJSON(): String {
-        throw UnsupportedOperationException("StringNode cannot be directly converted to GeoJSON")
-    }
-}
+
 
 class ComparisonNode(val operator: Operator) : Node {
     enum class Operator {
-        GT, // greater than
-        LT, // less than
-        EQ  // equal to
+        GT,
+        LT,
+        EQ
     }
 
     override fun toGeoJSON(): String {
-        // Handle conversion to GeoJSON here, if applicable.
-        // If not applicable, you may just want to return a string representation of the node.
+        //tu samo vrnemo operator
         return operator.toString()
     }
 }
 
 class ConditionNode(val left: NumberNode, val comparison: ComparisonNode, val right: NumberNode) : Node {
     override fun toGeoJSON(): String {
-        // We don't need to convert this to GeoJSON
+        // tu samo vrnemo prazno string ce je false, ce je true pa vrnemo city.toGeoJSON()
         return ""
     }
 
@@ -398,8 +388,7 @@ class ConditionNode(val left: NumberNode, val comparison: ComparisonNode, val ri
 
 class IfNode(val condition: ConditionNode, val city: CityNode) : Node {
     override fun toGeoJSON(): String {
-        // If condition evaluates to true, we return the GeoJSON of the city,
-        // otherwise we return an empty string
+        // tu samo vrnemo prazno string ce je false, ce je true pa vrnemo city.toGeoJSON()
         return if (condition.evaluate()) city.toGeoJSON() else ""
     }
 }

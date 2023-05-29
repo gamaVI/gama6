@@ -37,16 +37,16 @@ class Parser(private val scanner: Scanner) {
     private fun parseCity(): CityNode {
         parseTerminal(city_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
-        parseTerminal(l_w_paren_SYMBOL) // changed to left brace symbol
+        parseTerminal(l_w_paren_SYMBOL)
         val elements = mutableListOf<Node>()
-        while (last?.symbol != r_w_paren_SYMBOL) { // changed to right brace symbol
+        while (last?.symbol != r_w_paren_SYMBOL) {
             elements.add(parseCityElement())
         }
-        parseTerminal(r_w_paren_SYMBOL) // changed to right brace symbol
+        parseTerminal(r_w_paren_SYMBOL)
         return CityNode(name, elements)
     }
 
-    //<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium> | <let> | <for>
+    //<city_element> ::= <road> | <building> | <park> | <river> | <restaurant> | <school> | <townhall> | <church> | <stadium> | <let>
     private fun parseCityElement(): Node {
         return when (last?.symbol) {
             road_SYMBOL -> parseRoad()
@@ -58,8 +58,6 @@ class Parser(private val scanner: Scanner) {
             townhall_SYMBOL -> parseTownhall()
             church_SYMBOL -> parseChurch()
             stadium_SYMBOL -> parseStadium()
-            //for_SYMBOL -> parseFor()
-
             else -> panic()
         }
     }
@@ -68,15 +66,16 @@ class Parser(private val scanner: Scanner) {
     private fun parseBuilding(): BuildingNode {
         parseTerminal(building_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
-        parseTerminal(l_w_paren_SYMBOL) // changed to left brace symbol
+        parseTerminal(l_w_paren_SYMBOL)
         parseTerminal(box_SYMBOL)
         val point1 = parsePoint()
         val point2 = parsePoint()
-        parseTerminal(r_w_paren_SYMBOL) // changed to right brace symbol
+        parseTerminal(r_w_paren_SYMBOL)
         val temp = BoxNode(point1, point2)
         return BuildingNode(name, temp)
     }
 
+    //point ::= "(" <number> "," <number> ")"
     private fun parsePoint(): PointNode {
         parseTerminal(l_paren_SYMBOL)
         val x = if (last?.symbol == number_SYMBOL) parseTerminal(number_SYMBOL).toDouble() else variables[parseTerminal(
@@ -90,7 +89,7 @@ class Parser(private val scanner: Scanner) {
         return PointNode(x, y)
     }
 
-
+    //<road> ::= "road" <string> "(" <line> | <bend> ")" ";"
     fun parseRoad(): RoadNode {
         parseTerminal(road_SYMBOL)
         val roadName = parseTerminal(string_SYMBOL)
@@ -107,6 +106,7 @@ class Parser(private val scanner: Scanner) {
         return RoadNode(roadName, elements)
     }
 
+    //<line> ::= "line" "(" <point> <point> ")" ";"
     fun parseLine(): LineNode {
         parseTerminal(line_SYMBOL)
         parseTerminal(l_paren_SYMBOL)
@@ -118,6 +118,7 @@ class Parser(private val scanner: Scanner) {
         return LineNode(point1, point2)
     }
 
+    //<bend> ::= "bend" "(" <point> <point> <number> ")" ";"
     fun parseBend(): BendNode {
         parseTerminal(bend_SYMBOL)
         parseTerminal(l_paren_SYMBOL)
@@ -129,6 +130,7 @@ class Parser(private val scanner: Scanner) {
         return BendNode(point1, point2, bendFactor)
     }
 
+    //<park> ::= "park" <string> "(" "circ" <point> <number> ")" ";"
     fun parsePark(): ParkNode {
         parseTerminal(park_SYMBOL)
         val parkName = parseTerminal(string_SYMBOL)
@@ -145,6 +147,7 @@ class Parser(private val scanner: Scanner) {
         return ParkNode(parkName, centerPoint, radius) // Construct and return the ParkNode object
     }
 
+    //<river> ::= "river" <string> "(" "poly" <point_list> ")" ";"
     fun parseRiver(): RiverNode {
         parseTerminal(river_SYMBOL)
         val riverName = parseTerminal(string_SYMBOL)
@@ -157,6 +160,7 @@ class Parser(private val scanner: Scanner) {
         return RiverNode(riverName, points) // Construct and return the RiverNode object
     }
 
+    //<pointlist> ::= "(" <point> | <point> "," <point> ")" ";"
     private fun parsePointList(): List<PointNode> {
         parseTerminal(l_paren_SYMBOL)
         val points = mutableListOf<PointNode>()
@@ -169,6 +173,7 @@ class Parser(private val scanner: Scanner) {
         return points
     }
 
+    //<restaurant> ::= "restaurant" <string> <point> ";"
     private fun parseRestaurant(): RestaurantNode {
         parseTerminal(restaurant_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
@@ -176,6 +181,7 @@ class Parser(private val scanner: Scanner) {
         return RestaurantNode(name, point)
     }
 
+    //<school> ::= "school" <string> <point> ";"
     private fun parseSchool(): SchoolNode {
         parseTerminal(school_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
@@ -183,6 +189,7 @@ class Parser(private val scanner: Scanner) {
         return SchoolNode(name, point)
     }
 
+    //<townhall> ::= "townhall" <string> <point> ";"
     private fun parseTownhall(): TownhallNode {
         parseTerminal(townhall_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
@@ -190,6 +197,7 @@ class Parser(private val scanner: Scanner) {
         return TownhallNode(name, point)
     }
 
+    //<stadium> ::= "stadium" <string> <point> ";"
     private fun parseStadium(): StadiumNode {
         parseTerminal(stadium_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
@@ -197,6 +205,7 @@ class Parser(private val scanner: Scanner) {
         return StadiumNode(name, point)
     }
 
+    //<church> ::= "church" <string> <point> ";"
     private fun parseChurch(): ChurchNode {
         parseTerminal(church_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
@@ -204,6 +213,7 @@ class Parser(private val scanner: Scanner) {
         return ChurchNode(name, point)
     }
 
+    //<let> ::= "let" <string> "=" <number> ";"
     private fun parseLet(): LetNode {
         parseTerminal(let_SYMBOL)
         val name = parseTerminal(string_SYMBOL)
@@ -214,11 +224,13 @@ class Parser(private val scanner: Scanner) {
         return LetNode(name, value)
     }
 
+    //<number> ::= digit | digit <number>
     private fun parseNumber(): NumberNode {
         val value = parseTerminal(number_SYMBOL)
         return NumberNode(value.toInt())
     }
 
+    //<if> ::= "if" <condition> "{" <city> "}"
     private fun parseIf(): IfNode {
         parseTerminal(if_SYMBOL)
         val condition = parseCondition()
@@ -228,6 +240,7 @@ class Parser(private val scanner: Scanner) {
         return IfNode(condition, city)
     }
 
+    //<condition> ::= <number> <comparison> <number>
     private fun parseCondition(): ConditionNode {
         val num1 = parseNumberOrVariable()
         val comparison = parseComparison()
@@ -235,16 +248,8 @@ class Parser(private val scanner: Scanner) {
         return ConditionNode(num1, comparison, num2)
     }
 
-    private fun parseNumberOrVariable(): NumberNode {
-        return if (last?.symbol == number_SYMBOL) {
-            parseNumber()
-        } else {
-            val name = parseTerminal(string_SYMBOL)
-            NumberNode(variables[name]?.toInt() ?: panic())
-        }
-    }
 
-
+    //<comparison> ::= ">" | "<" | "=="
     private fun parseComparison(): ComparisonNode {
         return when (last?.symbol) {
             greater_SYMBOL -> {
@@ -266,6 +271,14 @@ class Parser(private val scanner: Scanner) {
         }
     }
 
+    private fun parseNumberOrVariable(): NumberNode {
+        return if (last?.symbol == number_SYMBOL) {
+            parseNumber()
+        } else {
+            val name = parseTerminal(string_SYMBOL)
+            NumberNode(variables[name]?.toInt() ?: panic())
+        }
+    }
 
     private fun parseTerminal(symbol: Int): String =
         if (last?.symbol == symbol) {

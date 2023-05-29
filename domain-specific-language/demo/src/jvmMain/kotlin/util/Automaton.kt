@@ -6,14 +6,13 @@ object Automaton : DFA {
     override val finalStates = setOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 22, 29, 33,35,40, 45, 47, 48, 107, 52, 54, 56, 60, 63, 73, 77, 80, 86, 92, 96, 103, 104, 105, 108, 109, 110, 111)
     override val alphabet = 0..255
 
-    private val numberOfStates = states.max() + 1  // plus the ERROR_STATE
-    //    private val numberOfStates
+    private val numberOfStates = states.max() + 1//plus error state
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF...
     private val transitions = Array(numberOfStates) { IntArray(numberOfCodes) }
     private val values = Array(numberOfStates) { SKIP_SYMBOL }
 
     private fun setTransition(from: Int, chr: Char, to: Int) {
-        transitions[from][chr.code + 1] = to // + 1 because EOF is -1 and the array starts at 0
+        transitions[from][chr.code + 1] = to
     }
 
     private fun setTransition(from: Int, code: Int, to: Int) {

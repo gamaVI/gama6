@@ -1,4 +1,4 @@
-1.
+1. http://geojson.io/#map=3.51/11.85/15.62
   let spremenljivka = 2;
         let var = 1;
         if spremenljivka > var {
@@ -295,5 +295,8 @@ if numx == numy {
      bend ((26, 24) (24, 22) 2);
       bend ((26, 24) (28, 22) 2);
      }
+     }
+
+
 
 "{ } ( ) [ ] . , /" road park river church stadium restaurant school townhall building list let if for in true false city line bend circ box poly population xos stevilo mesta gostilne kipec neboticnik juznaplaza trznica dvorec mestnipark zupanciceva pinestreet celjskipark bajte ljudski vrt joze mariborska obcina feri poper drava dvorana stozice peter obcina ljubljana fri soncni park presernova ulica ljubljana maribor celje ptuj piran novo mesto koper murska sobota kranj"

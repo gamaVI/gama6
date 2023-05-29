@@ -5,11 +5,8 @@ import java.util.*
 data class Token(val symbol: Int, val lexeme: String, val startRow: Int, val startColumn: Int)
 
 class Scanner(private val automaton: DFA, private val stream: InputStream) {
-    //private var last: Int? = null
+        private var last: Int? = null
 
-    private var state = automaton.startState
-    private var last: Int? = null
-    private var buffer = LinkedList<Byte>()
     //____________________
 
     private var row = 1
@@ -40,7 +37,7 @@ class Scanner(private val automaton: DFA, private val stream: InputStream) {
             buffer.add(code.toChar())
             code = stream.read()
         }
-        last = code // The code following the current lexeme is the first code of the next lexeme
+        last = code
 
         if (automaton.finalStates.contains(state)) {//če je mozno da je to state končni poem se izvede
             val symbol = automaton.symbol(state)
