@@ -1,11 +1,42 @@
-import React from 'react';
-import { ScatterChart, CartesianGrid, XAxis, YAxis, Tooltip, Scatter, ResponsiveContainer } from 'recharts';
+import React from "react";
+import {
+  ScatterChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Scatter,
+  ResponsiveContainer,
+} from "recharts";
 
 function YearBuiltSizeScatterChart({ transactions }) {
-  let data = transactions.map(transaction => ({
-    yearBuilt: transaction.buildingYearBuilt,
-    size: transaction.unitRoomsSumSize,
-  }));
+  let tempData = {};
+
+  for (const transaction of transactions) {
+    // Check if building year exists in tempData
+    if (tempData[transaction.buildingYearBuilt]) {
+      // If it does, add the current size to the total and increment the count
+      tempData[transaction.buildingYearBuilt].totalSize +=
+        transaction.unitRoomsSumSize;
+      tempData[transaction.buildingYearBuilt].count += 1;
+    } else {
+      // If it doesn't, create a new entry with the current size and count 1
+      tempData[transaction.buildingYearBuilt] = {
+        totalSize: transaction.unitRoomsSumSize,
+        count: 1,
+      };
+    }
+  }
+
+  let data = [];
+
+  // Calculate the average size for each year and store it in the final data array
+  for (const year in tempData) {
+    data.push({
+      yearBuilt: parseInt(year),
+      averageSize: tempData[year].totalSize / tempData[year].count,
+    });
+  }
 
   // Sort data by yearBuilt
   data = data.sort((a, b) => a.yearBuilt - b.yearBuilt);
@@ -24,8 +55,8 @@ function YearBuiltSizeScatterChart({ transactions }) {
       >
         <CartesianGrid stroke="#f5f5f5" />
         <XAxis dataKey="yearBuilt" name="Year Built" />
-        <YAxis dataKey="size" name="Size" />
-        <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+        <YAxis dataKey="averageSize" name="Average size" />
+        <Tooltip cursor={{ strokeDasharray: "3 3" }} />
         <Scatter data={data} fill="#8884d8" />
       </ScatterChart>
     </ResponsiveContainer>
