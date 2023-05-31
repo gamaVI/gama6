@@ -151,14 +151,11 @@ data class BendNode(val point1: PointNode, val point2: PointNode, val bendFactor
     override fun toGeoJSON(): String {
         val p0 = Coordinates(point1.x, point1.y)
         val p3 = Coordinates(point2.x, point2.y)
-        val midX = (p0.x + p3.x) / 2
-        val midY = (p0.y + p3.y) / 2
+        val midX = (p0.x + p3.x) / 2 // sredina med začetno in končno točko x os
+        val midY = (p0.y + p3.y) / 2  // sredina med začetno in končno točko y os
 
-        val scaleFactor = 0.5// lahko nastavlaš kak hudo močen bend bo(priporočano med 0.1 in 2)
-        val shift = bendFactor * scaleFactor
-
-        val p1 = Coordinates(midX, p0.y)
-        val p2 = Coordinates(midX + shift, midY)
+        val p1 = Coordinates(midX, p0.y) // točka na sredini med začetno in končno točko na x osi
+        val p2 = Coordinates(midX + bendFactor, midY)  // najodaljena točka od sredine med začetno in končno točko
 
         val bezier = Bezier(p0, p1, p2, p3)
 
@@ -177,13 +174,13 @@ data class BendNode(val point1: PointNode, val point2: PointNode, val bendFactor
 data class ParkNode(val name: String, val center: PointNode, val radius: Double) : Node {
     override fun toGeoJSON(): String {
         val coordinates = mutableListOf<Coordinates>()
-        val step = 2 * PI / 30
+        val step = 2 * PI / 30 // 30 točk na krogu
 
         for (i in 0 until 30) {
-            val angle = step * i
+            val angle = step * i // kot med točkami
 
-            val x = center.x+ radius * cos(angle)
-            val y = center.y + radius * sin(angle)
+            val x = center.x+ radius * cos(angle) // x koordinata točke na krogu
+            val y = center.y + radius * sin(angle) // y koordinata točke na krogu
 
             coordinates.add(Coordinates(x, y))
         }
@@ -364,14 +361,13 @@ class ComparisonNode(val operator: Operator) : Node {
     }
 
     override fun toGeoJSON(): String {
-        //tu samo vrnemo operator
         return operator.toString()
     }
 }
 
 class ConditionNode(val left: NumberNode, val comparison: ComparisonNode, val right: NumberNode) : Node {
     override fun toGeoJSON(): String {
-        // tu samo vrnemo prazno string ce je false, ce je true pa vrnemo city.toGeoJSON()
+//more bit prazno ker ce bi javlali napako ne bi bila veljavna geojson koda če so druge stvari vredu
         return ""
     }
 
@@ -389,7 +385,7 @@ class ConditionNode(val left: NumberNode, val comparison: ComparisonNode, val ri
 class IfNode(val condition: ConditionNode, val city: CityNode) : Node {
     override fun toGeoJSON(): String {
         // tu samo vrnemo prazno string ce je false, ce je true pa vrnemo city.toGeoJSON()
-        return if (condition.evaluate()) city.toGeoJSON() else ""
+        return if (condition.evaluate()) city.toGeoJSON() else condition.toGeoJSON()
     }
 }
 

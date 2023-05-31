@@ -123,8 +123,8 @@ fun main() {
 
             road koroska {
                 line((1, 3) (13, 3));
-                bend ((13, 3) (15, 6) 2);
-                bend ((13, 3) (15, 0) 2);
+                bend ((13, 3) (15, 6) 1);
+                bend ((13, 3) (15, 0) 1);
                 line((15, 6) (15, 20));
             }
               park promenada { circ (17, 3) 2 }
@@ -156,9 +156,10 @@ fun main() {
             river drava { poly ((20, 25), (22, 23), (20, 21), (22, 19), (20, 17), (22, 15), (20, 13), (22, 11), (20, 9), (22, 7), (20, 5), (22, 3), (20, 1)) }
             road smetanova {
             line ((5, 20) (25, 20));
-            bend ((25, 20) (27, 18) 2);
-            bend ((25, 20) (27, 22) 2);
+            bend ((25, 20) (27, 18) 1);
+            bend ((25, 20) (27, 22) 1);
             line ((27, 18) (27, 0));
+            line ((27, 22) (27, 40));
             }
             building mestna_obcina_maribor {
                 box (26, 17) (23, 12)
@@ -167,11 +168,83 @@ fun main() {
 
             park vijolcni_park { circ (24, 9) 2 }
             stadium ljudski_vrt (24, 9)
+        }
+        }
+        
+        let bla = 2;
+        let blah = 1;
+        if bla > blah {
+        city celje {
+            building bajta {
+                box (27, 42) (29, 44)
+            }
+            building bajta {
+                box (27, 44) (29, 46)
+            }
+            building bajta {
+                box (27, 46) (29, 48)
+            }
+            building bajta {
+                box (27, 48) (29, 50)
+            }
+            building bajta {
+                box (27, 50) (29, 52)
+            }
+            road celjska {
+                line((27, 40) (28, 40));
+                bend ((28, 40) (30, 42) 1);
 
+                line((30, 42) (30, 60));
+                bend ((30, 60) (32, 62) 1);
+                bend ((28, 62) (30, 60) 1);
+                bend ((28, 62) (30, 64) 1);
+                bend ((30, 64) (32, 62) 1);
+            }
+            park mestni_park { circ (33, 45) 2 }
+            building cerkev {
+                box (32, 47) (34, 46)
+            }
+            church sv_joze (32, 47)
+            building bajta {
+                box (32, 48) (34, 50)
+            }
+            building bajta {
+                box (32, 50) (34, 52)
+            }
+            building bajta {
+                box (32, 52) (34, 54)
+            }
+            building bajta {
+                box (32, 54) (34, 56)
+            }
+            building bajta {
+                box (32, 56) (34, 58)
+            }
 
+            building univerza_v_celju {
+                box (35, 50) (40, 60)
+            }
+            restaurant gurman (36, 51)
+            school gimnazija_celje_center (38, 53)
+            river voglajna { poly ((42, 65), (44, 63), (42, 61), (44, 59), (42, 57), (44, 55), (42, 53), (44, 51), (42, 49), (44, 47), (42, 45), (44, 43), (42, 41)) }
+            road lavtarska {
+                line ((32, 62) (57, 62));
+                bend ((57, 62) (59, 60) 1);
+                bend ((57, 62) (59, 64) 1);
+                line ((59, 60) (59, 40));
+                line ((59, 64) (59, 80));
+            }
+            building mestna_obcina_celje {
+                box (58, 59) (55, 54)
+            }
+            townhall mestna_obcina_celje (56, 56)
+
+            park mestni_park_celje { circ (56, 50) 2 }
+            stadium arena_petrol (56, 50)
         }
         }
 
+      
     """.trimIndent()
 
     val scanner = Scanner(Automaton, input.byteInputStream())
