@@ -211,7 +211,7 @@ fun main() {
             }
             building bajta {
                 box (32, 52) (34, 54)
-            }
+            } 
             building bajta {
                 box (32, 54) (34, 56)
             }
