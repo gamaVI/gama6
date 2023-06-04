@@ -38,7 +38,7 @@ export default function OverviewPage({transactions,dateFrom,dateTo}) {
   const averageTransactionValue = totalTransactionAmount / numberOfTransactions;
 
   // Calculate average price per square meter
-  const totalSquareMeters = transactions.reduce((total, transaction) => total + transaction.unitRoomsSumSize, 0);
+  const totalSquareMeters = transactions.reduce((total, transaction) => total + transaction.unitRoomsSumSize , 0);
   const averagePricePerSquareMeter = totalTransactionAmount / totalSquareMeters;
 
   return (
@@ -92,7 +92,7 @@ export default function OverviewPage({transactions,dateFrom,dateTo}) {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Povpečna cena na kvadratni meter</CardTitle>
+            <CardTitle>Povprečna cena na kvadratni meter</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
           <Overview transactions={transactions} />

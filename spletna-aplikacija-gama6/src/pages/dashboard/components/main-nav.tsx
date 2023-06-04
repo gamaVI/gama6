@@ -25,7 +25,13 @@ export default function MainNav({
         href="/examples/dashboard"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        AI asistent
+        Dokumentacija
+      </Link>
+      <Link
+        href="/examples/dashboard"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+      >
+        Github
       </Link>
     </nav>
   );

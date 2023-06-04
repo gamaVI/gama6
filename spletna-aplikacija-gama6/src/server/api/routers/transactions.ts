@@ -93,10 +93,24 @@ export const transactionRouter = createTRPCRouter({
 
 
     getTransactionsInPolygon: publicProcedure
-    .input(z.array(z.object({ lat: z.number(), lng: z.number() })))
+    .input(
+      z.object({
+        polygon: z.array(z.object({ lat: z.number(), lng: z.number() })),
+        componentTypes: z.array(z.string()),
+        startDate: z.date(),
+        endDate: z.date(),
+        priceFrom: z.number(),
+        priceTo: z.number(),
+    })
+    )
     .mutation(async ({ ctx, input }) => {
-      const polygon = input;
+      const {polygon, startDate, endDate, priceFrom,priceTo, componentTypes} = input;
       const transactions = await ctx.prisma.transaction.findMany({
+        where: {
+          componentType: { in: componentTypes },
+          transactionDate: { gte: startDate, lte: endDate },
+          transactionAmountGross: { gte: priceFrom, lte: priceTo },
+        },
         include: { gps: true },
       });
       const result = transactions.filter((transaction) =>

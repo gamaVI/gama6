@@ -17,12 +17,12 @@ import dayjs from "dayjs";
 const AnalizaObmocja = () => {
 
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2010, 0, 20),
+    from: new Date(2021, 0, 20),
     to: addDays(new Date(2023, 0, 20), 20),
   })
 
-  const [priceFrom, setPriceFrom] = useState<number | undefined>(10)
-  const [priceTo, setPriceTo] = useState<number | undefined>(10000000)
+  const [priceFrom, setPriceFrom] = useState<number | undefined>(100000)
+  const [priceTo, setPriceTo] = useState<number | undefined>(200000)
   const [enabledTypes, setEnabledTypes] = useState<string[]>([])
   const [mapLayers, setMapLayers] = useState([]);
   const [transactions , setTransactions] = useState<any[]>([])
@@ -33,29 +33,21 @@ const AnalizaObmocja = () => {
 
   const getTransactionsInPolygon = api.transactions.getTransactionsInPolygon.useMutation({
     onSuccess: (data) => {
-
-      const filteredTransactions = data.filter((transaction) => {
-        
-        const transactionDate = dayjs(transaction.transactionDate);
-        const transactionPrice = transaction.transactionAmountGross;
-  
-        const isDateInRange = transactionDate.isAfter(date.from) && transactionDate.isBefore(date.to);
-        const isPriceInRange = transactionPrice >= priceFrom && transactionPrice <= priceTo;
-        const isTypeEnabled = enabledTypes.includes(transaction.componentType);
-
-        return isDateInRange && isPriceInRange && isTypeEnabled;
-      });
-      
-
-      setTransactions(filteredTransactions || [])
+      setTransactions(data || [])
     }
 
   });
 
   const submitSearch = async () => {
     
-      await getTransactionsInPolygon.mutate(
-       mapLayers[0].latlngs)
+      await getTransactionsInPolygon.mutate({
+        polygon: mapLayers[0].latlngs,
+        startDate: date.from,
+        endDate: date.to,
+        priceFrom: priceFrom,
+        priceTo: priceTo,
+        componentTypes: enabledTypes
+      })
       
       
   }   
