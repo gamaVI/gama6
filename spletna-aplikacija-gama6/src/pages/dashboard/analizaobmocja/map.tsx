@@ -30,6 +30,7 @@ import {
   TableBody,
   TableHeader,
 } from "@/components/ui/table";
+import L from 'leaflet';
 const PolygonMap = ({ mapLayers, setMapLayers, transactions }) => {
   console.log(transactions);
 
@@ -80,6 +81,12 @@ const PolygonMap = ({ mapLayers, setMapLayers, transactions }) => {
     });
   };
 
+  const iconHTML = (color) => {
+    return `<img src="https://cdn3d.iconscout.com/3d/premium/thumb/payment-invoice-6760943-5588826.png" style="width: 60px; height: 60px;"/>
+    `;
+  
+  };
+
   return (
     <>
       <div
@@ -123,7 +130,12 @@ const PolygonMap = ({ mapLayers, setMapLayers, transactions }) => {
 
               {transactions.map((transaction) => {
                 return (
-                  <Marker position={[transaction.gps.lat, transaction.gps.lng]}>
+                  <Marker icon={L.divIcon({
+                    iconSize: [60, 60],
+                    iconAnchor: null,
+                    className: "mymarker",
+                    html: iconHTML("#ff0000"),
+                  })} position={[transaction.gps.lat, transaction.gps.lng]}>
                    <Popup>
   <Card key={transaction.id}>
     <CardHeader>
