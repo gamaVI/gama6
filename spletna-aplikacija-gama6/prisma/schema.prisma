@@ -74,14 +74,14 @@ model Transaction {
   isEstimatedAmount         Boolean
   gps                       Gps      @relation(fields: [gpsId], references: [id])
   transactionItemsList      String[]
-  transactionSumParcelSizes Int
+  transactionSumParcelSizes Int?
   transactionDate           DateTime  @db.Date
-  transactionAmountGross    Float
+  transactionAmountGross    Float?
   transactionTax            Float?
-  buildingYearBuilt         Int
+  buildingYearBuilt         Int?
   unitRoomCount             Int?
-  unitRoomsSumSize          Float
-  unitRooms                 String
+  unitRoomsSumSize          Float?
+  unitRooms                 String?
   gpsId                     String   @db.ObjectId
 
   @@map("properties")

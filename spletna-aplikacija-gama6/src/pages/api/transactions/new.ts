@@ -21,14 +21,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       lng: z.number(),
     }),
     transactionItemsList: z.array(z.string()),
-    transactionSumParcelSizes: z.number(),
+    transactionSumParcelSizes: z.number().nullable(), 
     transactionDate: z.string(),
     transactionAmountGross: z.number(),
     transactionTax: z.number().nullable(),
     buildingYearBuilt: z.number(),
     unitRoomCount: z.number().nullable(),
-    unitRoomsSumSize: z.number(),
-    unitRooms: z.string(),
+    unitRoomsSumSize: z.number().nullable(),
+    unitRooms: z.string().nullable(),
   });
 
   try {
