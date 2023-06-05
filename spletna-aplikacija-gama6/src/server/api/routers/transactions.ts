@@ -10,12 +10,12 @@ import { isPointInsidePolygon } from "~/utils/mapUtil";
 export const transactionRouter = createTRPCRouter({
   
 
-  getAllTransactions: publicProcedure.query(({ ctx }) => {
+  getAllTransactions: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.transaction.findMany();
   }),
 
 
-  getTransactionById: publicProcedure
+  getTransactionById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const transaction = await ctx.prisma.transaction.findUnique({
@@ -93,10 +93,24 @@ export const transactionRouter = createTRPCRouter({
 
 
     getTransactionsInPolygon: publicProcedure
-    .input(z.array(z.object({ lat: z.number(), lng: z.number() })))
-    .query(async ({ ctx, input }) => {
-      const polygon = input;
+    .input(
+      z.object({
+        polygon: z.array(z.object({ lat: z.number(), lng: z.number() })),
+        componentTypes: z.array(z.string()),
+        startDate: z.date(),
+        endDate: z.date(),
+        priceFrom: z.number(),
+        priceTo: z.number(),
+    })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const {polygon, startDate, endDate, priceFrom,priceTo, componentTypes} = input;
       const transactions = await ctx.prisma.transaction.findMany({
+        where: {
+          componentType: { in: componentTypes },
+          transactionDate: { gte: startDate, lte: endDate },
+          transactionAmountGross: { gte: priceFrom, lte: priceTo },
+        },
         include: { gps: true },
       });
       const result = transactions.filter((transaction) =>
@@ -107,4 +121,18 @@ export const transactionRouter = createTRPCRouter({
       );
       return result;
     }),
-});
+
+    getAllComponentTypes: publicProcedure.query(async ({ ctx }) => {
+      // find all diffferent component types in transactions
+      const componentTypes  = await ctx.prisma.transaction.findMany({
+        select: { componentType: true },
+      });
+      return [...new Set(componentTypes.map((item) => item.componentType))];
+    }),
+
+
+
+    }
+    );
+
+
