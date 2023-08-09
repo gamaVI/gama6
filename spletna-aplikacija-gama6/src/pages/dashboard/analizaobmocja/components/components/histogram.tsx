@@ -2,19 +2,10 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 function TransactionHistogram({ transactions }) {
-  // Get maximum transaction amount
   const maxTransactionAmount = Math.max(...transactions.map(t => t.transactionAmountGross));
-  
-  // Define number of bins for histogram
-  const numberOfBins = 10;
-  
-  // Define bin size based on max transaction amount
-  const binSize = 100000;
-
-  // Initialize counts
+  const numberOfBins = 20;
+  const binSize = 50000;
   const counts = Array.from({ length: numberOfBins }, () => 0);
-  
-  // Count transactions for each bin
   transactions.forEach(transaction => {
     const binIndex = Math.floor(transaction.transactionAmountGross / binSize);
     if (binIndex < counts.length) {
@@ -22,7 +13,6 @@ function TransactionHistogram({ transactions }) {
     }
   });
 
-  // Prepare data for Recharts
   const data = counts.map((count, i) => ({ 
     name: `${i * binSize}-${(i + 1) * binSize - 1}`, 
     count 

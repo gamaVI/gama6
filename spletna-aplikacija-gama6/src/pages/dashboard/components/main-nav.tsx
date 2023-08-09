@@ -22,13 +22,13 @@ export default function MainNav({
         Analiza območja
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="https://gama6-organization.gitbook.io/product-docs/"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Dokumentacija
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="https://github.com/gamaVI/gama6"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Github
