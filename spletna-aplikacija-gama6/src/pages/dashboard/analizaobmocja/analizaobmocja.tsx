@@ -39,7 +39,6 @@ const AnalizaObmocja = () => {
   });
 
   const submitSearch = async () => {
-    
       await getTransactionsInPolygon.mutate({
         polygon: mapLayers[0].latlngs,
         startDate: date.from,
@@ -48,8 +47,6 @@ const AnalizaObmocja = () => {
         priceTo: priceTo,
         componentTypes: enabledTypes
       })
-      
-      
   }   
 
 

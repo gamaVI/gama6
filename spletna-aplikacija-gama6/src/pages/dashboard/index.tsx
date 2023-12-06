@@ -14,7 +14,6 @@ import Link from "next/link";
 const DashboardPage: NextPage = () => {
   const { data: sessionData } = useSession();
   
-  // redirect user to landing page if not logged in
   if (!sessionData) {
     return (
     <div className="flex items-center justify-center " style={{
@@ -22,7 +21,7 @@ const DashboardPage: NextPage = () => {
       width: "100vw",
     }}>
     <h1>
-      <Link href="/">You are not logged in. Click here to go to the landing page.</Link>
+      <Link href="/">You are not logged in.</Link>
     </h1>
     </div>
     )
