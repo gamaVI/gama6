@@ -1,92 +1,34 @@
-const ChainUtil = require("../chain-util");
-const { MINING_REWARD } = require("../config");
-class Transaction {
-  constructor() {
-    this.id = ChainUtil.id();
-    this.input = null;
-    this.outputs = [];
-  }
+const EC = require('elliptic').ec;
+const ec = new EC('secp256k1');
 
-  update(senderWallet, recipient, amount) {
-    const senderOutput = this.outputs.find(
-      (output) => output.address === senderWallet.publicKey
-    );
+const uuidV1 = require('uuid/v1');
 
-    if (amount > senderWallet.amount) {
-      console.log(`Amount ${amount} exceeds balance`);
-      return;
+const SHA256 = require('crypto-js/sha256');
+
+class ChainUtil{
+
+    static genKeyPair(){
+        return ec.genKeyPair();
     }
 
-    senderOutput.amount = senderOutput.amount - amount;
-    this.outputs.push({ amount: amount, address: recipient });
-    Transaction.signTransaction(this, senderWallet);
-
-    return this;
-  }
-
-  /**
-   * create a new transaction
-   */
-
-  static newTransaction(senderWallet, recipient, amount) {
-    if (amount > senderWallet.balance) {
-      console.log(`Amount : ${amount} exceeds the balance`);
-      return;
+    static id(){
+        return uuidV1();
     }
-    // call to the helper function that creates and signs the transaction outputs
-    return Transaction.transactionWithOutputs(senderWallet, [
-      {
-        amount: senderWallet.balance - amount,
-        address: senderWallet.publicKey,
-      },
-      { amount: amount, address: recipient },
-    ]);
-  }
 
-  /**
-   * helper function
-   */
+    static hash(data){
+        return SHA256(JSON.stringify(data)).toString();
+    }
+    /**
+     * verify the transaction signature to 
+     * check its validity using the method provided
+     * in EC module
+     */
 
-  static transactionWithOutputs(senderWallet, outputs) {
-    const transaction = new this();
-    transaction.outputs.push(...outputs);
-    Transaction.signTransaction(transaction, senderWallet);
-    return transaction;
-  }
+    static verifySignature(publicKey,signature,dataHash){
+        return ec.keyFromPublic(publicKey,'hex').verify(dataHash,signature);
+    }
 
-  /**
-   * create input and sign the outputs
-   */
 
-  static signTransaction(transaction, senderWallet) {
-    transaction.input = {
-      timestamp: Date.now(),
-      amount: senderWallet.balance,
-      address: senderWallet.publicKey,
-      signature: senderWallet.sign(ChainUtil.hash(transaction.outputs)),
-    };
-  }
-
-  /**
-   * verify the transaction by decrypting and matching
-   */
-
-  static verifyTransaction(transaction) {
-    return ChainUtil.verifySignature(
-      transaction.input.address,
-      transaction.input.signature,
-      ChainUtil.hash(transaction.outputs)
-    );
-  }
-
-  static rewardTransaction(minerWallet, blockchainWallet) {
-    return Transaction.transactionWithOutputs(blockchainWallet, [
-      {
-        amount: MINING_REWARD,
-        address: minerWallet.publicKey,
-      },
-    ]);
-  }
 }
 
-module.exports = Transaction;
+module.exports = ChainUtil;

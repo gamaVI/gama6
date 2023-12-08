@@ -23,6 +23,6 @@
 //     console.log(blockchain.addBlock(`foo ${i}`).toString());
 // }
 
-const Wallet = require("./wallet");
+const Wallet = require('./wallet');
 const wallet = new Wallet();
 console.log(wallet.toString());
