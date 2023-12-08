@@ -1,15 +1,11 @@
-const DIFFICULTY = 4;
+const DIFFICULTY = 1;
 
 // in milliseconds
 const MINE_RATE = 3000;
-
-const INITIAL_BALANCE = 500;
-
-const MINING_REWARD = 50;
+const DIFFICULTY_ADJUSTMENT_INTERVAL = 3;
 
 module.exports = {
-    DIFFICULTY,
-    MINE_RATE,
-    INITIAL_BALANCE,
-    MINING_REWARD
-}
+  DIFFICULTY,
+  MINE_RATE,
+  DIFFICULTY_ADJUSTMENT_INTERVAL,
+};

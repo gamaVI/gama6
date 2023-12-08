@@ -1,5 +1,4 @@
 const Event = require("../wallet/event");
-const Wallet = require("../wallet/index");
 
 class Miner {
   constructor(blockchain, eventPool, wallet, p2pServer) {

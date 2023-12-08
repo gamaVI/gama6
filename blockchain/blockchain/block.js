@@ -1,9 +1,14 @@
 const ChainUtil = require("../chain-util");
-const { DIFFICULTY, MINE_RATE } = require("../config.js");
+const {
+  DIFFICULTY,
+  MINE_RATE,
+  DIFFICULTY_ADJUSTMENT_INTERVAL,
+} = require("../config.js");
 
 class Block {
-  constructor(timestamp, lastHash, hash, data, nonce, difficulty) {
+  constructor(timestamp, lastHash, hash, data, nonce, difficulty, index) {
     this.timestamp = timestamp;
+    this.index = index || 0;
     this.lastHash = lastHash;
     this.hash = hash;
     this.data = data;
@@ -32,31 +37,29 @@ class Block {
    */
 
   static genesis() {
-    return new this("Genesis time", "----", "f1574-h4gh", [], 0, DIFFICULTY);
+    return new this("Genesis time", "----", "f1574-h4gh", [], 0, DIFFICULTY, 0);
   }
 
   /**
    * function to create new blocks or to mine new blocks
    */
 
-  static mineBlock(lastBlock, data) {
-    let hash;
-    let timestamp;
+  static mineBlock(lastBlock, data, difficulty) {
+    let hash, timestamp;
     const lastHash = lastBlock.hash;
 
-    let { difficulty } = lastBlock;
+    let { index } = lastBlock;
+    index = index + 1;
 
     let nonce = 0;
-    //generate the hash of the block
     do {
       nonce++;
       timestamp = Date.now();
-      difficulty = Block.adjustDifficulty(lastBlock, timestamp);
       hash = Block.hash(timestamp, lastHash, data, nonce, difficulty);
       // checking if we have the required no of leading number of zeros
     } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
 
-    return new this(timestamp, lastHash, hash, data, nonce, difficulty);
+    return new this(timestamp, lastHash, hash, data, nonce, difficulty, index);
   }
 
   /**
@@ -84,12 +87,20 @@ class Block {
    */
 
   static adjustDifficulty(lastBlock, currentTime) {
-    let { difficulty } = lastBlock;
-    difficulty =
-      lastBlock.timestamp + MINE_RATE > currentTime
-        ? difficulty + 1
-        : difficulty - 1;
-    return difficulty;
+    const timeTaken = currentTime - lastBlock.timestamp; // Čas, ki je bil potreben za najti zadnji blok
+
+    if (lastBlock.index % DIFFICULTY_ADJUSTMENT_INTERVAL === 0) {
+      // Preveri, če je čas za popravek težavnosti
+      if (timeTaken < MINE_RATE / 2) {
+        // Če je ustvarjanje trajalo manj kot polovico pričakovanega časa
+        return lastBlock.difficulty + 1;
+      } else if (timeTaken > MINE_RATE * 2) {
+        // Če je ustvarjanje trajalo več kot dvojno pričakovanega časa
+        return Math.max(1, lastBlock.difficulty - 1); // Težavnost ne sme pasti pod 1
+      }
+    }
+
+    return lastBlock.difficulty; // Če ni potreben popravek, vrni trenutno težavnost
   }
 }
 

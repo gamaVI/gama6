@@ -1,30 +1,22 @@
-const EC = require("elliptic").ec;
-const ec = new EC("secp256k1");
-
-const uuidV1 = require("uuid/v1");
-
 const SHA256 = require("crypto-js/sha256");
+const fs = require("fs");
 
 class ChainUtil {
-  static genKeyPair() {
-    return ec.genKeyPair();
-  }
-
-  static id() {
-    return uuidV1();
-  }
-
   static hash(data) {
     return SHA256(JSON.stringify(data)).toString();
   }
-  /**
-   * verify the transaction signature to
-   * check its validity using the method provided
-   * in EC module
-   */
 
-  static verifySignature(publicKey, signature, dataHash) {
-    return ec.keyFromPublic(publicKey, "hex").verify(dataHash, signature);
+  static saveBlockchainToFile(blockchain, filename) {
+    const jsonContent = JSON.stringify(blockchain, null, 2); // Beautify the JSON
+
+    fs.writeFile(filename, jsonContent, "utf8", (err) => {
+      if (err) {
+        console.log("An error occurred while writing JSON to file.");
+        return console.log(err);
+      }
+
+      console.log("Blockchain has been saved to file.");
+    });
   }
 }
 
