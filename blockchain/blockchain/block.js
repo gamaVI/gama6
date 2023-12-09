@@ -1,4 +1,8 @@
 const ChainUtil = require("../chain-util");
+const NUM_WORKERS = 5;
+const { Worker } = require("worker_threads");
+const deasync = require("deasync");
+
 const {
   DIFFICULTY,
   MINE_RATE,
@@ -42,24 +46,85 @@ class Block {
 
   /**
    * function to create new blocks or to mine new blocks
+   *
+   *
    */
 
   static mineBlock(lastBlock, data, difficulty) {
-    let hash, timestamp;
-    const lastHash = lastBlock.hash;
+    let minedBlock;
+    let error;
+    let done = false;
 
-    let { index } = lastBlock;
-    index = index + 1;
+    // Asynchronous mining logic (same as before)
+    this.mineBlockAsync(lastBlock, data, difficulty)
+      .then((block) => {
+        minedBlock = block;
+        done = true;
+      })
+      .catch((err) => {
+        error = err;
+        done = true;
+      });
 
-    let nonce = 0;
-    do {
-      nonce++;
-      timestamp = Date.now();
-      hash = Block.hash(timestamp, lastHash, data, nonce, difficulty);
-      // checking if we have the required no of leading number of zeros
-    } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
+    // Deasync loop waits here until mining is complete
+    deasync.loopWhile(() => !done);
 
-    return new this(timestamp, lastHash, hash, data, nonce, difficulty, index);
+    if (error) {
+      throw error;
+    }
+
+    return minedBlock;
+  }
+  static mineBlockAsync(lastBlock, data, difficulty) {
+    return new Promise((resolve, reject) => {
+      const workers = [];
+      const lastHash = lastBlock.hash;
+      let nonceFound = false;
+
+      // Calculate the nonce range for each worker
+      const maxNonce = 2 ** 32;
+      const nonceRange = Math.floor(maxNonce / NUM_WORKERS);
+
+      for (let i = 0; i < NUM_WORKERS; i++) {
+        const startNonce = i * nonceRange;
+        const endNonce = startNonce + nonceRange;
+        const worker = new Worker("./mineWorker.js");
+
+        worker.postMessage({
+          lastHash,
+          data,
+          difficulty,
+          startNonce,
+          endNonce,
+        });
+
+        worker.on("message", (result) => {
+          if (!nonceFound) {
+            nonceFound = true;
+            workers.forEach((w) => w.terminate()); // Terminate all workers
+            const newBlock = new Block(
+              result.timestamp,
+              lastHash,
+              result.hash,
+              data,
+              result.nonce,
+              difficulty,
+              lastBlock.index + 1
+            );
+            resolve(newBlock);
+          }
+        });
+
+        worker.on("error", reject);
+        worker.on("exit", (code) => {
+          if (code !== 0 && !nonceFound) {
+            reject(new Error(`Worker stopped with exit code ${code}`));
+          }
+        });
+
+        workers.push(worker);
+      }
+    });
   }
 
   /**

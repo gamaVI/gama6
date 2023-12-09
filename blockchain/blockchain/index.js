@@ -14,7 +14,6 @@ class Blockchain {
     const lastBlock = this.chain[this.chain.length - 1];
     const difficulty = Blockchain.adjustDifficulty(lastBlock, this);
     const newBlock = Block.mineBlock(lastBlock, data, difficulty);
-
     this.chain.push(newBlock);
     return newBlock;
   }

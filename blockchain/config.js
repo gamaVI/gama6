@@ -1,4 +1,4 @@
-const DIFFICULTY = 1;
+const DIFFICULTY = 4;
 
 // in milliseconds
 const MINE_RATE = 3000;
