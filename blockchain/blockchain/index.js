@@ -1,6 +1,8 @@
 const Block = require("./block");
 const { DIFFICULTY_ADJUSTMENT_INTERVAL, MINE_RATE } = require("../config.js");
 
+// test
+
 class Blockchain {
   constructor() {
     this.chain = [Block.genesis()];

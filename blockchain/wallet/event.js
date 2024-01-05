@@ -7,17 +7,6 @@ class Event {
     this.timestamp = Date.now(); // Timestamp of the event creation
   }
 
-  /**
-   * Update the event data.
-   */
-  update(newData) {
-    this.data = newData;
-    this.timestamp = Date.now(); // Update timestamp
-  }
-
-  /**
-   * Create a new event.
-   */
   static newEvent(type, data) {
     return new Event(type, data);
   }
