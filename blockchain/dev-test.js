@@ -1,42 +1,29 @@
-// // file used to explore block class
-
-// const Block = require('./blockchain/block');
-
-// //creating a new instance
-// // const block = new Block('foo','bar','zoo','bas');
-
-// //testing the toString function
-// // console.log(block.toString());
-
-// //testing the genesis function
-// // console.log(Block.genesis().toString());
-
-// //testing the mineBlock function
-// const fooBlock = Block.mineBlock(Block.genesis(),"foo");
-// console.log(fooBlock.toString());
-
-// // file used to explore block class
-
-// const Block = require('./blockchain/block');
-
-// //creating a new instance
-// // const block = new Block('foo','bar','zoo','bas');
-
-// //testing the toString function
-// // console.log(block.toString());
-
-// //testing the genesis function
-// // console.log(Block.genesis().toString());
-
-// //testing the mineBlock function
-// const fooBlock = Block.mineBlock(Block.genesis(),"foo");
-// console.log(fooBlock.toString());
-
 const Blockchain = require("./blockchain");
 
 const blockchain = new Blockchain();
 
+// Start the timer
+const startTime = Date.now();
+
+let totalHashCount = 0;
+
 for (let i = 0; i < 10; i++) {
-  console.log(blockchain.addBlock(`foo ${i}`).toString());
-  console.log(blockchain.chain[i].totalHashCount);
+  const newBlock = blockchain.addBlock(`foo ${i}`);
+  console.log(newBlock.toString());
+
+  // Accumulate total hash count
+  totalHashCount += newBlock.totalHashCount;
+}
+
+// Stop the timer
+const endTime = Date.now();
+const duration = (endTime - startTime) / 1000; // Duration in seconds
+
+if (duration > 0) {
+  const hashesPerSecond = totalHashCount / duration;
+  console.log(`Total Hashes: ${totalHashCount}`);
+  console.log(`Total Duration: ${duration} seconds`);
+  console.log(`Hashes per Second: ${hashesPerSecond}`);
+} else {
+  console.log("Duration too short to calculate hashes per second");
 }
