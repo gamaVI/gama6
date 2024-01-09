@@ -1,6 +1,6 @@
 const ChainUtil = require("../chain-util");
 const NUM_WORKERS = 5;
-const { Worker } = require("worker_threads");
+const { Worker, SharedArrayBuffe } = require("worker_threads");
 const deasync = require("deasync");
 
 const {
@@ -10,7 +10,16 @@ const {
 } = require("../config.js");
 
 class Block {
-  constructor(timestamp, lastHash, hash, data, nonce, difficulty, index) {
+  constructor(
+    timestamp,
+    lastHash,
+    hash,
+    data,
+    nonce,
+    difficulty,
+    index,
+    totalHashCount = 0
+  ) {
     this.timestamp = timestamp;
     this.index = index || 0;
     this.lastHash = lastHash;
@@ -18,6 +27,7 @@ class Block {
     this.data = data;
     this.nonce = nonce;
     this.difficulty = difficulty || DIFFICULTY;
+    this.totalHashCount = totalHashCount || 0;
   }
 
   /**
@@ -75,11 +85,16 @@ class Block {
 
     return minedBlock;
   }
+
   static mineBlockAsync(lastBlock, data, difficulty) {
     return new Promise((resolve, reject) => {
       const workers = [];
       const lastHash = lastBlock.hash;
       let nonceFound = false;
+
+      // Shared buffer for hash count
+      const sharedBuffer = new SharedArrayBuffer(4); // 4 bytes for an Int32
+      const hashCount = new Int32Array(sharedBuffer);
 
       // Calculate the nonce range for each worker
       const maxNonce = 2 ** 32;
@@ -88,20 +103,22 @@ class Block {
       for (let i = 0; i < NUM_WORKERS; i++) {
         const startNonce = i * nonceRange;
         const endNonce = startNonce + nonceRange;
-        const worker = new Worker("./mineWorker.js");
-
-        worker.postMessage({
-          lastHash,
-          data,
-          difficulty,
-          startNonce,
-          endNonce,
+        const worker = new Worker("./mineWorker.js", {
+          workerData: {
+            lastHash,
+            data,
+            difficulty,
+            startNonce,
+            endNonce,
+            sharedBuffer,
+          },
         });
 
         worker.on("message", (result) => {
-          if (!nonceFound) {
+          if (!nonceFound && result.found) {
             nonceFound = true;
             workers.forEach((w) => w.terminate()); // Terminate all workers
+            const totalHashCount = Atomics.load(hashCount, 0); // Read total hash count
             const newBlock = new Block(
               result.timestamp,
               lastHash,
@@ -109,7 +126,8 @@ class Block {
               data,
               result.nonce,
               difficulty,
-              lastBlock.index + 1
+              lastBlock.index + 1,
+              totalHashCount // Add total hash count to the block
             );
             resolve(newBlock);
           }

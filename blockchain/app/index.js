@@ -26,7 +26,7 @@ const wallet = new Wallet();
 // decentralized and synchronized using the peer to peer server
 const eventPool = new EventPool();
 
-// create a p2p server instance with the blockchain and the transaction pool
+// create a p2p server instance with the blockchain and the event pool
 const p2pserver = new P2pserver(blockchain, eventPool);
 
 // create a miner
@@ -42,11 +42,6 @@ app.get("/blocks", (req, res) => {
 app.post("/mine", (req, res) => {
   const block = blockchain.addBlock(req.body.data);
   console.log(`New block added: ${block.toString()}`);
-
-  /**
-   * use the synchain method to synchronise the
-   * state of the blockchain
-   */
   p2pserver.syncChain();
   res.redirect("/blocks");
 });

@@ -6,6 +6,7 @@ const { DIFFICULTY_ADJUSTMENT_INTERVAL, MINE_RATE } = require("../config.js");
 class Blockchain {
   constructor() {
     this.chain = [Block.genesis()];
+    this.miningData = [];
   }
   /**
    * utility function to add block to the blockchain
@@ -34,8 +35,12 @@ class Blockchain {
       if (
         block.lastHash !== lastBlock.hash ||
         block.hash !== Block.blockHash(block)
-      )
+      ) {
         return false;
+      }
+      if (block.timestamp < lastBlock.timestamp - 60000) {
+        return false;
+      }
     }
 
     return true;
@@ -76,6 +81,7 @@ class Blockchain {
   }
 
   replaceChain(newChain) {
+    // TODO : Validate the chain
     if (newChain.length <= this.chain.length) {
       console.log("Recieved chain is not longer than the current chain");
       return;
