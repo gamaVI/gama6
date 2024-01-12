@@ -1,4 +1,4 @@
-package com.example.mobile_application.ui.slideshow
+package com.example.gama6mobileapp.ui.slideshow
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

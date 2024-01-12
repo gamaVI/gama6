@@ -1,4 +1,4 @@
-package com.example.mobile_application
+package com.example.gama6mobileapp
 
 import android.os.Bundle
 import android.view.Menu
@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mobile_application.databinding.ActivityMainBinding
+import com.example.gama6mobileapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

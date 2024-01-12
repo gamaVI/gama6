@@ -1,4 +1,4 @@
-package com.example.mobile_application.ui.home
+package com.example.gama6mobileapp.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.mobile_application.databinding.FragmentHomeBinding
+import com.example.gama6mobileapp.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
