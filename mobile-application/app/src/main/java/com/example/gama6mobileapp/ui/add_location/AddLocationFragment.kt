@@ -6,7 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import com.example.gama6mobileapp.appClass.Gama6Application
 import com.example.gama6mobileapp.databinding.FragmentAddLocationBinding
+import com.example.gama6mobileapp.model.Location
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -52,22 +56,63 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
             getMapAsync(this@AddLocationFragment)
         }
 
-        val hoursPicker = binding.addLocationNpUpdateFrequencyHours
-        val minutesPicker = binding.addLocationNpUpdateFrequencyMinutes
-        val secondsPicker = binding.addLocationNpUpdateFrequencySeconds
+        setupTimePicker()
 
-        hoursPicker.minValue = 0
-        hoursPicker.maxValue = 23
-        hoursPicker.value = 0
+        binding.btnSaveLocation.setOnClickListener {
+            val locationName = binding.addLocationTilLocationName.editText?.text.toString().trim()
+            val minCarsString =
+                binding.addLocationEtRandomGenerationRangeMin.text?.toString()?.trim()
+            val maxCarsString =
+                binding.addLocationEtRandomGenerationRangeMax.text?.toString()?.trim()
 
-        minutesPicker.minValue = 0
-        minutesPicker.maxValue = 59
-        minutesPicker.value = 0
+            val minCars = minCarsString?.toIntOrNull()
+            val maxCars = maxCarsString?.toIntOrNull()
 
-        secondsPicker.minValue = 0
-        secondsPicker.maxValue = 59
-        secondsPicker.value = 0
+            val locationUpdateFrequencyHours = binding.addLocationNpUpdateFrequencyHours.value
+            val locationUpdateFrequencyMinutes = binding.addLocationNpUpdateFrequencyMinutes.value
+            val locationUpdateFrequencySeconds = binding.addLocationNpUpdateFrequencySeconds.value
+            val locationUpdateFrequency =
+                locationUpdateFrequencyHours * 3600 + locationUpdateFrequencyMinutes * 60 + locationUpdateFrequencySeconds
 
+            val locationLatitude = currentMarker?.position?.latitude
+            val locationLongitude = currentMarker?.position?.longitude
+            val locationSimulation = binding.switchSimulateLocation.isChecked
+
+            if (validateData(
+                    locationName,
+                    minCars,
+                    maxCars,
+                    locationUpdateFrequency,
+                    locationLatitude,
+                    locationLongitude
+                )
+            ) {
+                val location = Location(
+                    name = locationName,
+                    minCars = minCars ?: 0,  // Defaulting to 0 if null
+                    maxCars = maxCars ?: 0,  // Defaulting to 0 if null
+                    updateFrequencySeconds = locationUpdateFrequency,
+                    latitude = locationLatitude,
+                    longitude = locationLongitude,
+                    simulation = locationSimulation
+                )
+                println(location)
+                binding.addLocationTilLocationName.editText?.text?.clear()
+                binding.addLocationEtRandomGenerationRangeMin.text?.clear()
+                binding.addLocationEtRandomGenerationRangeMax.text?.clear()
+                binding.addLocationNpUpdateFrequencyHours.value = 0
+                binding.addLocationNpUpdateFrequencyMinutes.value = 0
+                binding.addLocationNpUpdateFrequencySeconds.value = 0
+                binding.switchSimulateLocation.isChecked = false
+                Toast.makeText(context, "Location saved!", Toast.LENGTH_LONG).show()
+                val app = Gama6Application.instance
+                app.locations.add(location)
+                app.saveData()
+                findNavController().navigateUp()
+            } else {
+                Toast.makeText(context, "Invalid data...", Toast.LENGTH_LONG).show()
+            }
+        }
         return root
     }
 
@@ -163,6 +208,52 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
         currentMarker?.remove() // Remove the existing marker, if any
         currentMarker = mGoogleMap?.addMarker(MarkerOptions().position(latLng))
         mGoogleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7f))
+    }
+
+    private fun setupTimePicker() {
+        val hoursPicker = binding.addLocationNpUpdateFrequencyHours
+        val minutesPicker = binding.addLocationNpUpdateFrequencyMinutes
+        val secondsPicker = binding.addLocationNpUpdateFrequencySeconds
+
+        hoursPicker.minValue = 0
+        hoursPicker.maxValue = 23
+        hoursPicker.value = 0
+
+        minutesPicker.minValue = 0
+        minutesPicker.maxValue = 59
+        minutesPicker.value = 0
+
+        secondsPicker.minValue = 0
+        secondsPicker.maxValue = 59
+        secondsPicker.value = 0
+
+    }
+
+    private fun validateData(
+        locationName: String,
+        minCars: Int?,
+        maxCars: Int?,
+        locationUpdateFrequency: Int,
+        locationLatitude: Double?,
+        locationLongitude: Double?
+    ): Boolean {
+        if (locationName.isEmpty()) {
+            return false
+        }
+
+        if (minCars != null && maxCars != null && minCars > maxCars) {
+            return false
+        }
+
+        if (locationUpdateFrequency == 0) {
+            return false
+        }
+
+        if (locationLatitude == null || locationLongitude == null) {
+            return false
+        }
+
+        return true
     }
 
 
