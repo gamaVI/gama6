@@ -1,5 +1,5 @@
 const ChainUtil = require("../chain-util");
-const NUM_WORKERS = 5;
+const { NUM_WORKERS } = require("../config.js");
 const { Worker, SharedArrayBuffe } = require("worker_threads");
 const deasync = require("deasync");
 
