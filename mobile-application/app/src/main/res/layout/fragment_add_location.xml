@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.add_location.AddLocationFragment">
+
+
+    <TextView
+        android:id="@+id/add_location_tw_random_generation_range"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/random_data_generation_range"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@id/guideline6"
+        app:layout_constraintStart_toEndOf="@id/guideline4"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="65dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_location_til_random_generation_range_min"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@id/add_location_tw_random_generation_range">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/add_location_et_random_generation_range_min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_location_hint_min_value"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_location_til_random_generation_range_max"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="82dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline6"
+        app:layout_constraintStart_toEndOf="@+id/add_location_til_random_generation_range_min"
+        app:layout_constraintTop_toBottomOf="@+id/add_location_tw_random_generation_range">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/add_location_et_random_generation_range_max"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_location_hint_max_value"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/add_location_tw_update_frequency"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/update_frequency"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@id/guideline6"
+        app:layout_constraintStart_toEndOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@id/add_location_til_random_generation_range_max" />
+
+    <NumberPicker
+        android:id="@+id/add_location_np_update_frequency_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="115dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@id/add_location_np_update_frequency_minutes"
+        app:layout_constraintStart_toEndOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@id/add_location_tw_update_frequency" />
+
+    <NumberPicker
+        android:id="@+id/add_location_np_update_frequency_minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="115dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@id/add_location_np_update_frequency_seconds"
+        app:layout_constraintStart_toEndOf="@+id/add_location_np_update_frequency_hours"
+        app:layout_constraintTop_toBottomOf="@id/add_location_tw_update_frequency" />
+
+    <NumberPicker
+        android:id="@+id/add_location_np_update_frequency_seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="115dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline6"
+        app:layout_constraintStart_toEndOf="@+id/add_location_np_update_frequency_minutes"
+        app:layout_constraintTop_toBottomOf="@id/add_location_tw_update_frequency" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_location_til_location_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toStartOf="@id/fab_search_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_location_np_update_frequency_seconds">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_location_hint_location_name"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_search_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="5dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_location_button_add_location"
+        android:focusable="true"
+        android:src="@drawable/ic_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/add_location_til_location_name"
+        app:layout_constraintTop_toBottomOf="@id/add_location_np_update_frequency_seconds" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="0dp"
+        android:layout_height="240dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/add_location_speakable_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fab_search_location"
+        tools:layout_editor_absoluteX="174dp"
+        tools:layout_editor_absoluteY="459dp" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_simulate_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/add_location_switch_simulation"
+        app:layout_constraintEnd_toStartOf="@id/guideline6"
+        app:layout_constraintStart_toEndOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@id/mapView" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:drawableEnd="@drawable/ic_save"
+        android:text="@string/add_location_save_location_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline6"
+        app:layout_constraintStart_toEndOf="@id/guideline4" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
