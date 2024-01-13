@@ -9,7 +9,7 @@ data class Location(
     val updateFrequencySeconds: Int,
     val latitude: Double?,
     val longitude: Double?,
-    val simulation: Boolean = false,
+    var simulation: Boolean = false,
     val lastUpdated: Long = 0,
     val id: String = UUID.randomUUID().toString()
 )
