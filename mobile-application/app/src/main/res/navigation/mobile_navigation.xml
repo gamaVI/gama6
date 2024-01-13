@@ -7,19 +7,32 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.gama6mobileapp.ui.home.HomeFragment"
+        android:name="com.example.gama6mobileapp.ui.home.TakeAPhotoFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_take_a_photo" />
 
     <fragment
         android:id="@+id/nav_my_locations"
         android:name="com.example.gama6mobileapp.ui.my_locations.MyLocationsFragment"
         android:label="@string/menu_my_locations"
-        tools:layout="@layout/fragment_my_locations" />
+        tools:layout="@layout/fragment_my_locations" >
+        <action
+            android:id="@+id/action_nav_my_locations_to_addLocationFragment"
+            app:destination="@id/addLocationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_post_a_message"
         android:name="com.example.gama6mobileapp.ui.post_a_message.PostAMessageFragment"
         android:label="@string/menu_post_a_message"
         tools:layout="@layout/fragment_post_a_message" />
+    <fragment
+        android:id="@+id/addLocationFragment"
+        android:name="com.example.gama6mobileapp.ui.add_location.AddLocationFragment"
+        android:label="@string/menu_add_location"
+        tools:layout="@layout/fragment_add_location" >
+        <action
+            android:id="@+id/action_addLocationFragment_to_nav_my_locations"
+            app:destination="@id/nav_my_locations" />
+    </fragment>
 </navigation>
