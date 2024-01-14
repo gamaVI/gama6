@@ -33,15 +33,12 @@ const p2pserver = new P2pserver(blockchain, eventPool);
 const miner = new Miner(blockchain, eventPool, wallet, p2pserver);
 //EXPOSED APIs
 
-//api to get the blocks
 app.get("/blocks", (req, res) => {
   res.json(blockchain.chain);
 });
 
-//api to add blocks
 app.post("/mine", (req, res) => {
   const block = blockchain.addBlock(req.body.data);
-  console.log(`New block added: ${block.toString()}`);
   p2pserver.syncChain();
   res.redirect("/blocks");
 });

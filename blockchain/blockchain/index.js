@@ -8,10 +8,6 @@ class Blockchain {
     this.chain = [Block.genesis()];
     this.miningData = [];
   }
-  /**
-   * utility function to add block to the blockchain
-   * returns the added block
-   */
 
   addBlock(data) {
     const lastBlock = this.chain[this.chain.length - 1];
@@ -20,10 +16,6 @@ class Blockchain {
     this.chain.push(newBlock);
     return newBlock;
   }
-
-  /**
-   * checks if the chain recieved from another miner is valid or not
-   */
 
   isValidChain(chain) {
     if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis()))
@@ -43,12 +35,12 @@ class Blockchain {
       }
     }
 
+    const lastBlock = chain[chain.length - 1];
+    if (lastBlock.timestamp > Date.now() + 60000) {
+      return false;
+    }
     return true;
   }
-  /**
-   * replace the chain if the chain recieved from another miner
-   * is longer and valid
-   */
 
   static adjustDifficulty(lastBlock, blockchain) {
     // Preveri, ali je čas za prilagoditev težavnosti
@@ -81,12 +73,29 @@ class Blockchain {
   }
 
   replaceChain(newChain) {
-    // TODO : Validate the chain
     if (newChain.length <= this.chain.length) {
       console.log("Recieved chain is not longer than the current chain");
       return;
     } else if (!this.isValidChain(newChain)) {
       console.log("Recieved chain is invalid");
+      return;
+    }
+
+    const newChainCumulativeDifficulty = newChain.reduce(
+      (sum, block) => sum + 2 ** block.difficulty,
+      0
+    );
+
+    const currentChainCumulativeDifficulty = this.chain.reduce(
+      (sum, block) => sum + 2 ** block.difficulty,
+      0
+    );
+
+    if (
+      newChainCumulativeDifficulty <= currentChainCumulativeDifficulty &&
+      newChain[0].index !== 0
+    ) {
+      console.log("Recieved chain has lower difficulty");
       return;
     }
 

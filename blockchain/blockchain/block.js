@@ -30,12 +30,6 @@ class Block {
     this.totalHashCount = totalHashCount || 0;
   }
 
-  /**
-   * returns what the object looks like
-   * substring is used to make it look nice
-   * hashes are too big to printed on command line
-   */
-
   toString() {
     return `Block - 
         Timestamp : ${this.timestamp}
@@ -96,7 +90,6 @@ class Block {
       const sharedBuffer = new SharedArrayBuffer(4); // 4 bytes for an Int32
       const hashCount = new Int32Array(sharedBuffer);
 
-      // Calculate the nonce range for each worker
       const maxNonce = 2 ** 32;
       const nonceRange = Math.floor(maxNonce / NUM_WORKERS);
 
