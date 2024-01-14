@@ -1,0 +1,3 @@
+1. installiras fastapi, uvicorn v anacodni + to še : " python -m pip install "pymongo[srv]""
+2. vb terminalu: "python -m uvicorn main:app --reload"
+
