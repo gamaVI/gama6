@@ -22,6 +22,7 @@ import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
@@ -29,6 +30,10 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.gama6mobileapp.R
+import com.example.gama6mobileapp.util.uploadImage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -97,14 +102,28 @@ class CameraFragment : Fragment() {
             .build()
 
         imageCapture.takePicture(
-            outputOptions,
             ContextCompat.getMainExecutor(requireContext()),
-            object : ImageCapture.OnImageSavedCallback {
+            object : ImageCapture.OnImageCapturedCallback() {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e("Gama6MobileAPP", "Photo capture failed: ${exc.message}", exc)
                 }
 
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                override fun onCaptureSuccess(image: ImageProxy) {
+                    val buffer = image.planes[0].buffer
+                    val bytes = ByteArray(buffer.remaining())
+                    buffer.get(bytes)
+                    image.close()
+
+                    GlobalScope.launch(Dispatchers.Main) {
+                        val count = uploadImage(bytes)
+                        Log.d("Upload", "Count from CameraFragment: $count")
+                        Toast.makeText(
+                            requireContext(),
+                            "Number of cars on the image: $count",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                     val msg = "Photo capture succeeded!"
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                     Log.d("Gama6MobileAPP", msg)
@@ -112,6 +131,7 @@ class CameraFragment : Fragment() {
                 }
             }
         )
+
     }
 
     private fun checkMultiplePermission(): Boolean {

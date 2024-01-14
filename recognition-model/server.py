@@ -12,6 +12,7 @@ async def process_image(file: UploadFile = File(...)):
         buffer.write(file.file.read())
 
     result = from_static_image("temp_image.jpg")
+    print(result)
     
     return JSONResponse(content={"count": result})
 

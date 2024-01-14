@@ -121,21 +121,26 @@ def postProcess(outputs,img):
 
     # Apply Non-Max Suppression
     indices = cv2.dnn.NMSBoxes(boxes, confidence_scores, confThreshold, nmsThreshold)
+
+    # if isinstance(indices, tuple):
+    #     indices = indices[0]
+
     # print(classIds)
-    for i in indices.flatten():
-        x, y, w, h = boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3]
-        # print(x,y,w,h)
+    if len(indices) > 0:
+        for i in indices.flatten():
+            x, y, w, h = boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3]
+            # print(x,y,w,h)
 
-        color = [int(c) for c in colors[classIds[i]]]
-        name = classNames[classIds[i]]
-        detected_classNames.append(name)
-        # Draw classname and confidence score 
-        cv2.putText(img,f'{name.upper()} {int(confidence_scores[i]*100)}%',
-                  (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+            color = [int(c) for c in colors[classIds[i]]]
+            name = classNames[classIds[i]]
+            detected_classNames.append(name)
+            # # Draw classname and confidence score 
+            # cv2.putText(img,f'{name.upper()} {int(confidence_scores[i]*100)}%',
+            #           (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
 
-        # Draw bounding rectangle
-        cv2.rectangle(img, (x, y), (x + w, y + h), color, 1)
-        detection.append([x, y, w, h, required_class_index.index(classIds[i])])
+            # # Draw bounding rectangle
+            # cv2.rectangle(img, (x, y), (x + w, y + h), color, 1)
+            detection.append([x, y, w, h, required_class_index.index(classIds[i])])
 
     # Update the tracker for each object
     boxes_ids = tracker.update(detection)
@@ -144,7 +149,7 @@ def postProcess(outputs,img):
 
 
 
-image_file = 'test13.jpg'
+image_file = 'peugeot.png'
 def from_static_image(image):
     img = cv2.imread(image)
 
@@ -155,6 +160,11 @@ def from_static_image(image):
     
     outputNames = [layersNames[i - 1] for i in net.getUnconnectedOutLayers()]
     outputs = net.forward(outputNames)
+
+    print(len(outputs))
+    # save outputs to a text file for checking
+    with open('outputs.txt', 'w') as f:
+        f.writelines(str(outputs))
 
     postProcess(outputs,img)
 
