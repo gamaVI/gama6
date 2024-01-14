@@ -7,9 +7,14 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.gama6mobileapp.ui.home.TakeAPhotoFragment"
+        android:name="com.example.gama6mobileapp.ui.take_a_picture.TakeAPhotoFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_take_a_photo" />
+        tools:layout="@layout/fragment_take_a_photo" >
+        <action
+            android:id="@+id/fromHomeToCamera"
+            app:destination="@id/cameraFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_my_locations"
@@ -17,7 +22,7 @@
         android:label="@string/menu_my_locations"
         tools:layout="@layout/fragment_my_locations" >
         <action
-            android:id="@+id/action_nav_my_locations_to_addLocationFragment"
+            android:id="@+id/fromMyLocationsToAddLocation"
             app:destination="@id/addLocationFragment" />
     </fragment>
 
@@ -32,7 +37,26 @@
         android:label="@string/menu_add_location"
         tools:layout="@layout/fragment_add_location" >
         <action
-            android:id="@+id/action_addLocationFragment_to_nav_my_locations"
+            android:id="@+id/fromAddLocationToMyLocations"
             app:destination="@id/nav_my_locations" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.gama6mobileapp.ui.camera.CameraFragment"
+        android:label="@string/menu_camera"
+        tools:layout="@layout/fragment_camera" >
+        <argument
+            android:name="locationText"
+            app:argType="string"
+            android:defaultValue="Ptuj" />
+        <action
+            android:id="@+id/fromCameraToMyLocations"
+            app:destination="@id/nav_my_locations"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gama6mobileapp.R
 import com.example.gama6mobileapp.adapter.RecycleViewAdapter
 import com.example.gama6mobileapp.databinding.FragmentMyLocationsBinding
 
@@ -34,7 +35,7 @@ class MyLocationsFragment : Fragment() {
 
         binding.fabAddLocation.setOnClickListener { view ->
             //Open Add Location Fragment
-            findNavController().navigate(com.example.gama6mobileapp.R.id.action_nav_my_locations_to_addLocationFragment)
+            findNavController().navigate(R.id.fromMyLocationsToAddLocation)
         }
 
         return root

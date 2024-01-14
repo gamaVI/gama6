@@ -11,6 +11,7 @@
     <string name="menu_my_locations">My Locations</string>
     <string name="menu_post_a_message">Post a message</string>
     <string name="menu_add_location">Add location</string>
+    <string name="menu_camera">Camera</string>
 
     <string name="post_a_message_text_input_layout_hint">Message…</string>
     <string name="post_a_message_text_input_layout_message_type_hint">Message type…</string>
@@ -35,11 +36,16 @@
     <string name="recycle_view_item_switch_on">ON</string>
     <string name="recycle_view_item_switch_off">OFF</string>
 
+    <string name="take_a_picture_autocomplete_text_view_hint">Location…</string>
+    <string name="take_a_picture_go_to_camera_button">Go to camera</string>
+
     <!-- array of message types -->
     <string-array name="message_types">
         <item>Information</item>
         <item>Warning</item>
         <item>Alert</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

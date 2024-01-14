@@ -20,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        tools:listitem="@layout/recycle_view_item"
         android:id="@+id/rvMyLocations"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
