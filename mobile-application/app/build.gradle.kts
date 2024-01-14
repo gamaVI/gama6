@@ -75,4 +75,6 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
 }

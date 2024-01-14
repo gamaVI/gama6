@@ -1,13 +1,26 @@
 package com.example.gama6mobileapp.adapter
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gama6mobileapp.appClass.Gama6Application
+import com.example.gama6mobileapp.apiService.ApiService.deleteLocation
 import com.example.gama6mobileapp.databinding.RecycleViewItemBinding
 import com.example.gama6mobileapp.model.Location
+import com.example.gama6mobileapp.ui.my_locations.MyLocationsFragment
 
-class RecycleViewAdapter(private var locations: MutableList<Location> = mutableListOf()) : RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>() {
+class RecycleViewAdapter(private var locations: MutableList<Location> = mutableListOf()) :
+    RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>() {
+
+    interface OnLocationLongClickListener {
+        fun onLocationLongClicked(location: Location, position: Int)
+    }
+
+    private var listener: OnLocationLongClickListener? = null
+
+    fun setOnLocationLongClickListener(listener: OnLocationLongClickListener) {
+        this.listener = listener
+    }
 
     class ViewHolder(val binding: RecycleViewItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -50,6 +63,12 @@ class RecycleViewAdapter(private var locations: MutableList<Location> = mutableL
                 }
             }
         }
+
+        holder.itemView.setOnLongClickListener {
+            listener?.onLocationLongClicked(locations[position], position)
+            true
+        }
+
     }
 
     private fun getHourMinAndSFromInt(allSeconds: Int): String {
@@ -63,8 +82,10 @@ class RecycleViewAdapter(private var locations: MutableList<Location> = mutableL
         locations = newLocations
         notifyDataSetChanged()
     }
-    fun addLocation(newLocation: Location) {
-        locations.add(newLocation)
-        notifyDataSetChanged()
+
+    fun removeLocationAt(position: Int) {
+        locations.removeAt(position)
+        notifyItemRemoved(position)
     }
+
 }

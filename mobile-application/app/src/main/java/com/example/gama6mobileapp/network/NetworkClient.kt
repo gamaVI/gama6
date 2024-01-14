@@ -15,6 +15,8 @@ object NetworkClient {
 
         val request = when (method) {
             "GET" -> builder.get()
+            "POST" -> builder.post(body)
+            "DELETE" -> builder.delete(body)
             else -> builder.method(method, body)
         }.build()
 
