@@ -7,6 +7,9 @@ import csv
 import collections
 import numpy as np
 from tracker import *
+import os
+import pandas as pd
+from collections import Counter
 
 # Initialize Tracker
 tracker = EuclideanDistTracker()
@@ -30,7 +33,7 @@ down_line_position = middle_line_position + 15
 
 
 # Store Coco Names in a list
-classesFile = "coco.names"
+classesFile = ".\\recognition-model\\coco.names"
 classNames = open(classesFile).read().strip().split('\n')
 print(classNames)
 print(len(classNames))
@@ -41,8 +44,8 @@ required_class_index = [2, 3, 5, 7]
 detected_classNames = []
 
 ## Model Files
-modelConfiguration = 'yolov3-320.cfg'
-modelWeigheights = 'yolov3-320.weights'
+modelConfiguration = '.\\recognition-model\\yolov3-320.cfg'
+modelWeigheights = '.\\recognition-model\\yolov3-320.weights'
 
 # configure the network model
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeigheights)
@@ -203,12 +206,25 @@ def realTime():
     cv2.destroyAllWindows()
 
 
-image_file = 'test13.jpg'
+image_file = '.\\recognition-model\\testImages\\20231211_134800.jpg'
 def from_static_image(image):
+    # Check if the file exists
+    if not os.path.exists(image):
+        print(f"File {image} not found.")
+        return
+
     img = cv2.imread(image)
+    
+    # Check if the image is loaded correctly
+    if img is None:
+        print(f"Failed to load image {image}.")
+        return
+    
+    resized_img = cv2.resize(img, (1000, 800))
+
 
     blob = cv2.dnn.blobFromImage(img, 1 / 255, (input_size, input_size), [0, 0, 0], 1, crop=False)
-
+    
     # Set the input of the network
     net.setInput(blob)
     layersNames = net.getLayerNames()
@@ -219,7 +235,7 @@ def from_static_image(image):
     outputs = net.forward(outputNames)
 
     # Find the objects from the network output
-    postProcess(outputs,img)
+    postProcess(outputs,resized_img)
 
     # count the frequency of detected classes
     frequency = collections.Counter(detected_classNames)
@@ -231,17 +247,21 @@ def from_static_image(image):
     cv2.putText(img, "Truck:      "+str(frequency['truck']), (20, 100), cv2.FONT_HERSHEY_SIMPLEX, font_size, font_color, font_thickness)
 
 
-    cv2.imshow("image", img)
+    cv2.imshow("image", resized_img)
 
     cv2.waitKey(0)
 
     # save the data to a csv file
-    with open("static-data.csv", 'a') as f1:
+    with open(".\\recognition-model\\static-data.csv", 'a') as f1:
         cwriter = csv.writer(f1)
-        cwriter.writerow([image, frequency['car'], frequency['motorbike'], frequency['bus'], frequency['truck']])
+        cwriter.writerow([image, frequency['car'] + frequency['motorbike'] + frequency['bus'] + frequency['truck']])
     f1.close()
 
 
 if __name__ == '__main__':
-    # realTime()
-    from_static_image(image_file)
+    #image_folder_path = '.\\recognition-model\\testImages'
+    #csv_filename = '.\\recognition-model\\images.csv'
+    process_images_and_write_results(image_folder_path)
+    compare_results_with_expected(csv_filename)
+
+    #from_static_image(image_file)
