@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gama6mobileapp.appClass.Gama6Application
 import com.example.gama6mobileapp.databinding.RecycleViewItemBinding
+import com.example.gama6mobileapp.model.Location
 
-class RecycleViewAdapter : RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>() {
-    private var locations = Gama6Application.instance.locations
+class RecycleViewAdapter(private var locations: MutableList<Location> = mutableListOf()) : RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: RecycleViewItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -35,6 +35,8 @@ class RecycleViewAdapter : RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>()
         holder.binding.rvUpdateFrequency.text = updateFrequency
         holder.binding.rvLocationName.text = location.name
         holder.binding.rvSimulationSwitch.isChecked = location.simulation
+        val numCars = "( ${location.numCars} )"
+        holder.binding.rvNumCars.text = numCars
 
         holder.binding.rvSimulationSwitch.apply {
             setOnCheckedChangeListener(null)
@@ -55,5 +57,14 @@ class RecycleViewAdapter : RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>()
         val minutes = (allSeconds % 3600) / 60
         val seconds = allSeconds % 60
         return "$hours hours, $minutes minutes, $seconds seconds"
+    }
+
+    fun updateLocations(newLocations: MutableList<Location>) {
+        locations = newLocations
+        notifyDataSetChanged()
+    }
+    fun addLocation(newLocation: Location) {
+        locations.add(newLocation)
+        notifyDataSetChanged()
     }
 }

@@ -29,7 +29,8 @@
     <string name="add_location_speakable_text">Google Maps</string>
     <string name="add_location_save_location_button">Save location</string>
 
-    <string name="recycle_view_item_title">Title</string>
+    <string name="recycle_view_item_title">Free Parking Spots</string>
+    <string name="recycle_view_item_num_cars">(10)</string>
     <string name="recycle_view_item_range">From 0 to 10</string>
     <string name="recycle_view_item_update_frequency">Update frequency</string>
     <string name="recycle_view_item_location">Location</string>
