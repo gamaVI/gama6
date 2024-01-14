@@ -30,6 +30,7 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
         val root: View = binding.root
 
         setUpRecyclerView()
+        setUpSwipeRefreshLayout()
         fetchLocations()
 
         binding.fabAddLocation.setOnClickListener {
@@ -52,12 +53,19 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
         binding.rvMyLocations.layoutManager = LinearLayoutManager(context)
     }
 
+    private fun setUpSwipeRefreshLayout() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            fetchLocations()
+        }
+    }
+
     private fun fetchLocations() {
         val app = Gama6Application.instance
         app.fetchLocationsFromServer { fetchedLocations ->
             // Ensure UI update is run on the main thread
             activity?.runOnUiThread {
                 recycleViewAdapter.updateLocations(fetchedLocations)
+                binding.swipeRefreshLayout.isRefreshing = false
             }
         }
     }
