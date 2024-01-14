@@ -1,21 +1,23 @@
 package com.example.gama6mobileapp.ui.my_locations
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gama6mobileapp.R
 import com.example.gama6mobileapp.adapter.RecycleViewAdapter
+import com.example.gama6mobileapp.apiService.ApiService
+import com.example.gama6mobileapp.apiService.ApiService.deleteLocation
 import com.example.gama6mobileapp.appClass.Gama6Application
 import com.example.gama6mobileapp.databinding.FragmentMyLocationsBinding
+import com.example.gama6mobileapp.model.Location
 
-class MyLocationsFragment : Fragment() {
+class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickListener {
 
     private var _binding: FragmentMyLocationsBinding? = null
     private val binding get() = _binding!!
@@ -43,7 +45,9 @@ class MyLocationsFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        recycleViewAdapter = RecycleViewAdapter()
+        recycleViewAdapter = RecycleViewAdapter().apply {
+            setOnLocationLongClickListener(this@MyLocationsFragment)
+        }
         binding.rvMyLocations.adapter = recycleViewAdapter
         binding.rvMyLocations.layoutManager = LinearLayoutManager(context)
     }
@@ -62,4 +66,24 @@ class MyLocationsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onLocationLongClicked(location: Location, position: Int) {
+        showConfirmationDialog(location, position)
+    }
+
+    private fun showConfirmationDialog(location: Location, position: Int) {
+        AlertDialog.Builder(context)
+            .setTitle("Confirm Delete")
+            .setMessage("Are you sure you want to delete this location?")
+            .setPositiveButton("Yes") { _, _ ->
+                deleteLocation(location) { success ->
+                    if (success) {
+                        recycleViewAdapter.removeLocationAt(position)
+                    }
+                }
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+
 }

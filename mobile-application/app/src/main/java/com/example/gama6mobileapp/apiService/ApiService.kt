@@ -1,5 +1,7 @@
 package com.example.gama6mobileapp.apiService
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.example.gama6mobileapp.jsonParser.JsonParser
 import com.example.gama6mobileapp.model.Location
@@ -11,7 +13,7 @@ import java.io.IOException
 
 object ApiService {
     fun getAllLocations(callback: (List<Location>) -> Unit) {
-        val url = "http://192.168.56.1:3000/api/locations/getAll"
+        val url = "http://192.168.1.2:3000/api/locations/getAll"
         NetworkClient.run(url, "", "GET", object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 // Handle failure
@@ -35,7 +37,7 @@ object ApiService {
     }
 
     fun upsertLocation(location: Location, callback: (Boolean) -> Unit) {
-        val url = "http://192.168.56.1:3000/api/locations/upsert"
+        val url = "http://192.168.1.2:3000/api/locations/upsert"
         val json = JsonParser.toJson(location)
         NetworkClient.run(url, json, "POST", object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -49,4 +51,23 @@ object ApiService {
             }
         })
     }
+
+    fun deleteLocation(location: Location, callback: (Boolean) -> Unit) {
+        val url = "http://192.168.1.2:3000/api/locations/delete"
+        val json = JsonParser.toJson(location)
+        NetworkClient.run(url, json, "DELETE", object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Handler(Looper.getMainLooper()).post {
+                    callback(false)
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                Handler(Looper.getMainLooper()).post {
+                    callback(response.isSuccessful)
+                }
+            }
+        })
+    }
+
 }
