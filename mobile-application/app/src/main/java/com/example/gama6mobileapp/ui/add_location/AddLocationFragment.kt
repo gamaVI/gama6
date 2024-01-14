@@ -37,6 +37,14 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private fun generateRandomNumber(minCars: Int?, maxCars: Int?): Int {
+        return if (minCars != null && maxCars != null) {
+            (minCars..maxCars).random()
+        } else {
+            0
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,7 +73,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
             val maxCarsString =
                 binding.addLocationEtRandomGenerationRangeMax.text?.toString()?.trim()
 
-            val minCars = minCarsString?.toIntOrNull()
+            var minCars = minCarsString?.toIntOrNull()
             val maxCars = maxCarsString?.toIntOrNull()
 
             val locationUpdateFrequencyHours = binding.addLocationNpUpdateFrequencyHours.value
@@ -78,6 +86,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
             val locationLongitude = currentMarker?.position?.longitude
             val locationSimulation = binding.switchSimulateLocation.isChecked
 
+            if (minCars != null && minCars < 0) minCars = 0
             if (validateData(
                     locationName,
                     minCars,
@@ -87,6 +96,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
                     locationLongitude
                 )
             ) {
+                val numCars = generateRandomNumber(minCars, maxCars)
                 val location = Location(
                     name = locationName,
                     minCars = minCars ?: 0,  // Defaulting to 0 if null
@@ -94,7 +104,8 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
                     updateFrequencySeconds = locationUpdateFrequency,
                     latitude = locationLatitude,
                     longitude = locationLongitude,
-                    simulation = locationSimulation
+                    simulation = locationSimulation,
+                    numCars = numCars
                 )
                 println(location)
                 binding.addLocationTilLocationName.editText?.text?.clear()
@@ -106,9 +117,14 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
                 binding.switchSimulateLocation.isChecked = false
                 Toast.makeText(context, "Location saved!", Toast.LENGTH_LONG).show()
                 val app = Gama6Application.instance
-                app.locations.add(location)
-                app.saveData()
-                findNavController().navigateUp()
+                if(app.upsertLocation(location)) {
+                    Toast.makeText(context, "Location saved!", Toast.LENGTH_LONG).show()
+                    app.locations.add(location)
+                    findNavController().navigateUp()
+                } else {
+                    Toast.makeText(context, "Location not saved!", Toast.LENGTH_LONG).show()
+                }
+
             } else {
                 Toast.makeText(context, "Invalid data...", Toast.LENGTH_LONG).show()
             }
@@ -241,7 +257,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClick
             return false
         }
 
-        if (minCars != null && maxCars != null && minCars > maxCars) {
+        if ((minCars != null) && (maxCars != null) && (minCars > maxCars) && (minCars < 0)) {
             return false
         }
 

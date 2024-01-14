@@ -72,4 +72,7 @@ dependencies {
     implementation("androidx.camera:camera-view:${camerax_version}")
     // If you want to additionally use the CameraX Extensions library
     implementation("androidx.camera:camera-extensions:${camerax_version}")
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
 }

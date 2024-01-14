@@ -11,5 +11,5 @@ data class Location(
     val longitude: Double?,
     var simulation: Boolean = false,
     val lastUpdated: Long = 0,
-    val id: String = UUID.randomUUID().toString()
+    val numCars: Int = 0
 )

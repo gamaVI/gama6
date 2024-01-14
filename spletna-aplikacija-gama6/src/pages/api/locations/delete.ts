@@ -11,14 +11,14 @@ export default async function handler(
   }
 
   const schema = z.object({
-    id: z.string(),
+    name: z.string(),
   });
 
   try {
-    const { id } = schema.parse(req.body);
+    const { name } = schema.parse(req.body);
     await prisma.lokacija.delete({
       where: {
-        id,
+        name,
       },
     });
     return res.status(200).json({ message: "Location deleted" });
