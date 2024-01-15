@@ -1,5 +1,7 @@
 var mqtt = require("mqtt");
-const API_URL = "http://localhost:3000/addBlock";
+const { sendMessage } = require("./util");
+const API_URL = "http://localhost:3001/mine";
+
 var options = {
   host: "800979d8ad28412c984565b6102b58a1.s2.eu.hivemq.cloud",
   port: 8883,
@@ -28,4 +30,5 @@ client.on("message", function (topic, message) {
   console.log(
     "Received message on topic '" + topic + "': " + message.toString()
   );
+  sendMessage(API_URL, topic, message.toString());
 });

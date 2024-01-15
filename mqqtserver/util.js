@@ -16,3 +16,7 @@ async function sendMessage(apiUrl, type, message) {
     );
   }
 }
+
+module.exports = {
+  sendMessage,
+};
