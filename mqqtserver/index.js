@@ -1,19 +1,34 @@
-// mqttClient.js
-const mqtt = require("mqtt");
+var mqtt = require("mqtt");
+const { sendMessage } = require("./util");
+const API_URL = "http://localhost:3001/mine";
 
-const client = mqtt.connect("mqtt://your_mqtt_broker:1883");
+var options = {
+  host: "800979d8ad28412c984565b6102b58a1.s2.eu.hivemq.cloud",
+  port: 8883,
+  protocol: "mqtts",
+  username: "galjeza55@gmail.com",
+  password: "Geslo123.",
+};
 
-client.on("connect", () => {
-  console.log("Connected to MQTT Broker");
-  client.subscribe("your/topic", (err) => {
-    if (!err) {
-      console.log("Subscribed to topic: your/topic");
-    } else {
-      console.error("Subscription error:", err);
-    }
-  });
+// initialize the MQTT client
+var client = mqtt.connect(options);
+
+// setup the callbacks
+client.on("connect", function () {
+  console.log("Connected");
+
+  client.subscribe("Information");
+  client.subscribe("Warning");
+  client.subscribe("Alert");
 });
 
-client.on("message", (topic, message) => {
-  console.log("Received message:", message.toString());
+client.on("error", function (error) {
+  console.log(error);
+});
+
+client.on("message", function (topic, message) {
+  console.log(
+    "Received message on topic '" + topic + "': " + message.toString()
+  );
+  sendMessage(API_URL, topic, message.toString());
 });
