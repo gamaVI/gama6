@@ -55,7 +55,9 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
             val app = Gama6Application.instance
             while (isActive) {
                 val locationsCopy = ArrayList(app.locations)
-                updateLocationsIfNeeded(locationsCopy)
+                if (locationsCopy.isNotEmpty()) {
+                    updateLocationsIfNeeded(locationsCopy)
+                }
                 delay(5 * 1000) // Delay outside the forEachIndexed loop
             }
         }
@@ -90,19 +92,6 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
     private fun fetchLocations() {
         val app = Gama6Application.instance
         app.fetchLocationsFromServer { fetchedLocations ->
-            // Process each location
-            fetchedLocations.forEach { location ->
-                if (location.simulation && System.currentTimeMillis() - location.lastUpdated > location.updateFrequencySeconds * 1000) {
-                    // Generate random number within the range
-                    val randomNumCars = (location.minCars!!..location.maxCars!!).random()
-
-                    // Update location properties
-                    location.numCars = randomNumCars
-                    location.lastUpdated = System.currentTimeMillis()
-                }
-            }
-
-            // Ensure UI update is run on the main thread
             activity?.runOnUiThread {
                 recycleViewAdapter.updateLocations(fetchedLocations)
                 binding.swipeRefreshLayout.isRefreshing = false
