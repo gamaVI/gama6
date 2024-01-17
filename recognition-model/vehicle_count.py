@@ -169,7 +169,7 @@ def from_static_image(image):
     postProcess(outputs,img)
 
     frequency = collections.Counter(detected_classNames)
-
+    sum = 0
     sum = frequency['car'] + frequency['motorbike'] + frequency['bus'] + frequency['truck']
     return sum
 

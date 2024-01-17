@@ -9,7 +9,13 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.gama6mobileapp.BuildConfig
 import com.example.gama6mobileapp.databinding.FragmentPostAMessageBinding
+import org.eclipse.paho.client.mqttv3.MqttClient
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions
+import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
 
 class PostAMessageFragment : Fragment() {
@@ -57,11 +63,7 @@ class PostAMessageFragment : Fragment() {
             val message = binding.postAMessageTextInputEditTextMessage.text.toString()
             //create toast which will display the message type and message
             binding.postAMessageTextInputEditTextMessage.text?.clear()
-            Toast.makeText(
-                context,
-                "Message type: $messageType\nMessage: $message",
-                Toast.LENGTH_LONG
-            ).show()
+            sendMessage(messageType, message)
         }
 
         //TODO: Send message to server
@@ -72,5 +74,36 @@ class PostAMessageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun sendMessage(messageType: String, message: String) {
+        val broker = BuildConfig.BROKER
+        val clientId = BuildConfig.CLIENT_ID
+        val username = BuildConfig.USERNAME
+        val password = BuildConfig.PASSWORD
+        val topic = messageType
+        val content = message
+
+        try {
+            val persistence = MemoryPersistence()
+            val client = MqttClient(broker, clientId, persistence).apply {
+                connect(MqttConnectOptions().apply {
+                    userName = username
+                    setPassword(password.toCharArray())
+                })
+            }
+
+            val message = MqttMessage(content.toByteArray()).apply {
+                qos = 2
+            }
+
+            client.publish(topic, message)
+            Toast.makeText(context, "Message sent", Toast.LENGTH_LONG).show()
+            client.disconnect()
+            findNavController().navigateUp()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Message not sent", Toast.LENGTH_LONG).show()
+        }
     }
 }

@@ -10,6 +10,6 @@ data class Location(
     val latitude: Double?,
     val longitude: Double?,
     var simulation: Boolean = false,
-    val lastUpdated: Long = 0,
-    val numCars: Int = 0
+    var lastUpdated: Long = 0,
+    var numCars: Int = 0
 )

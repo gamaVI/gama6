@@ -1,6 +1,7 @@
 package com.example.gama6mobileapp.util
 
 import android.util.Log
+import com.example.gama6mobileapp.apiService.IP_ADDRESS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.*
@@ -20,7 +21,7 @@ suspend fun uploadImage(imageBytes: ByteArray): Int = withContext(Dispatchers.IO
         .build()
 
     val request = Request.Builder()
-        .url("http://192.168.1.2:7000/process-image/") // Replace with your server URL
+        .url("http://${IP_ADDRESS}:7000/process-image/") // Replace with your server URL
         .post(requestBody)
         .build()
 

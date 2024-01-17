@@ -6,3 +6,5 @@ recognition-model/__pycache__/tracker.cpython-39.pyc
 recognition-model/__pycache__/vehicle_count.cpython-39.pyc
 
 recognition-model/static-data.csv
+
+mobile-application/app/src/main/java/com/example/gama6mobileapp/mqtt_credentials.json

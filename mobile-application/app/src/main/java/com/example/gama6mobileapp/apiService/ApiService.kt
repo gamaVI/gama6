@@ -11,9 +11,12 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 
+const val IP_ADDRESS = "192.168.56.1" // Laptop
+//const val IP_ADDRESS = "192.168.1.2" // PC
+
 object ApiService {
     fun getAllLocations(callback: (List<Location>) -> Unit) {
-        val url = "http://192.168.1.2:3000/api/locations/getAll"
+        val url = "http://${IP_ADDRESS}:3000/api/locations/getAll"
         NetworkClient.run(url, "", "GET", object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 // Handle failure
@@ -37,7 +40,7 @@ object ApiService {
     }
 
     fun upsertLocation(location: Location, callback: (Boolean) -> Unit) {
-        val url = "http://192.168.1.2:3000/api/locations/upsert"
+        val url = "http://${IP_ADDRESS}:3000/api/locations/upsert"
         val json = JsonParser.toJson(location)
         NetworkClient.run(url, json, "POST", object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -53,7 +56,7 @@ object ApiService {
     }
 
     fun deleteLocation(location: Location, callback: (Boolean) -> Unit) {
-        val url = "http://192.168.1.2:3000/api/locations/delete"
+        val url = "http://${IP_ADDRESS}:3000/api/locations/delete"
         val json = JsonParser.toJson(location)
         NetworkClient.run(url, json, "DELETE", object : Callback {
             override fun onFailure(call: Call, e: IOException) {

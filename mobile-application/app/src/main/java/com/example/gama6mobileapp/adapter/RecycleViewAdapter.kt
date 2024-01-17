@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gama6mobileapp.apiService.ApiService.deleteLocation
+import com.example.gama6mobileapp.apiService.ApiService.upsertLocation
 import com.example.gama6mobileapp.databinding.RecycleViewItemBinding
 import com.example.gama6mobileapp.model.Location
 import com.example.gama6mobileapp.ui.my_locations.MyLocationsFragment
@@ -59,10 +60,25 @@ class RecycleViewAdapter(private var locations: MutableList<Location> = mutableL
                 // Post the action to the handler of the itemView
                 holder.itemView.post {
                     location.simulation = isChecked
+
+                    Thread {
+                        upsertLocation(location, callback = { success ->
+                            // Post any UI updates back to the main thread
+                            holder.itemView.post {
+                                if (success) {
+                                    // Update the UI or do something on success
+                                } else {
+                                    // Handle the failure, show error message, etc.
+                                }
+                            }
+                        })
+                    }.start()
+
                     println("Location: ${location.name} simulation state changed to $isChecked - ${location.simulation}")
                 }
             }
         }
+
 
         holder.itemView.setOnLongClickListener {
             listener?.onLocationLongClicked(locations[position], position)
@@ -86,6 +102,11 @@ class RecycleViewAdapter(private var locations: MutableList<Location> = mutableL
     fun removeLocationAt(position: Int) {
         locations.removeAt(position)
         notifyItemRemoved(position)
+    }
+
+    fun updateLocationAt(position: Int, location: Location) {
+        locations[position] = location
+        notifyItemChanged(position)
     }
 
 }

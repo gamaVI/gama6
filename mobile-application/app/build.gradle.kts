@@ -18,6 +18,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField("String", "BROKER", "")
+        buildConfigField("String", "CLIENT_ID", "")
+        buildConfigField("String", "USERNAME", "")
+        buildConfigField("String", "PASSWORD", "")
+
     }
 
     buildTypes {
@@ -38,6 +43,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -76,5 +82,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    implementation ("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.4")
+    implementation ("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
 
 }

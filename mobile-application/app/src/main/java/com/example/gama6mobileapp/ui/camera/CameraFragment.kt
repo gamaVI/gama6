@@ -28,6 +28,7 @@ import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.gama6mobileapp.R
 import com.example.gama6mobileapp.util.uploadImage
@@ -114,20 +115,23 @@ class CameraFragment : Fragment() {
                     buffer.get(bytes)
                     image.close()
 
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val count = uploadImage(bytes)
-                        Log.d("Upload", "Count from CameraFragment: $count")
-                        Toast.makeText(
-                            requireContext(),
-                            "Number of cars on the image: $count",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                        if (isAdded) {
+                            var count = 0
+                            count = uploadImage(bytes)
+                            Log.d("Upload", "Count from CameraFragment: $count")
+                            Toast.makeText(
+                                requireContext(),
+                                "Number of cars on the image: $count",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                    val msg = "Photo capture succeeded!"
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d("Gama6MobileAPP", msg)
-                    findNavController().navigate(R.id.fromCameraToMyLocations)
+                            // Safe navigation
+                            if (isAdded) {
+                                findNavController().navigate(R.id.fromCameraToMyLocations)
+                            }
+                        }
+                    }
                 }
             }
         )
