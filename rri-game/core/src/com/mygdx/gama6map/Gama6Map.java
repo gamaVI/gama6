@@ -1,5 +1,7 @@
 package com.mygdx.gama6map;
 
+import static com.mygdx.gama6map.utils.ApiRequests.fetchTransactionsFromDB;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -27,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -36,6 +39,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.gama6map.BoatAnimation;
 //import com.mygdx.gama6map.lang.Context;
 //import com.mygdx.gama6map.lang.Renderer;
+import com.mygdx.gama6map.model.Transaction;
 import com.mygdx.gama6map.utils.Constants;
 import com.mygdx.gama6map.utils.Geolocation;
 import com.mygdx.gama6map.utils.MapRasterTiles;
@@ -50,6 +54,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
 	private ShapeRenderer shapeRenderer;
 	private Vector3 touchPosition;
+
+	private List<Transaction> locations;
 
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
@@ -95,7 +101,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 		camera.position.set(Constants.MAP_WIDTH / 2f, Constants.MAP_HEIGHT / 2f, 0);
 		camera.viewportWidth = Constants.MAP_WIDTH / 2f;
 		camera.viewportHeight = Constants.MAP_HEIGHT / 2f;
-		camera.zoom = 2f;
+		camera.zoom = 0.5f;
 		camera.update();
 
 		spriteBatch = new SpriteBatch();
@@ -151,12 +157,13 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 			@Override
 			public boolean scrolled(float amountX, float amountY) {
 				camera.zoom += amountY * 0.1f; // Adjust zoom factor
-				camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f); // Keep zoom within limits
+				camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 2f); // Keep zoom within limits
 				return true;
 			}
 		});
 		Gdx.input.setInputProcessor(inputMultiplexer);
 
+		locations = fetchTransactionsFromDB();
 
 	}
 
@@ -252,9 +259,9 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
 		if (initialDistance >= distance)
-			camera.zoom += 0.02;
+			camera.zoom += 0.01;
 		else
-			camera.zoom -= 0.02;
+			camera.zoom -= 0.01;
 		return false;
 	}
 
@@ -270,10 +277,10 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
 	private void handleInput() {
 		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-			camera.zoom += 0.02;
+			camera.zoom += 0.01;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			camera.zoom -= 0.02;
+			camera.zoom -= 0.01;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			camera.translate(-3, 0, 0);
@@ -288,7 +295,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 			camera.translate(0, 3, 0);
 		}
 
-		camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f);
+		camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 2f);
 
 		float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
 		float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
