@@ -21,7 +21,7 @@ public class MapRasterTiles {
     //https://www.geoapify.com/get-started-with-maps-api
     static String mapServiceUrl = "https://maps.geoapify.com/v1/tile/";
     static String token = "?&apiKey=" + Keys.GEOAPIFY;
-    static String tilesetId = "klokantech-basic";
+    static String tilesetId = "positron-blue";//klokantech-basic
     static String format = "@2x.png";
 
     //@2x in format means it returns higher DPI version of the image and the image size is 512px (otherwise it is 256px)

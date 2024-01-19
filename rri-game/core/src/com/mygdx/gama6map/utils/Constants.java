@@ -3,7 +3,7 @@ package com.mygdx.gama6map.utils;
 import com.badlogic.gdx.Gdx;
 
 public class Constants {
-    public static final int NUM_TILES = 3;
+    public static final int NUM_TILES = 9;
     public static final int ZOOM = 16;
     public static final int MAP_WIDTH = MapRasterTiles.TILE_SIZE * NUM_TILES;
     public static final int MAP_HEIGHT = MapRasterTiles.TILE_SIZE * NUM_TILES;

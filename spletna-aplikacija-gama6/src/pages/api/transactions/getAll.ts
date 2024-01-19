@@ -9,7 +9,7 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
   const transactions = await prisma.transaction.findMany({
-    take: 20,
+    take: 100,
     orderBy: {
       transactionDate: "desc",
     },

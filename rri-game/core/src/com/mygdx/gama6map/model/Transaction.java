@@ -33,6 +33,14 @@ public class Transaction {
 
         // Getters and setters for lat and lng
 
+
+        public Double getLat() {
+            return lat;
+        }
+        public Double getLng() {
+            return lng;
+        }
+
         @Override
         public String toString() {
             return "GPS{" +
@@ -62,6 +70,9 @@ public class Transaction {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+    public GPS getGps() {
+        return gps;
     }
 
     @Override

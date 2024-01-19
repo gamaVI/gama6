@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Gama6Map extends ApplicationAdapter implements GestureDetector.GestureListener {
@@ -77,6 +78,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     private Stage stage;
     private FitViewport viewport;
 
+    private Texture markerTexture;
+
     // boat animation
     Geolocation[] boatCoordinates = {
             new Geolocation(46.5602f, 15.625186f),
@@ -88,14 +91,25 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     BoatAnimation boatAnimation;
 
     // center geolocation
-    private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.05108, 14.50513);
+    private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.05108, 14.50513);// ljubljana
 
-    // test marker
-    private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.559070, 15.638100);
 
     @Override
     public void create() {
         shapeRenderer = new ShapeRenderer();
+
+        markerTexture = new Texture(Gdx.files.internal("pinMarker3.png"));
+
+
+        locations = fetchTransactionsFromDB();
+
+        if (locations != null) {
+            for (Transaction transaction : locations) {
+                System.out.println(transaction);
+            }
+        }
+
+        //locations = new ArrayList<>();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
@@ -166,12 +180,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
 
 
-        List<Transaction> locations = fetchTransactionsFromDB();
-        if (locations != null) {
-            for (Transaction transaction : locations) {
-                System.out.println(transaction);
-            }
-        }
+
 
 
     }
@@ -208,14 +217,28 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     }
 
     private void drawMarkers() {
-        Vector2 marker = MapRasterTiles.getPixelPosition(MARKER_GEOLOCATION.lat, MARKER_GEOLOCATION.lng, beginTile.x, beginTile.y);
+        if (locations == null) return;
+
+
+        spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.begin();
+
+        for (Transaction transaction : locations) {
+            if (transaction.getGps() != null) {
+                Vector2 markerPos = MapRasterTiles.getPixelPosition(transaction.getGps().getLat(), transaction.getGps().getLng(), beginTile.x, beginTile.y);
+                spriteBatch.draw(markerTexture, markerPos.x - markerTexture.getWidth() / 2, markerPos.y - markerTexture.getHeight() / 2);
+            }
+        }
+
+        spriteBatch.end();
+/*        Vector2 marker = MapRasterTiles.getPixelPosition(MARKER_GEOLOCATION.lat, MARKER_GEOLOCATION.lng, beginTile.x, beginTile.y);
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(marker.x, marker.y, 10);
         shapeRenderer.end();
-
+*/
         // boat positions
         /*for(int i=0; i<boatAnimation.getInterpolatedPositions().length; i++){
             shapeRenderer.setProjectionMatrix(camera.combined);
@@ -230,6 +253,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     public void dispose() {
         shapeRenderer.dispose();
         hudStage.dispose();
+        markerTexture.dispose();
     }
 
     @Override
