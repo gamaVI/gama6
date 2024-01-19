@@ -1,2 +1,10 @@
 ./idea
+recognition-model/yolov3-320.weights
+
+recognition-model/__pycache__/tracker.cpython-39.pyc
+
+recognition-model/__pycache__/vehicle_count.cpython-39.pyc
+
+recognition-model/static-data.csv
+
 blockchain/node_modules/

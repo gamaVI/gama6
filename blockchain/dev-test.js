@@ -15,11 +15,9 @@ for (let i = 0; i < NUMBLOCKS; i++) {
   const newBlock = blockchain.addBlock(`foo ${i}`);
   console.log(newBlock.toString());
 
-  // Accumulate total hash count
   totalHashCount += newBlock.totalHashCount;
 }
 
-// Stop the timer
 const endTime = Date.now();
 const duration = (endTime - startTime) / 1000; // Duration in seconds
 
