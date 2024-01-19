@@ -8,14 +8,35 @@ export default async function handler(
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method not allowed" });
   }
-
   const transactions = await prisma.transaction.findMany({
     take: 20,
     orderBy: {
       transactionDate: "desc",
     },
-    include: {
-      gps: true,
+    select: {
+      id: true,
+      apiId: true,
+      componentType: true,
+      address: true,
+      transactionAmountM2: true,
+      estimatedAmountM2: true,
+      isEstimatedAmount: true,
+      transactionItemsList: true,
+      transactionSumParcelSizes: true,
+      transactionDate: true,
+      transactionAmountGross: true,
+      transactionTax: true,
+      buildingYearBuilt: true,
+      unitRoomCount: true,
+      unitRoomsSumSize: true,
+      unitRooms: true,
+      gpsId: true,
+      gps: {
+        select: {
+          lat: true,
+          lng: true,
+        },
+      },
     },
   });
 
