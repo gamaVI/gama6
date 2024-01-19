@@ -3,6 +3,7 @@ package com.mygdx.gama6map;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -80,7 +81,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 	BoatAnimation boatAnimation;
 
 	// center geolocation
-	private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.557314, 15.637771);
+	private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.05108, 14.50513);
 
 	// test marker
 	private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.559070, 15.638100);
@@ -141,6 +142,22 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 		boatAnimation = new BoatAnimation(boatCoordinates, beginTile, 5);
 		stage = new Stage(viewport, spriteBatch);
 		stage.addActor(boatAnimation.create());
+
+
+		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer.addProcessor(hudStage);
+		inputMultiplexer.addProcessor(new GestureDetector(this));
+		inputMultiplexer.addProcessor(new InputAdapter() {
+			@Override
+			public boolean scrolled(float amountX, float amountY) {
+				camera.zoom += amountY * 0.1f; // Adjust zoom factor
+				camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f); // Keep zoom within limits
+				return true;
+			}
+		});
+		Gdx.input.setInputProcessor(inputMultiplexer);
+
+
 	}
 
 	@Override
