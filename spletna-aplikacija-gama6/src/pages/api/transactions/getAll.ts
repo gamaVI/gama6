@@ -14,6 +14,9 @@ export default async function handler(
     orderBy: {
       transactionDate: "desc",
     },
+    include: {
+      gps: true,
+    },
   });
 
   try {
