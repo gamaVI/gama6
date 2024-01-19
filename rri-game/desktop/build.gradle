@@ -17,7 +17,7 @@ tasks.register('run', JavaExec) {
 
     if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
         // Required to run on macOS
-        jvmArgs += "-XstartOnFirstThread"
+        jvmArgs += "-XstartOnFirstThread --add-opens java.base/java.io=ALL-UNNAMED\n"
     }
 }
 

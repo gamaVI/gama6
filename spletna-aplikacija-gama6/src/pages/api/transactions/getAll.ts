@@ -21,7 +21,7 @@ export default async function handler(
       transactionAmountM2: true,
       estimatedAmountM2: true,
       isEstimatedAmount: true,
-      transactionItemsList: true,
+      transactionItemsList: false,
       transactionSumParcelSizes: true,
       transactionDate: true,
       transactionAmountGross: true,
@@ -29,7 +29,7 @@ export default async function handler(
       buildingYearBuilt: true,
       unitRoomCount: true,
       unitRoomsSumSize: true,
-      unitRooms: true,
+      unitRooms: false,
       gpsId: true,
       gps: {
         select: {
