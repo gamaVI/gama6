@@ -10,10 +10,9 @@ const MESSAGE_TYPE = {
 };
 
 class P2pserver {
-  constructor(blockchain, eventPool) {
+  constructor(blockchain) {
     this.blockchain = blockchain;
     this.sockets = [];
-    this.eventPool = eventPool;
   }
 
   listen() {
@@ -45,12 +44,6 @@ class P2pserver {
       switch (data.type) {
         case MESSAGE_TYPE.chain:
           this.blockchain.replaceChain(data.chain);
-          break;
-        case MESSAGE_TYPE.event:
-          this.eventPool.addEvent(data.event);
-          break;
-        case MESSAGE_TYPE.clear_events:
-          this.eventPool.clear();
           break;
       }
     });
