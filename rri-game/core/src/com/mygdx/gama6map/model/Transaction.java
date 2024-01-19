@@ -43,10 +43,7 @@ public class Transaction {
 
         @Override
         public String toString() {
-            return "GPS{" +
-                    "lat=" + lat +
-                    ", lng=" + lng +
-                    '}';
+            return  "\nSirina=" + lat +"\n"+"Dolzina=" + lng;
         }
     }
     public Transaction() {}
@@ -55,6 +52,59 @@ public class Transaction {
         this.id = id;
         this.address = address;
     }
+
+    public Boolean getEstimatedAmount() {
+        return isEstimatedAmount;
+    }
+    //implement all get methods
+    public String getApiId() {
+        return apiId;
+    }
+
+    public String getComponentType() {
+        return componentType;
+    }
+
+    public Double getTransactionAmountM2() {
+        return transactionAmountM2;
+    }
+
+    public Double getEstimatedAmountM2() {
+        return estimatedAmountM2;
+    }
+
+    public Double getTransactionSumParcelSizes() {
+        return transactionSumParcelSizes;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public Double getTransactionAmountGross() {
+        return transactionAmountGross;
+    }
+
+    public Double getTransactionTax() {
+        return transactionTax;
+    }
+
+    public Integer getBuildingYearBuilt() {
+        return buildingYearBuilt;
+    }
+
+    public Integer getUnitRoomCount() {
+        return unitRoomCount;
+    }
+
+    public Double getUnitRoomsSumSize() {
+        return unitRoomsSumSize;
+    }
+
+    public String getGpsId() {
+        return gpsId;
+    }
+
 
     public String getId() {
         return id;
@@ -68,9 +118,6 @@ public class Transaction {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
     public GPS getGps() {
         return gps;
     }

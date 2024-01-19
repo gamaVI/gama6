@@ -25,15 +25,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.gama6map.BoatAnimation;
@@ -98,7 +102,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     public void create() {
         shapeRenderer = new ShapeRenderer();
 
-        markerTexture = new Texture(Gdx.files.internal("pinMarker3.png"));
+        markerTexture = new Texture(Gdx.files.internal("home.png"));
 
 
         locations = fetchTransactionsFromDB();
@@ -153,7 +157,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
         // buttons
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("ui/tracer-ui.json"));
         hudStage = new Stage(hudViewport, spriteBatch);
         hudStage.addActor(createButtons());
 
@@ -196,13 +200,15 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
+        drawMarkers();
+
         hudStage.act(Gdx.graphics.getDeltaTime());
         stage.act(Gdx.graphics.getDeltaTime());
 
         hudStage.draw();
         stage.draw();
 
-        drawMarkers();
+
 
         // lang
 		/*
@@ -231,22 +237,6 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         }
 
         spriteBatch.end();
-/*        Vector2 marker = MapRasterTiles.getPixelPosition(MARKER_GEOLOCATION.lat, MARKER_GEOLOCATION.lng, beginTile.x, beginTile.y);
-
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.circle(marker.x, marker.y, 10);
-        shapeRenderer.end();
-*/
-        // boat positions
-        /*for(int i=0; i<boatAnimation.getInterpolatedPositions().length; i++){
-            shapeRenderer.setProjectionMatrix(camera.combined);
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.circle(boatAnimation.getInterpolatedPositions()[i].x, boatAnimation.getInterpolatedPositions()[i].y, 10);
-            shapeRenderer.end();
-        }*/
     }
 
     @Override
@@ -256,10 +246,96 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         markerTexture.dispose();
     }
 
+    private void showLocationPrompt(Transaction transaction) {
+
+        Texture imageTexture = new Texture(Gdx.files.internal("new-house.png"));
+        Image image = new Image(imageTexture);
+
+        Dialog dialog = new Dialog("", skin) {
+            public void result(Object obj) {
+                this.hide();
+            }
+        };
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = skin.getFont("font");
+        labelStyle.fontColor = Color.WHITE;
+
+        Label titleLabel = new Label("Location Details", labelStyle);
+        titleLabel.setAlignment(Align.center);
+        dialog.getTitleTable().add(titleLabel).center().expandX().padTop(10);
+
+        dialog.setSize(300, Gdx.graphics.getHeight());
+
+        dialog.getContentTable().add(image).top().padBottom(10);
+        dialog.getContentTable().row();
+
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Naslov: " + transaction.getAddress(), labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Kordinate: " + transaction.getGps(), labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Tip nepremičnine: " + transaction.getComponentType(), labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Cena kvadratnega metra: " + String.format("%.1f",transaction.getTransactionAmountM2()) + "€", labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Ocenjena vrednost kvadratnega metra: " + String.format("%.1f", transaction.getEstimatedAmountM2()) + "€", labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Velikost Parcele " + String.format("%.1f",transaction.getTransactionSumParcelSizes()) + "€", labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Datum tranzakcije: " + transaction.getTransactionDate(), labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Tranzakcija: " + String.format("%.1f",transaction.getTransactionAmountGross()) + "€", labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Davek na transakcijo: " + transaction.getTransactionTax(), labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(new Label("Izgradnja nepremičnine: " + transaction.getBuildingYearBuilt(), labelStyle));
+        dialog.getContentTable().row();
+        dialog.getContentTable().columnDefaults(0).padRight(10);
+
+
+
+        dialog.show(hudStage);
+        dialog.setPosition(Gdx.graphics.getWidth() - dialog.getWidth(), Gdx.graphics.getHeight() - dialog.getHeight());
+        dialog.setZIndex(Integer.MAX_VALUE);
+
+
+        dialog.button("Close", true);
+        dialog.key(Input.Keys.ESCAPE, true);
+        dialog.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (x < 0 || x > dialog.getWidth() || y < 0 || y > dialog.getHeight()) {
+                    dialog.hide();
+                    event.stop();
+                }
+                return false;
+            }
+        });
+
+
+    }
+
+
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         touchPosition.set(x, y, 0);
         camera.unproject(touchPosition);
+
+        for (Transaction transaction : locations) {
+            if (transaction.getGps() != null) {
+                Vector2 markerPos = MapRasterTiles.getPixelPosition(transaction.getGps().getLat(), transaction.getGps().getLng(), beginTile.x, beginTile.y);
+                float markerWidth = markerTexture.getWidth();
+                float markerHeight = markerTexture.getHeight();
+
+                if (touchPosition.x >= markerPos.x - markerWidth / 2 && touchPosition.x <= markerPos.x + markerWidth / 2
+                        && touchPosition.y >= markerPos.y - markerHeight / 2 && touchPosition.y <= markerPos.y + markerHeight / 2) {
+                    showLocationPrompt(transaction);
+                    break;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -341,7 +417,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         Table table = new Table();
         table.defaults().pad(20);
 
-        TextButton langButton = new TextButton("Lang", skin, "toggle");
+        TextButton langButton = new TextButton("Lang", skin);
         langButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
