@@ -12,3 +12,5 @@ recognition-model/__pycache__/vehicle_count.cpython-39.pyc
 recognition-model/static-data.csv
 
 blockchain/node_modules/
+
+rri-game/cache/

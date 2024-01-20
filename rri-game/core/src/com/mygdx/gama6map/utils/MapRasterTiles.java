@@ -1,5 +1,7 @@
 package com.mygdx.gama6map.utils;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -105,16 +107,53 @@ public class MapRasterTiles {
      * @throws IOException
      */
     public static ByteArrayOutputStream fetchTile(URL url) throws IOException {
-        ByteArrayOutputStream bis = new ByteArrayOutputStream();
-        InputStream is = url.openStream();
-        byte[] bytebuff = new byte[4096];
-        int n;
+        String fileName = getTileFileName(url);
+        FileHandle fileHandle = Gdx.files.local("cache/" + fileName);
+        System.out.println("File path: " + fileHandle.file().getAbsolutePath());
 
-        while ((n = is.read(bytebuff)) > 0) {
-            bis.write(bytebuff, 0, n);
+        if (fileHandle.exists()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] fileBytes = fileHandle.readBytes();
+            baos.write(fileBytes, 0, fileBytes.length);
+            return baos;
+        } else {
+            ByteArrayOutputStream bis = new ByteArrayOutputStream();
+            InputStream is = url.openStream();
+            byte[] bytebuff = new byte[4096];
+            int n;
+
+            while ((n = is.read(bytebuff)) > 0) {
+                bis.write(bytebuff, 0, n);
+            }
+
+            // Save the downloaded data to a file
+            fileHandle.writeBytes(bis.toByteArray(), false);
+            return bis;
         }
-        return bis;
     }
+
+    private static String getTileFileName(URL url) {
+        // Extract the path from the URL
+        String path = url.getPath();
+
+        // Split the path into parts
+        String[] parts = path.split("/");
+
+        // The parts array should have a structure like: [, v1, tile, dark-matter-yellow-roads, zoom, x, y@2x.png]
+        // So, the zoom, x, and y coordinates are in specific positions
+        if (parts.length >= 7) {
+            String zoom = parts[4];
+            String x = parts[5];
+            String y = parts[6].split("@")[0]; // Split again to remove the @2x part
+
+            // Construct and return the file name
+            return "tile_" + zoom + "_" + x + "_" + y + ".png";
+        } else {
+            // Handle unexpected URL format
+            throw new IllegalArgumentException("Unexpected URL format: " + url);
+        }
+    }
+
 
     /**
      * Converts byte[] to Texture.
