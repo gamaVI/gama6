@@ -43,7 +43,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.gama6map.BoatAnimation;
 //import com.mygdx.gama6map.lang.Context;
 //import com.mygdx.gama6map.lang.Renderer;
+import com.mygdx.gama6map.model.Block;
 import com.mygdx.gama6map.model.Transaction;
+import com.mygdx.gama6map.utils.ApiRequests;
 import com.mygdx.gama6map.utils.Constants;
 import com.mygdx.gama6map.utils.Geolocation;
 import com.mygdx.gama6map.utils.MapRasterTiles;
@@ -317,6 +319,34 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     }
 
 
+
+    private void showDataWindow(List<Block> blocks) {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = skin.getFont("font");
+        labelStyle.fontColor = Color.WHITE;
+
+        Dialog dialog = new Dialog("", skin);
+
+
+        Label titleLabel = new Label("Messages", labelStyle);
+        titleLabel.setAlignment(Align.center);
+        dialog.getTitleTable().add(titleLabel).center().expandX().padTop(10);
+
+
+        dialog.setSize(400, Gdx.graphics.getHeight());
+
+        for (Block block : blocks) {
+            Label label = new Label("Index: " + block.getIndex() + ", Message: " + block.getData().getMessage(), labelStyle);
+            dialog.getContentTable().add(label).expandX().fillX().pad(10);
+            dialog.getContentTable().row();
+        }
+
+        dialog.button("Close", true);
+        dialog.show(hudStage);
+        dialog.setPosition(Gdx.graphics.getWidth() - dialog.getWidth(), Gdx.graphics.getHeight() - dialog.getHeight());
+    }
+
+
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         touchPosition.set(x, y, 0);
@@ -425,11 +455,14 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
             }
         });
 
-        TextButton animButton = new TextButton("Animation", skin);
-        animButton.addListener(new ClickListener() {
+        TextButton fetchDataButton = new TextButton("Fetch Data", skin);
+        fetchDataButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                stage.addActor(boatAnimation.create());
+                List<Block> blocks = ApiRequests.fetchBlocksFromDB();
+                if (blocks != null) {
+                    showDataWindow(blocks);
+                }
             }
         });
 
@@ -445,9 +478,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         buttonTable.defaults().padLeft(30).padRight(30);
 
         buttonTable.add(langButton).padBottom(15).expandX().fill().row();
-        buttonTable.add(animButton).padBottom(15).fillX().row();
+        buttonTable.add(fetchDataButton).padBottom(15).fillX().row(); // Changed button added here
         buttonTable.add(quitButton).fillX();
-
 
         table.add(buttonTable);
         table.left();
