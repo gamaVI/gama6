@@ -265,6 +265,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
         Label titleLabel = new Label("Location Details", labelStyle);
         titleLabel.setAlignment(Align.center);
+        dialog.getTitleTable().clear();
         dialog.getTitleTable().add(titleLabel).center().expandX().padTop(10);
 
         dialog.setSize(300, Gdx.graphics.getHeight());
@@ -328,15 +329,17 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         Dialog dialog = new Dialog("", skin);
 
 
-        Label titleLabel = new Label("Messages", labelStyle);
+        Label titleLabel = new Label("Sporocila", labelStyle);
         titleLabel.setAlignment(Align.center);
-        dialog.getTitleTable().add(titleLabel).center().expandX().padTop(10);
+        dialog.getTitleTable().clear();
+        dialog.getTitleTable().add(titleLabel).center().expandX().padTop(100).padBottom(100);
+
 
 
         dialog.setSize(400, Gdx.graphics.getHeight());
 
         for (Block block : blocks) {
-            Label label = new Label("Index: " + block.getIndex() + ", Message: " + block.getData().getMessage(), labelStyle);
+            Label label = new Label("Indeks: " + block.getIndex() + ", Sporocilo: " + block.getData().getMessage(), labelStyle);
             dialog.getContentTable().add(label).expandX().fillX().pad(10);
             dialog.getContentTable().row();
         }
