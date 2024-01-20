@@ -9,10 +9,11 @@ import com.example.gama6mobileapp.network.NetworkClient
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import org.json.JSONObject
 import java.io.IOException
 
-const val IP_ADDRESS = "192.168.56.1" // Laptop
-//const val IP_ADDRESS = "192.168.1.2" // PC
+//const val IP_ADDRESS = "192.168.56.1" // Laptop
+const val IP_ADDRESS = "192.168.1.2" // PC
 
 object ApiService {
     fun getAllLocations(callback: (List<Location>) -> Unit) {
@@ -54,6 +55,30 @@ object ApiService {
             }
         })
     }
+
+    fun updateLocation(locationName: String, numCars: Int, callback: (Boolean) -> Unit) {
+        val url = "http://${IP_ADDRESS}:3000/api/locations/updateLocation"
+
+        // Creating the JSON payload
+        val jsonPayload = JSONObject().apply {
+            put("name", locationName)
+            put("numCars", numCars)
+        }
+
+        // Convert the JSON object to a String
+        val jsonString = jsonPayload.toString()
+
+        NetworkClient.run(url, jsonString, "PUT", object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback(false)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                callback(response.isSuccessful)
+            }
+        })
+    }
+
 
     fun deleteLocation(location: Location, callback: (Boolean) -> Unit) {
         val url = "http://${IP_ADDRESS}:3000/api/locations/delete"

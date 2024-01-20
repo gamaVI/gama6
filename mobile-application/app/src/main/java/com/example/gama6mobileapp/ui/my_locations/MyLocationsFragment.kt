@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,23 +19,23 @@ import com.example.gama6mobileapp.appClass.Gama6Application
 import com.example.gama6mobileapp.databinding.FragmentMyLocationsBinding
 import com.example.gama6mobileapp.model.Location
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
 class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickListener {
 
     private var _binding: FragmentMyLocationsBinding? = null
+    private var repeatingTask: Job? = null
+
     private val binding get() = _binding!!
     private lateinit var recycleViewAdapter: RecycleViewAdapter
 
@@ -51,7 +49,7 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
         setUpRecyclerView()
         setUpSwipeRefreshLayout()
         fetchLocations()
-        lifecycleScope.launch {
+        repeatingTask = lifecycleScope.launch {
             val app = Gama6Application.instance
             while (isActive) {
                 val locationsCopy = ArrayList(app.locations)
@@ -76,7 +74,9 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
     }
 
     private fun setUpRecyclerView() {
-        recycleViewAdapter = RecycleViewAdapter().apply {
+        recycleViewAdapter = RecycleViewAdapter(
+            locations = mutableListOf()
+        ).apply {
             setOnLocationLongClickListener(this@MyLocationsFragment)
         }
         binding.rvMyLocations.adapter = recycleViewAdapter
@@ -102,6 +102,7 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
 
     override fun onDestroyView() {
         super.onDestroyView()
+        repeatingTask?.cancel() // Cancel the repeating task
         _binding = null
     }
 
@@ -195,13 +196,13 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
             }
 
             client.publish(topic, message)
-            Toast.makeText(context, "Message sent", Toast.LENGTH_LONG).show()
-            Log.d("MyLocationsFragment", "Message sent. $message")
+//            Toast.makeText(context, "Message $message sent", Toast.LENGTH_LONG).show()
+            Log.d("MyLocationsFragment", "Message sent. $messageType/$message")
             client.disconnect()
             findNavController().navigateUp()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "Message not sent", Toast.LENGTH_LONG).show()
+//            Toast.makeText(context, "Message not sent", Toast.LENGTH_LONG).show()
         }
     }
 
