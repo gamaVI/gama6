@@ -45,7 +45,10 @@ class Block {
    */
 
   static genesis() {
-    return new this("Genesis time", "----", "f1574-h4gh", [], 0, DIFFICULTY, 0);
+    return new this("Genesis time", "----", "f1574-h4gh", {
+      type:"Information",
+      message:"genesis block" 
+    }, 0, DIFFICULTY, 0);
   }
 
   /**
