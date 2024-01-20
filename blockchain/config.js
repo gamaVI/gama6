@@ -1,0 +1,12 @@
+const DIFFICULTY = 4;
+// in milliseconds
+const MINE_RATE = 3000;
+const DIFFICULTY_ADJUSTMENT_INTERVAL = 2;
+const NUM_WORKERS = 16;
+
+module.exports = {
+  DIFFICULTY,
+  MINE_RATE,
+  DIFFICULTY_ADJUSTMENT_INTERVAL,
+  NUM_WORKERS,
+};

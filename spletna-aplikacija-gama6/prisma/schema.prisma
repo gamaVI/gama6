@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -63,7 +63,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-
 model Transaction {
   id                        String   @id @default(auto()) @map("_id") @db.ObjectId
   apiId                     String   @unique
@@ -75,7 +74,7 @@ model Transaction {
   gps                       Gps      @relation(fields: [gpsId], references: [id])
   transactionItemsList      String[]
   transactionSumParcelSizes Int?
-  transactionDate           DateTime  @db.Date
+  transactionDate           DateTime @db.Date
   transactionAmountGross    Float?
   transactionTax            Float?
   buildingYearBuilt         Int?
@@ -99,11 +98,24 @@ model Gps {
 model Oglas {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   url      String
-  title   String
+  title    String
   photoUrl String
-  type      String
-  size Float
-  price     Int
-  seller String
+  type     String
+  size     Float
+  price    Int
+  seller   String
   location String
+}
+
+model Lokacija {
+  id                     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name                   String  @unique
+  latitude               Float
+  longitude              Float
+  minCars                Int
+  maxCars                Int
+  updateFrequencySeconds Int
+  simulation             Boolean
+  lastUpdated            Int
+  numCars                Int     @default(0)
 }
