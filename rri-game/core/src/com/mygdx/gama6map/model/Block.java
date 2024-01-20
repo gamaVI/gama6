@@ -1,7 +1,7 @@
 package com.mygdx.gama6map.model;
 
 public class Block {
-    private String timestamp; //later change to Date/Long
+    private String timestamp;
     private int index;
     private String lastHash;
     private String hash;

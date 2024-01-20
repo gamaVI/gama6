@@ -7,31 +7,29 @@ import java.util.Date;
 public class Transaction {
     private String id;
     private String address;
-    // Add other fields
+
     private String apiId;
     private String componentType;
     private Double transactionAmountM2;
     private Double estimatedAmountM2;
     private Boolean isEstimatedAmount;
-    //private List<TransactionItem> transactionItemsList; // Assuming TransactionItem is another class
     private Double transactionSumParcelSizes;
-    private Date transactionDate; // Assuming standard java.util.Date
+    private Date transactionDate;
     private Double transactionAmountGross;
     private Double transactionTax;
     private Integer buildingYearBuilt;
     private Integer unitRoomCount;
     private Double unitRoomsSumSize;
-    //private List<Room> unitRooms; // Assuming Room is another class
+
     private String gpsId;
     private GPS gps;
-    // Constructor, getters, and setters
+
 
 
     public static class GPS {
         private Double lat;
         private Double lng;
 
-        // Getters and setters for lat and lng
 
 
         public Double getLat() {
@@ -39,6 +37,13 @@ public class Transaction {
         }
         public Double getLng() {
             return lng;
+        }
+
+        public String getLatString() {
+            return lat.toString();
+        }
+        public String getLngString() {
+            return lng.toString();
         }
 
         @Override
@@ -56,7 +61,7 @@ public class Transaction {
     public Boolean getEstimatedAmount() {
         return isEstimatedAmount;
     }
-    //implement all get methods
+
     public String getApiId() {
         return apiId;
     }

@@ -27,8 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -40,9 +38,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.gama6map.BoatAnimation;
 //import com.mygdx.gama6map.lang.Context;
 //import com.mygdx.gama6map.lang.Renderer;
+import com.mygdx.gama6map.animation.MoneyFallingActor;
 import com.mygdx.gama6map.model.Block;
 import com.mygdx.gama6map.model.Transaction;
 import com.mygdx.gama6map.utils.ApiRequests;
@@ -51,11 +49,8 @@ import com.mygdx.gama6map.utils.Geolocation;
 import com.mygdx.gama6map.utils.MapRasterTiles;
 import com.mygdx.gama6map.utils.ZoomXY;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Gama6Map extends ApplicationAdapter implements GestureDetector.GestureListener {
@@ -86,15 +81,10 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
     private Texture markerTexture;
 
-    // boat animation
-    Geolocation[] boatCoordinates = {
-            new Geolocation(46.5602f, 15.625186f),
-            new Geolocation(46.5580f, 15.632482f),
-            new Geolocation(46.5560f, 15.639112f),
-            new Geolocation(46.5555f, 15.647974f),
-            new Geolocation(46.5553f, 15.657566f)
-    };
-    BoatAnimation boatAnimation;
+
+    // money animation
+    private Texture buildingTexture;
+    private Texture moneyTexture;
 
     // center geolocation
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.05108, 14.50513);// ljubljana
@@ -104,9 +94,11 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     public void create() {
         shapeRenderer = new ShapeRenderer();
 
+
+
         markerTexture = new Texture(Gdx.files.internal("home.png"));
-
-
+        buildingTexture = new Texture(Gdx.files.internal("locationImage.png"));
+        moneyTexture = new Texture(Gdx.files.internal("money.png"));
         locations = fetchTransactionsFromDB();
 
         if (locations != null) {
@@ -115,7 +107,6 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
             }
         }
 
-        //locations = new ArrayList<>();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
@@ -130,6 +121,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         viewport = new FitViewport(Constants.MAP_WIDTH / 2f, Constants.MAP_HEIGHT / 2f, camera);
 
         touchPosition = new Vector3();
+        viewport = new FitViewport(Constants.MAP_WIDTH / 2f, Constants.MAP_HEIGHT / 2f, camera);
+        stage = new Stage(viewport, spriteBatch);
 
         try {
             //in most cases, geolocation won't be in the center of the tile because tile borders are predetermined (geolocation can be at the corner of a tile)
@@ -165,10 +158,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hudStage, new GestureDetector(this)));
 
-        // boat
-        boatAnimation = new BoatAnimation(boatCoordinates, beginTile, 5);
-        stage = new Stage(viewport, spriteBatch);
-        stage.addActor(boatAnimation.create());
+
 
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -212,16 +202,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
 
 
-        // lang
-		/*
-		if(showLangExample){
-			Renderer renderer = new Renderer();
-			try {
-				renderer.render(new FileInputStream(new File("program.txt")), new Context(shapeRenderer, camera, beginTile));
-			} catch (FileNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}*/
+
     }
 
     private void drawMarkers() {
@@ -248,6 +229,24 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         markerTexture.dispose();
     }
 
+    private void addLabelRow(Table contentTable, String labelText, String valueText) {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = skin.getFont("font");
+        labelStyle.fontColor = Color.WHITE;
+
+        Label label = new Label(labelText, labelStyle);
+        label.setAlignment(Align.left);
+        Label value = new Label(valueText, labelStyle);
+        value.setAlignment(Align.right);
+
+        Table rowTable = new Table();
+        rowTable.add(label).expandX().align(Align.left).padRight(10);
+        rowTable.add(value).expandX().align(Align.right);
+
+        contentTable.add(rowTable).growX().padTop(10).padBottom(10);
+        contentTable.row();
+    }
+
     private void showLocationPrompt(Transaction transaction) {
 
         Texture imageTexture = new Texture(Gdx.files.internal("new-house.png"));
@@ -263,44 +262,36 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         labelStyle.font = skin.getFont("font");
         labelStyle.fontColor = Color.WHITE;
 
-        Label titleLabel = new Label("Location Details", labelStyle);
-        titleLabel.setAlignment(Align.center);
-        dialog.getTitleTable().clear();
-        dialog.getTitleTable().add(titleLabel).center().expandX().padTop(10);
-
         dialog.setSize(300, Gdx.graphics.getHeight());
+        dialog.setPosition(Gdx.graphics.getWidth() - dialog.getWidth(), 0);
 
-        dialog.getContentTable().add(image).top().padBottom(10);
+        dialog.getContentTable().top().pad(30);
+
+        MoneyFallingActor moneyFallingActor = new MoneyFallingActor(buildingTexture, moneyTexture, transaction.getTransactionAmountGross());
+        dialog.getContentTable().add(moneyFallingActor).size(300, 300).padBottom(30).row(); // Adjust size as needed
         dialog.getContentTable().row();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = dateFormat.format(transaction.getTransactionDate());
+
+        dialog.getContentTable().add().padTop(20);
         dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Naslov: " + transaction.getAddress(), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Kordinate: " + transaction.getGps(), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Tip nepremičnine: " + transaction.getComponentType(), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Cena kvadratnega metra:" + String.format("%.1f",transaction.getTransactionAmountM2()), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Ocenjena vrednost kvadratnega metra:" + String.format("%.1f", transaction.getEstimatedAmountM2()), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Velikost Parcele" + String.format("%.1f",transaction.getTransactionSumParcelSizes()), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Datum tranzakcije: " + transaction.getTransactionDate(), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Tranzakcija:" + String.format("%.1f",transaction.getTransactionAmountGross()), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Davek na transakcijo:" + String.format("%.1f",transaction.getTransactionTax()), labelStyle));
-        dialog.getContentTable().row();
-        dialog.getContentTable().add(new Label("Izgradnja nepremičnine: " + transaction.getBuildingYearBuilt(), labelStyle));
-        dialog.getContentTable().row();
+        addLabelRow(dialog.getContentTable(), "Naslov: ", transaction.getAddress());
+        addLabelRow(dialog.getContentTable(), "Geografska Sirina: ", transaction.getGps().getLatString());
+        addLabelRow(dialog.getContentTable(), "Geografska dolzina: ", transaction.getGps().getLngString());
+        addLabelRow(dialog.getContentTable(), "Tip nepremicnine: ", transaction.getComponentType());
+        addLabelRow(dialog.getContentTable(), "Cena kvadratnega metra: ", String.format("%.1f", transaction.getTransactionAmountM2()));
+        addLabelRow(dialog.getContentTable(), "Ocenjena vrednost kvadratnega metra: ", String.format("%.1f", transaction.getEstimatedAmountM2()));
+        addLabelRow(dialog.getContentTable(), "Velikost parcele: ", String.format("%.1f", transaction.getTransactionSumParcelSizes()));
+        addLabelRow(dialog.getContentTable(), "Datum transakcije: ", formattedDate);
+        addLabelRow(dialog.getContentTable(), "Transakcija: ", String.format("%.1f", transaction.getTransactionAmountGross()));
+        addLabelRow(dialog.getContentTable(), "Davek na transakcijo: ", String.format("%.1f", transaction.getTransactionTax()));
+        addLabelRow(dialog.getContentTable(), "Izgradnja nepremicnine: ", transaction.getBuildingYearBuilt().toString());
+
         dialog.getContentTable().columnDefaults(0).padRight(10);
 
-
-
-        dialog.show(hudStage);
-        dialog.setPosition(Gdx.graphics.getWidth() - dialog.getWidth(), Gdx.graphics.getHeight() - dialog.getHeight());
         dialog.setZIndex(Integer.MAX_VALUE);
+        dialog.getContentTable().add().expand().fill();
 
 
         dialog.button("Close", true);
@@ -315,7 +306,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
                 return false;
             }
         });
-
+        dialog.show(hudStage);
 
     }
 
@@ -327,6 +318,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         labelStyle.fontColor = Color.WHITE;
 
         Dialog dialog = new Dialog("", skin);
+        dialog.getTitleTable().padTop(50);
+        dialog.getContentTable().padTop(50);
 
 
         Label titleLabel = new Label("Sporocila", labelStyle);
@@ -345,6 +338,16 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         }
 
         dialog.button("Close", true);
+        dialog.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (x < 0 || x > dialog.getWidth() || y < 0 || y > dialog.getHeight()) {
+                    dialog.hide();
+                    event.stop();
+                }
+                return false;
+            }
+        });
         dialog.show(hudStage);
         dialog.setPosition(Gdx.graphics.getWidth() - dialog.getWidth(), Gdx.graphics.getHeight() - dialog.getHeight());
     }
@@ -450,15 +453,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         Table table = new Table();
         table.defaults().pad(20);
 
-        TextButton langButton = new TextButton("Lang", skin);
-        langButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                showLangExample = !showLangExample;
-            }
-        });
 
-        TextButton fetchDataButton = new TextButton("Fetch Data", skin);
+        TextButton fetchDataButton = new TextButton("Pridobi Sporocila", skin);
         fetchDataButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -480,8 +476,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         Table buttonTable = new Table();
         buttonTable.defaults().padLeft(30).padRight(30);
 
-        buttonTable.add(langButton).padBottom(15).expandX().fill().row();
-        buttonTable.add(fetchDataButton).padBottom(15).fillX().row(); // Changed button added here
+        buttonTable.add(fetchDataButton).padBottom(15).fillX().row();
         buttonTable.add(quitButton).fillX();
 
         table.add(buttonTable);
