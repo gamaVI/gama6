@@ -9,9 +9,20 @@ import com.example.gama6mobileapp.apiService.ApiService.upsertLocation
 import com.example.gama6mobileapp.databinding.RecycleViewItemBinding
 import com.example.gama6mobileapp.model.Location
 import com.example.gama6mobileapp.ui.my_locations.MyLocationsFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-class RecycleViewAdapter(private var locations: MutableList<Location> = mutableListOf()) :
+class RecycleViewAdapter(
+    private var locations: MutableList<Location> = mutableListOf()
+) :
     RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>() {
+
+    var onItemClick: ((Location) -> Unit)? = null
 
     interface OnLocationLongClickListener {
         fun onLocationLongClicked(location: Location, position: Int)
@@ -41,6 +52,8 @@ class RecycleViewAdapter(private var locations: MutableList<Location> = mutableL
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val location = locations[position]
+        println("Binding location: ${location.name} with hash: ${location.hashCode()}")
+
         val titleString = "Free parking spots"
         holder.binding.rvTitle.text = titleString
         val rangeString = "From ${location.minCars} to ${location.maxCars} cars"
@@ -52,29 +65,23 @@ class RecycleViewAdapter(private var locations: MutableList<Location> = mutableL
         val numCars = "( ${location.numCars} )"
         holder.binding.rvNumCars.text = numCars
 
-        holder.binding.rvSimulationSwitch.apply {
-            setOnCheckedChangeListener(null)
-            isChecked = location.simulation
+        // Remove any existing listener before setting a new one
+        holder.binding.rvSimulationSwitch.setOnCheckedChangeListener(null)
+        holder.binding.rvSimulationSwitch.isChecked = location.simulation
 
-            setOnCheckedChangeListener { _, isChecked ->
-                // Post the action to the handler of the itemView
-                holder.itemView.post {
-                    location.simulation = isChecked
-
-                    Thread {
-                        upsertLocation(location, callback = { success ->
-                            // Post any UI updates back to the main thread
-                            holder.itemView.post {
-                                if (success) {
-                                    // Update the UI or do something on success
-                                } else {
-                                    // Handle the failure, show error message, etc.
-                                }
-                            }
-                        })
-                    }.start()
-
-                    println("Location: ${location.name} simulation state changed to $isChecked - ${location.simulation}")
+        holder.binding.rvSimulationSwitch.setOnClickListener{
+            val updatedLocation = location.copy(simulation = !location.simulation)
+            CoroutineScope(Dispatchers.Main).launch {
+                val updated = withContext(Dispatchers.IO) {
+                    suspendCoroutine<Boolean> { continuation ->
+                        upsertLocation(updatedLocation) { success ->
+                            continuation.resume(success)
+                            locations[position] = updatedLocation
+                        }
+                    }
+                }
+                if (updated) {
+                    updateLocationAt(position, updatedLocation)
                 }
             }
         }

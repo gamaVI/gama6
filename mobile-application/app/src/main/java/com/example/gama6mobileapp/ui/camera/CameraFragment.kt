@@ -31,6 +31,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.gama6mobileapp.R
+import com.example.gama6mobileapp.apiService.ApiService.upsertLocation
+import com.example.gama6mobileapp.appClass.Gama6Application
 import com.example.gama6mobileapp.util.uploadImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -117,14 +119,30 @@ class CameraFragment : Fragment() {
 
                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                         if (isAdded) {
-                            var count = 0
-                            count = uploadImage(bytes)
+                            val count = uploadImage(bytes)
+                            val locationName = args.locationText
+
                             Log.d("Upload", "Count from CameraFragment: $count")
                             Toast.makeText(
                                 requireContext(),
                                 "Number of cars on the image: $count",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            // Prepare your Location object here
+                            val app = requireActivity().application as Gama6Application
+                            var location = app.locations.find { it.name == locationName }
+                            if (location!!.maxCars!! < count) {
+                                location.numCars = location.maxCars!!
+                            } else location.numCars = count
+                            // Call upsertLocation function
+                            upsertLocation(location) { success ->
+                                if (success) {
+                                    Log.d("LocationUpsert", "Location upserted successfully")
+                                } else {
+                                    Log.e("LocationUpsert", "Failed to upsert location")
+                                }
+                            }
 
                             // Safe navigation
                             if (isAdded) {
