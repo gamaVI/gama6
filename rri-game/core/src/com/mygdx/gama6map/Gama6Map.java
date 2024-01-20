@@ -23,6 +23,7 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -51,6 +52,7 @@ import com.mygdx.gama6map.utils.ZoomXY;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Gama6Map extends ApplicationAdapter implements GestureDetector.GestureListener {
@@ -101,7 +103,11 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         moneyTexture = new Texture(Gdx.files.internal("money.png"));
         locations = fetchTransactionsFromDB();
 
+        if (locations == null) {
+            locations = new ArrayList<>();
+        }
         if (locations != null) {
+
             for (Transaction transaction : locations) {
                 System.out.println(transaction);
             }
@@ -195,9 +201,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         drawMarkers();
 
         hudStage.act(Gdx.graphics.getDeltaTime());
-        stage.act(Gdx.graphics.getDeltaTime());
-
         hudStage.draw();
+        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
 
@@ -206,7 +211,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
     }
 
     private void drawMarkers() {
-        if (locations == null) return;
+        if (locations == null || locations.isEmpty()) return;
 
 
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -252,11 +257,22 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         Texture imageTexture = new Texture(Gdx.files.internal("new-house.png"));
         Image image = new Image(imageTexture);
 
+        MoneyFallingActor moneyFallingActor = new MoneyFallingActor(buildingTexture, moneyTexture, transaction.getTransactionAmountGross());
         Dialog dialog = new Dialog("", skin) {
-            public void result(Object obj) {
-                this.hide();
+            @Override
+            public void hide(Action action) {
+                moneyFallingActor.stopAnimation();
+                super.hide(action);
             }
         };
+
+        dialog.getContentTable().add(moneyFallingActor).size(300, 300).padBottom(30).row();
+        moneyFallingActor.startAnimation(); // Start animation immediately
+        moneyFallingActor.act(Gdx.graphics.getDeltaTime());
+
+
+
+
 
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = skin.getFont("font");
@@ -267,8 +283,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
 
         dialog.getContentTable().top().pad(30);
 
-        MoneyFallingActor moneyFallingActor = new MoneyFallingActor(buildingTexture, moneyTexture, transaction.getTransactionAmountGross());
-        dialog.getContentTable().add(moneyFallingActor).size(300, 300).padBottom(30).row(); // Adjust size as needed
+
         dialog.getContentTable().row();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -293,6 +308,8 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         dialog.setZIndex(Integer.MAX_VALUE);
         dialog.getContentTable().add().expand().fill();
 
+        //moneyFallingActor.startAnimation();
+
 
         dialog.button("Close", true);
         dialog.key(Input.Keys.ESCAPE, true);
@@ -300,6 +317,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (x < 0 || x > dialog.getWidth() || y < 0 || y > dialog.getHeight()) {
+                    moneyFallingActor.stopAnimation();
                     dialog.hide();
                     event.stop();
                 }
@@ -308,6 +326,7 @@ public class Gama6Map extends ApplicationAdapter implements GestureDetector.Gest
         });
         dialog.show(hudStage);
 
+        hudStage.act(Gdx.graphics.getDeltaTime());
     }
 
 

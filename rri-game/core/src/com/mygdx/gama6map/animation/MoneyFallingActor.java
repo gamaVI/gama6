@@ -13,6 +13,15 @@ public class MoneyFallingActor extends Actor {
     private float[] delay;
     private Color backgroundColor;
     private static final int MONEY_COUNT = 6;
+    private boolean isAnimating = false;
+
+    public void startAnimation() {
+        isAnimating = true;
+    }
+
+    public void stopAnimation() {
+        isAnimating = false;
+    }
 
     public MoneyFallingActor(Texture buildingTexture, Texture moneyTexture, double transactionAmount) {
         this.buildingTexture = buildingTexture;
@@ -42,18 +51,23 @@ public class MoneyFallingActor extends Actor {
 
     @Override
     public void act(float delta) {
-        super.act(delta);
-        for (int i = 0; i < MONEY_COUNT; i++) {
-            if (delay[i] > 0) {
-                delay[i] -= delta;
-                continue;
-            }
+        if (!isAnimating) {
+            return;
+        }else {
 
-            moneyY[i] -= delta * 100;
-            if (moneyY[i] < -moneyTexture.getHeight()) {
-                moneyY[i] = getHeight();
-                moneyX[i] = (float) Math.random() * getWidth();
-                delay[i] = (float) Math.random() * 2.0f;
+            super.act(delta);
+            for (int i = 0; i < MONEY_COUNT; i++) {
+                if (delay[i] > 0) {
+                    delay[i] -= delta;
+                    continue;
+                }
+
+                moneyY[i] -= delta * 100;
+                if (moneyY[i] < -moneyTexture.getHeight()) {
+                    moneyY[i] = getHeight();
+                    moneyX[i] = (float) Math.random() * getWidth();
+                    delay[i] = (float) Math.random() * 2.0f;
+                }
             }
         }
     }
