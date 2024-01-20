@@ -197,7 +197,7 @@ class MyLocationsFragment : Fragment(), RecycleViewAdapter.OnLocationLongClickLi
 
             client.publish(topic, message)
 //            Toast.makeText(context, "Message $message sent", Toast.LENGTH_LONG).show()
-            Log.d("MyLocationsFragment", "Message sent. $message")
+            Log.d("MyLocationsFragment", "Message sent. $messageType/$message")
             client.disconnect()
             findNavController().navigateUp()
         } catch (e: Exception) {
