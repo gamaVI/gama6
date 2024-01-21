@@ -31,26 +31,4 @@ app.listen(HTTP_PORT, () => {
   console.log(`listening on port ${HTTP_PORT}`);
 });
 
-blockchain.addBlock(
-  {
-    type:"Information",
-    message:"Test message"
-
-  }
-)
-blockchain.addBlock(
-  {
-    type:"Information",
-    message:"Test message 2"
-
-  }
-)
-blockchain.addBlock(
-  {
-    type:"Information",
-    message:"Test message 3"
-
-  }
-)
-
 p2pserver.listen();

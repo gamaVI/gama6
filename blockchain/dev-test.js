@@ -1,6 +1,6 @@
 const Blockchain = require("./blockchain");
 const ChainUtil = require("./chain-util");
-const { NUM_WORKERS } = require("./config.js");
+const { NUM_WORKERS, DIFFICULTY } = require("./config.js");
 const fs = require("fs");
 
 const blockchain = new Blockchain();
@@ -9,12 +9,13 @@ const blockchain = new Blockchain();
 const startTime = Date.now();
 
 let totalHashCount = 0;
-const NUMBLOCKS = 10;
+const NUMBLOCKS = 35;
+const difficulites = [];
 
 for (let i = 0; i < NUMBLOCKS; i++) {
   const newBlock = blockchain.addBlock(`foo ${i}`);
   console.log(newBlock.toString());
-
+  difficulites.push(newBlock.difficulty);
   totalHashCount += newBlock.totalHashCount;
 }
 
@@ -44,5 +45,18 @@ fs.writeFileSync(
 );
 
 console.log(minignInfo);
+const blockchainfilename =
+  "./stats/bc_" +
+  NUM_WORKERS +
+  "thread_" +
+  NUMBLOCKS +
+  +"blocks_" +
+  DIFFICULTY +
+  "diff.json";
+ChainUtil.saveBlockchainToFile(blockchain, blockchainfilename);
 
-ChainUtil.saveBlockchainToFile(blockchain, "./stats/bc_3thread_10blocks.json");
+const difficulitesText = difficulites.join("\n");
+fs.writeFileSync(
+  "./stats/difficulites_" + NUMBLOCKS + "blocks_" + NUM_WORKERS + "threads.txt",
+  difficulitesText
+);

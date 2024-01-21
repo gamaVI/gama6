@@ -1,0 +1,368 @@
+{
+  "chain": [
+    {
+      "timestamp": "Genesis time",
+      "index": 0,
+      "lastHash": "----",
+      "hash": "f1574-h4gh",
+      "data": {
+        "type": "Information",
+        "message": "genesis block"
+      },
+      "nonce": 0,
+      "difficulty": 1,
+      "totalHashCount": 0
+    },
+    {
+      "timestamp": 1705850206924,
+      "index": 1,
+      "lastHash": "f1574-h4gh",
+      "hash": "016a0cd91070e2e9f6d17673ede76189c00e2e92a6ee48280a47b40dc1c0ef5a",
+      "data": "foo 0",
+      "nonce": 49,
+      "difficulty": 1,
+      "totalHashCount": 50
+    },
+    {
+      "timestamp": 1705850206970,
+      "index": 2,
+      "lastHash": "016a0cd91070e2e9f6d17673ede76189c00e2e92a6ee48280a47b40dc1c0ef5a",
+      "hash": "09149b65e80b302c69c1b44cff8b1eaa67c2c23c0f7e36d70a092a5860e51e7a",
+      "data": "foo 1",
+      "nonce": 2,
+      "difficulty": 1,
+      "totalHashCount": 3
+    },
+    {
+      "timestamp": 1705850207016,
+      "index": 3,
+      "lastHash": "09149b65e80b302c69c1b44cff8b1eaa67c2c23c0f7e36d70a092a5860e51e7a",
+      "hash": "04acf9a763780efd6649a622266fb69ce78109425563c90e204a3a5394f2fe29",
+      "data": "foo 2",
+      "nonce": 32,
+      "difficulty": 1,
+      "totalHashCount": 33
+    },
+    {
+      "timestamp": 1705850207070,
+      "index": 4,
+      "lastHash": "04acf9a763780efd6649a622266fb69ce78109425563c90e204a3a5394f2fe29",
+      "hash": "00abb359af55ed0459601fc9a56802b9f7b52611f322d5cf1737d878b05a1e57",
+      "data": "foo 3",
+      "nonce": 290,
+      "difficulty": 2,
+      "totalHashCount": 291
+    },
+    {
+      "timestamp": 1705850207120,
+      "index": 5,
+      "lastHash": "00abb359af55ed0459601fc9a56802b9f7b52611f322d5cf1737d878b05a1e57",
+      "hash": "00dc56a6ea2c1b29fd788b338e47ab7749feb0320a92bd8e57d4a6aa1e1e66aa",
+      "data": "foo 4",
+      "nonce": 51,
+      "difficulty": 2,
+      "totalHashCount": 52
+    },
+    {
+      "timestamp": 1705850207190,
+      "index": 6,
+      "lastHash": "00dc56a6ea2c1b29fd788b338e47ab7749feb0320a92bd8e57d4a6aa1e1e66aa",
+      "hash": "004aff01a500ce5a5fd98b1d543fcb7890db4332f18f636f872394060e9cb8da",
+      "data": "foo 5",
+      "nonce": 767,
+      "difficulty": 2,
+      "totalHashCount": 768
+    },
+    {
+      "timestamp": 1705850207267,
+      "index": 7,
+      "lastHash": "004aff01a500ce5a5fd98b1d543fcb7890db4332f18f636f872394060e9cb8da",
+      "hash": "0006541a85791df93a758fe51c492e2d3e94dde99300d932c9a40307cb0f1d62",
+      "data": "foo 6",
+      "nonce": 1886,
+      "difficulty": 3,
+      "totalHashCount": 1887
+    },
+    {
+      "timestamp": 1705850207347,
+      "index": 8,
+      "lastHash": "0006541a85791df93a758fe51c492e2d3e94dde99300d932c9a40307cb0f1d62",
+      "hash": "000926d609410b57b59d0f60dd8183c2b24fab64bcb8a55fb51ad021878720f8",
+      "data": "foo 7",
+      "nonce": 2609,
+      "difficulty": 3,
+      "totalHashCount": 2610
+    },
+    {
+      "timestamp": 1705850207401,
+      "index": 9,
+      "lastHash": "000926d609410b57b59d0f60dd8183c2b24fab64bcb8a55fb51ad021878720f8",
+      "hash": "000035e511df658a320da5593f25b5d649680b19cc9f12f66d28bdf1c6a32bb2",
+      "data": "foo 8",
+      "nonce": 385,
+      "difficulty": 3,
+      "totalHashCount": 386
+    },
+    {
+      "timestamp": 1705850208189,
+      "index": 10,
+      "lastHash": "000035e511df658a320da5593f25b5d649680b19cc9f12f66d28bdf1c6a32bb2",
+      "hash": "00002ceff64142b10a5c012525d77d9d54eca6839506c383c9c6aa487c4f25c5",
+      "data": "foo 9",
+      "nonce": 93098,
+      "difficulty": 4,
+      "totalHashCount": 93099
+    },
+    {
+      "timestamp": 1705850208812,
+      "index": 11,
+      "lastHash": "00002ceff64142b10a5c012525d77d9d54eca6839506c383c9c6aa487c4f25c5",
+      "hash": "00001a6ccdc2e797242b3f1682b38e3180ecbe169f3168217d2b22fe80ec1ced",
+      "data": "foo 10",
+      "nonce": 66954,
+      "difficulty": 4,
+      "totalHashCount": 66955
+    },
+    {
+      "timestamp": 1705850209425,
+      "index": 12,
+      "lastHash": "00001a6ccdc2e797242b3f1682b38e3180ecbe169f3168217d2b22fe80ec1ced",
+      "hash": "0000484c64fbd85dbbaa6915b3140ca11e7065f6d1dff6426fa4994319bf22f2",
+      "data": "foo 11",
+      "nonce": 71431,
+      "difficulty": 4,
+      "totalHashCount": 71432
+    },
+    {
+      "timestamp": 1705850211275,
+      "index": 13,
+      "lastHash": "0000484c64fbd85dbbaa6915b3140ca11e7065f6d1dff6426fa4994319bf22f2",
+      "hash": "000006f50487497890973cd1681804a2de2413096dd1b359cd953f7716430a91",
+      "data": "foo 12",
+      "nonce": 227283,
+      "difficulty": 5,
+      "totalHashCount": 227284
+    },
+    {
+      "timestamp": 1705850226541,
+      "index": 14,
+      "lastHash": "000006f50487497890973cd1681804a2de2413096dd1b359cd953f7716430a91",
+      "hash": "000005cffceeeb622171d8a52eb288faf3ec77de275c06c7256662991531c983",
+      "data": "foo 13",
+      "nonce": 1965683,
+      "difficulty": 5,
+      "totalHashCount": 1965684
+    },
+    {
+      "timestamp": 1705850265522,
+      "index": 15,
+      "lastHash": "000005cffceeeb622171d8a52eb288faf3ec77de275c06c7256662991531c983",
+      "hash": "000004af13f2b2797759e40426d762cccb5b315b0e39d21b227cfee7336b2c99",
+      "data": "foo 14",
+      "nonce": 5022912,
+      "difficulty": 5,
+      "totalHashCount": 5022913
+    },
+    {
+      "timestamp": 1705850265657,
+      "index": 16,
+      "lastHash": "000004af13f2b2797759e40426d762cccb5b315b0e39d21b227cfee7336b2c99",
+      "hash": "000032120565ce40d1ce837b63d96d016a837f655b9c6a68dc18b9eaa9af0a53",
+      "data": "foo 15",
+      "nonce": 9318,
+      "difficulty": 4,
+      "totalHashCount": 9319
+    },
+    {
+      "timestamp": 1705850265919,
+      "index": 17,
+      "lastHash": "000032120565ce40d1ce837b63d96d016a837f655b9c6a68dc18b9eaa9af0a53",
+      "hash": "0000757ac191d328c98c1a7aab8035c389d867da5658b7b4ea8fe33f2ce7d369",
+      "data": "foo 16",
+      "nonce": 25355,
+      "difficulty": 4,
+      "totalHashCount": 25356
+    },
+    {
+      "timestamp": 1705850266287,
+      "index": 18,
+      "lastHash": "0000757ac191d328c98c1a7aab8035c389d867da5658b7b4ea8fe33f2ce7d369",
+      "hash": "00003d3eeb3c13dd1ffcba643e6a61534cb664020099d4edaef0df7d17aba46d",
+      "data": "foo 17",
+      "nonce": 40039,
+      "difficulty": 4,
+      "totalHashCount": 40040
+    },
+    {
+      "timestamp": 1705850273357,
+      "index": 19,
+      "lastHash": "00003d3eeb3c13dd1ffcba643e6a61534cb664020099d4edaef0df7d17aba46d",
+      "hash": "00000300bf413dd64496af9f5027857c224d8a2b967affb935ddc935103a890f",
+      "data": "foo 18",
+      "nonce": 922986,
+      "difficulty": 5,
+      "totalHashCount": 922987
+    },
+    {
+      "timestamp": 1705850282147,
+      "index": 20,
+      "lastHash": "00000300bf413dd64496af9f5027857c224d8a2b967affb935ddc935103a890f",
+      "hash": "00000d9784e0e13fd5301f7f3c49499e3a70bd20e4d2eb9387058638d4294508",
+      "data": "foo 19",
+      "nonce": 1109559,
+      "difficulty": 5,
+      "totalHashCount": 1109560
+    },
+    {
+      "timestamp": 1705850289540,
+      "index": 21,
+      "lastHash": "00000d9784e0e13fd5301f7f3c49499e3a70bd20e4d2eb9387058638d4294508",
+      "hash": "0000052ebd45e2286e711a1f04b31b70a80873d7873fb61de9a7a52ca5fd69ec",
+      "data": "foo 20",
+      "nonce": 963376,
+      "difficulty": 5,
+      "totalHashCount": 963377
+    },
+    {
+      "timestamp": 1705850314138,
+      "index": 22,
+      "lastHash": "0000052ebd45e2286e711a1f04b31b70a80873d7873fb61de9a7a52ca5fd69ec",
+      "hash": "0000083eaff8a5180fd8bf925594c11fabba9935a0fc0488acc4af941aed6840",
+      "data": "foo 21",
+      "nonce": 3148799,
+      "difficulty": 5,
+      "totalHashCount": 3148800
+    },
+    {
+      "timestamp": 1705850320721,
+      "index": 23,
+      "lastHash": "0000083eaff8a5180fd8bf925594c11fabba9935a0fc0488acc4af941aed6840",
+      "hash": "000008ccbc22151b01dc64f4019ba800a74b56c9d7c57a8b2481fb3fe80827f8",
+      "data": "foo 22",
+      "nonce": 849877,
+      "difficulty": 5,
+      "totalHashCount": 849878
+    },
+    {
+      "timestamp": 1705850323984,
+      "index": 24,
+      "lastHash": "000008ccbc22151b01dc64f4019ba800a74b56c9d7c57a8b2481fb3fe80827f8",
+      "hash": "00000e284880d5322295bce9b4fe6a27f5c7634b428424e17523d393038d4d97",
+      "data": "foo 23",
+      "nonce": 403093,
+      "difficulty": 5,
+      "totalHashCount": 403094
+    },
+    {
+      "timestamp": 1705850326742,
+      "index": 25,
+      "lastHash": "00000e284880d5322295bce9b4fe6a27f5c7634b428424e17523d393038d4d97",
+      "hash": "0000000c9883a26507b78600f1c5efab8477a7021fbe897f35f7005cfe09a441",
+      "data": "foo 24",
+      "nonce": 344556,
+      "difficulty": 5,
+      "totalHashCount": 344557
+    },
+    {
+      "timestamp": 1705850351593,
+      "index": 26,
+      "lastHash": "0000000c9883a26507b78600f1c5efab8477a7021fbe897f35f7005cfe09a441",
+      "hash": "00000253dd0d16537da1cb723f8e9c81adca67103521123a1d2a00c684a54f23",
+      "data": "foo 25",
+      "nonce": 3157793,
+      "difficulty": 5,
+      "totalHashCount": 3157794
+    },
+    {
+      "timestamp": 1705850358839,
+      "index": 27,
+      "lastHash": "00000253dd0d16537da1cb723f8e9c81adca67103521123a1d2a00c684a54f23",
+      "hash": "00000e57c05acb6ddf8fcc9a0b4ca8320f36c26c2a6d1dd0b7bd69c10a7e2d52",
+      "data": "foo 26",
+      "nonce": 916301,
+      "difficulty": 5,
+      "totalHashCount": 916302
+    },
+    {
+      "timestamp": 1705850359311,
+      "index": 28,
+      "lastHash": "00000e57c05acb6ddf8fcc9a0b4ca8320f36c26c2a6d1dd0b7bd69c10a7e2d52",
+      "hash": "00001fbfcbb26361b2c1cbed63c2dcc47c24922ce1fa25b48f35ca805aa71001",
+      "data": "foo 27",
+      "nonce": 48036,
+      "difficulty": 4,
+      "totalHashCount": 48037
+    },
+    {
+      "timestamp": 1705850359689,
+      "index": 29,
+      "lastHash": "00001fbfcbb26361b2c1cbed63c2dcc47c24922ce1fa25b48f35ca805aa71001",
+      "hash": "00008a79486aef6f2827bdae70de531a3aa1d7cae6f7fa86e09c80c64e5b5f65",
+      "data": "foo 28",
+      "nonce": 40588,
+      "difficulty": 4,
+      "totalHashCount": 40589
+    },
+    {
+      "timestamp": 1705850360318,
+      "index": 30,
+      "lastHash": "00008a79486aef6f2827bdae70de531a3aa1d7cae6f7fa86e09c80c64e5b5f65",
+      "hash": "0000d333ca9c2e1e2253b4c069b7e9c1deff7a4668829f2b5d39b87844b1b411",
+      "data": "foo 29",
+      "nonce": 72643,
+      "difficulty": 4,
+      "totalHashCount": 72644
+    },
+    {
+      "timestamp": 1705850370814,
+      "index": 31,
+      "lastHash": "0000d333ca9c2e1e2253b4c069b7e9c1deff7a4668829f2b5d39b87844b1b411",
+      "hash": "00000df0aa4e1746785e4ce967c53ba213a51543697f4c598c6b50cd086ab765",
+      "data": "foo 30",
+      "nonce": 1349918,
+      "difficulty": 5,
+      "totalHashCount": 1349919
+    },
+    {
+      "timestamp": 1705850374835,
+      "index": 32,
+      "lastHash": "00000df0aa4e1746785e4ce967c53ba213a51543697f4c598c6b50cd086ab765",
+      "hash": "000001d75fd4402d580d0c841b1a027bc1e289aefe092af33340d921c39bc58b",
+      "data": "foo 31",
+      "nonce": 507140,
+      "difficulty": 5,
+      "totalHashCount": 507141
+    },
+    {
+      "timestamp": 1705850376155,
+      "index": 33,
+      "lastHash": "000001d75fd4402d580d0c841b1a027bc1e289aefe092af33340d921c39bc58b",
+      "hash": "00000f6c39212cec2d1246c56aa56654fe552f954680c1fd4e6ea156ab50bd0b",
+      "data": "foo 32",
+      "nonce": 158531,
+      "difficulty": 5,
+      "totalHashCount": 158532
+    },
+    {
+      "timestamp": 1705850386794,
+      "index": 34,
+      "lastHash": "00000f6c39212cec2d1246c56aa56654fe552f954680c1fd4e6ea156ab50bd0b",
+      "hash": "00000cd7eded129ceec4b5aee5175c0c738318c95f8e142c998e41bf2b92bf6c",
+      "data": "foo 33",
+      "nonce": 1355956,
+      "difficulty": 5,
+      "totalHashCount": 1355957
+    },
+    {
+      "timestamp": 1705850387218,
+      "index": 35,
+      "lastHash": "00000cd7eded129ceec4b5aee5175c0c738318c95f8e142c998e41bf2b92bf6c",
+      "hash": "0000001345b8fa4ba47942299703db7a70ce3aa489174ab94b6292f9d2eb1d8a",
+      "data": "foo 34",
+      "nonce": 47241,
+      "difficulty": 5,
+      "totalHashCount": 47242
+    }
+  ],
+  "miningData": []
+}

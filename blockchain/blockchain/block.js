@@ -45,10 +45,18 @@ class Block {
    */
 
   static genesis() {
-    return new this("Genesis time", "----", "f1574-h4gh", {
-      type:"Information",
-      message:"genesis block" 
-    }, 0, DIFFICULTY, 0);
+    return new this(
+      "Genesis time",
+      "----",
+      "f1574-h4gh",
+      {
+        type: "Information",
+        message: "genesis block",
+      },
+      0,
+      DIFFICULTY,
+      0
+    );
   }
 
   /**
@@ -90,7 +98,7 @@ class Block {
       let nonceFound = false;
 
       // Shared buffer for hash count
-      const sharedBuffer = new SharedArrayBuffer(4); // 4 bytes for an Int32
+      const sharedBuffer = new SharedArrayBuffer(4); 
       const hashCount = new Int32Array(sharedBuffer);
 
       const maxNonce = 2 ** 32;
@@ -123,7 +131,7 @@ class Block {
               result.nonce,
               difficulty,
               lastBlock.index + 1,
-              totalHashCount // Add total hash count to the block
+              totalHashCount 
             );
             resolve(newBlock);
           }
