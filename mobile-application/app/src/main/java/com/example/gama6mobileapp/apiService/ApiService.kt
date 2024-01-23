@@ -12,8 +12,9 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
+const val IP_ADDRESS = "172.20.10.5" // Laptop
 //const val IP_ADDRESS = "192.168.56.1" // Laptop
-const val IP_ADDRESS = "192.168.1.2" // PC
+//const val IP_ADDRESS = "192.168.1.2" // PC
 
 object ApiService {
     fun getAllLocations(callback: (List<Location>) -> Unit) {

@@ -21,7 +21,7 @@ suspend fun uploadImage(imageBytes: ByteArray): Int = withContext(Dispatchers.IO
         .build()
 
     val request = Request.Builder()
-        .url("http://${IP_ADDRESS}:7000/process-image/") // Replace with your server URL
+        .url("http://172.20.10.4:7000/process-image/") // Replace with your server URL
         .post(requestBody)
         .build()
 

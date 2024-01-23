@@ -13,7 +13,7 @@ tracker = EuclideanDistTracker()
 cap = cv2.VideoCapture('video.mp4')
 input_size = 320
 
-confThreshold =0.2
+confThreshold =0.1
 nmsThreshold= 0.2
 
 font_color = (0, 0, 255)
@@ -172,6 +172,7 @@ def from_static_image(image):
     sum = 0
     sum = frequency['car'] + frequency['motorbike'] + frequency['bus'] + frequency['truck']
     return sum
+
 
 
 if __name__ == '__main__':

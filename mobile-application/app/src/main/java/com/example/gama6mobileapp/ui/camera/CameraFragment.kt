@@ -134,7 +134,7 @@ class CameraFragment : Fragment() {
                             var location = app.locations.find { it.name == locationName }
                             if (location!!.maxCars!! < count) {
                                 location.numCars = location.maxCars!!
-                            } else location.numCars = count
+                            } else location.numCars = location.maxCars!! - count
                             // Call upsertLocation function
                             upsertLocation(location) { success ->
                                 if (success) {
