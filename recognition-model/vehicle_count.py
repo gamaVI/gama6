@@ -151,6 +151,8 @@ def postProcess(outputs,img):
 
 image_file = 'peugeot.png'
 def from_static_image(image):
+    global detected_classNames
+    detected_classNames = []  # Reset the list for each new image
     img = cv2.imread(image)
 
     blob = cv2.dnn.blobFromImage(img, 1 / 255, (input_size, input_size), [0, 0, 0], 1, crop=False)
@@ -161,15 +163,10 @@ def from_static_image(image):
     outputNames = [layersNames[i - 1] for i in net.getUnconnectedOutLayers()]
     outputs = net.forward(outputNames)
 
-    print(len(outputs))
-    # save outputs to a text file for checking
-    with open('outputs.txt', 'w') as f:
-        f.writelines(str(outputs))
-
+    
     postProcess(outputs,img)
 
     frequency = collections.Counter(detected_classNames)
-    sum = 0
     sum = frequency['car'] + frequency['motorbike'] + frequency['bus'] + frequency['truck']
     return sum
 
